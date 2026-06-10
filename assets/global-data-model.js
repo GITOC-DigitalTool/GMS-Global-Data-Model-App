@@ -2050,13 +2050,6 @@ window.GDM_DATA = {
       "description": "Whether the seller appears to be a vulnerable group member (only if explicitly stated or clearly indicated in context)",
       "standardization_notes": "Boolean (TRUE/FALSE)/unknown; do NOT infer protected attributes; record only explicit self-identification or direct statements; document basis in note",
       "in_gms": true
-    },
-    {
-      "field_id": "vulnerable_group",
-      "category": "Vulnerability and bycatch indicators",
-      "description": "Vulnerable group category (if applicable)",
-      "standardization_notes": "Controlled list agreed by consortium; allow 'unknown'; avoid free text drift",
-      "in_gms": true
     }
   ],
   "profiles": {
@@ -2112,7 +2105,6 @@ window.GDM_DATA = {
       "is_delivery_available",
       "delivery_method",
       "is_seller_vulnerable_group",
-      "vulnerable_group",
       "is_bycatch",
       "permit_claimed_flag",
       "sponsored_ad",
@@ -2247,7 +2239,6 @@ window.GDM_DATA = {
     "is_delivery_available",
     "delivery_method",
     "is_seller_vulnerable_group",
-    "vulnerable_group",
     "is_bycatch",
     "permit_claimed_flag",
     "sponsored_ad",

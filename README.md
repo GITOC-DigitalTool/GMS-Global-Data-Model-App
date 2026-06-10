@@ -5,13 +5,13 @@ This repository contains a **static GitHub Pages version** of the ECOSOLVE Globa
 ## Files
 
 - `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
-- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the complete R-app field catalogue export (294 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
+- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the complete R-app field catalogue export (293 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
 The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads plus Excel workbook/template downloads work on GitHub Pages. CSV uploads are still accepted for assessment data, but downloads are kept to Excel workbooks/templates only.
 
 ## Global Data Model
 
-The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. The static app now uses the complete field export provided from the R app: **294 fields across 13 field-selection categories**.
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. The static app now uses the complete field export provided from the R app: **293 fields across 13 field-selection categories**.
 
 1. **Automation, scraping, and model-assist fields** — model labels, fingerprints, extractor metadata, scraper provenance, and ML suggestions.
 2. **Core record and workflow metadata** — collection program, analyst workflow, dates, review state, priority, risk, validation, and handling flags.
@@ -27,7 +27,7 @@ The **Global Data Model** is the master schema used to scope online illegal wild
 12. **Shipping, routes, and movement indicators** — cross-border indicators, delivery, origin/destination countries, meetup cues, packaging, and shipping methods.
 13. **Vulnerability and bycatch indicators** — bycatch flags and vulnerable-group indicators with explicit-basis requirements.
 
-Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set. The Global Monitoring System profile now contains the exact 58 fields specified for the current GMS export, including ad reference/type, seller item contact/name, sponsored-ad, permit-claimed, and case/datahub fields.
+Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set. The Global Monitoring System profile now contains the exact 57 fields specified for the current GMS export, including ad reference/type, seller item contact/name, sponsored-ad, permit-claimed, and case/datahub fields.
 
 ## Field catalogue and profiles
 
