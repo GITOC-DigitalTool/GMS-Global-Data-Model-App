@@ -51,13 +51,11 @@ The **Download Excel workbook** button exports the selected field set as a two-t
 
 This structure lets analysts fill out monitoring data in the first tab while keeping the full field definitions and standardization guidance in the second tab.
 
-Profiles are meant to be starting points rather than final protocols. The included profiles are:
+Profiles are meant to be starting points rather than final protocols. The included profiles mirror the R app subsets:
 
 - **Global Monitoring System** — all fields marked `in_gms = TRUE` in the R-app export.
-- **Core public-monitoring export** — selected current GMS fields from core record, platform/content, and item/species categories.
-- **Geography and routes review** — GMS geography and route fields plus common geocoding/shipping review fields.
-- **Enforcement and case tracking** — GMS legal/case fields plus selected referral, risk, and priority fields.
-- **Automation and dedupe QA** — selected automation, duplicate matching, and media/evidence quality-assurance fields.
+- **All fields** — the full field catalogue.
+- **Category subsets** — one baseline profile for each field-selection category in the R app, including automation/model-assist, core workflow metadata, geography/geocoding, governance/export controls, item/species/product fields, legal/enforcement tracking, linking/dedupe/network fields, media/evidence metadata, platform/content/discovery context, price/commercial terms, seller/account fields, shipping/routes indicators, and vulnerability/bycatch indicators.
 
 ## How the model was curated
 
