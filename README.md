@@ -1,13 +1,13 @@
 # gmstools Global Data Model Builder
 
-This repository contains a **static GitHub Pages version** of the gmstools Global Data Model app. It is designed to mimic the browser-only app pattern used by the original Shiny workflow: the schema is loaded in the browser, users can select fields, score species baskets, rank platforms, and export CSV or JSON outputs without running a server.
+This repository contains a **static GitHub Pages version** of the gmstools Global Data Model app. It runs entirely in the browser, so teams can review the field catalogue, build exportable schema profiles, run the Rapid Species Basket Assessment (RSBA), score platforms, and export templates or results without a Shiny server.
 
 ## Files
 
-- `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBR scoring, platform prioritisation, file upload handling, and export logic.
-- `assets/global-data-model.js` — the reusable data bundle exposed as `window.GDM_DATA`. It contains the field catalogue, baseline profiles, current GMS fields, curation notes, and platform assessment criteria.
+- `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
+- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the field catalogue, baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
-The app loads the SheetJS `xlsx` library from a CDN so `.xlsx` and `.xls` uploads work on GitHub Pages. CSV uploads have a small browser fallback parser so CSV files still work if the CDN is unavailable.
+The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads and Excel template downloads work on GitHub Pages. CSV uploads and CSV template downloads work without the CDN.
 
 ## Global Data Model
 
@@ -52,21 +52,21 @@ The model is curated as a practical harmonization layer across online monitoring
 
 This makes the model a living schema. Teams should adapt the field list to their species scope, platforms, legal context, ethics review, and operational capacity.
 
-## RSBA and RSBR
+## Rapid Species Basket Assessment (RSBA)
 
-The user-facing app labels the species workflow as **Rapid Species Basket Review (RSBR)**, while the broader readiness concept can be understood as part of an **RSBA-style rapid scoping and baseline assessment** workflow.
+The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow in the browser. Users can:
 
-The RSBR tab lets users:
-
+- load the bundled example species list;
 - upload a `.csv`, `.xlsx`, or `.xls` species list;
-- load example species data;
-- add and edit rows directly in the browser;
-- adjust retain and drop thresholds;
-- compute a total score from editable criteria; and
-- export the resulting species prioritisation table as CSV.
+- download CSV or Excel templates with the required criteria columns;
+- add species manually;
+- edit criteria values directly in the table;
+- run scoring after edits; and
+- export the completed assessment as CSV.
 
-The scoring fields are:
+The RSBA scoring criteria are stored in `assets/global-data-model.js` and displayed in the app. The current criteria columns are:
 
+- `conservation_concern`
 - `online_trade_evidence`
 - `local_relevance`
 - `enforcement_relevance`
@@ -78,19 +78,32 @@ The recommendation is calculated from the score:
 - totals at or below the drop threshold are marked **Drop**; and
 - totals between the thresholds are marked **Monitor**.
 
-## Platform assessment and prioritisation
+## Platform assessment
 
-The **Platform prioritisation** tab ranks monitoring platforms from uploaded exploratory monitoring data. Users choose the platform and species columns after upload. If RSBR rows are loaded, platform detections are linked against the RSBR species table; otherwise the ranking uses score or recommendation columns already present in the uploaded workbook when available.
+The **Platform assessment** tab lets users score platforms interactively or from uploaded data. Users can:
 
-The model documentation frames platform assessment around five criteria:
+- load the bundled platform example;
+- upload a `.csv`, `.xlsx`, or `.xls` platform list;
+- download CSV or Excel templates with the required platform criteria columns;
+- add platforms manually;
+- edit criteria values directly in the browser table;
+- re-run scoring after edits; and
+- export the ranked platform assessment as CSV.
 
-1. **Relevance** — whether target species, products, keywords, sellers, or communities appear on the platform.
-2. **Accessibility** — whether content is public, permissioned, partner-provided, technically restricted, or ephemeral.
-3. **Data quality** — whether the platform provides usable timestamps, images, references, location cues, and account continuity.
-4. **Risk and ethics** — whether privacy, investigator safety, sensitive species, or escalation concerns require stronger controls.
-5. **Operational fit** — whether the platform matches available language coverage, tooling, analyst capacity, and maintenance effort.
+The platform scoring criteria are stored in `assets/global-data-model.js` and displayed in the app. The current criteria columns are:
 
-The app calculates detections, distinct species, retain/monitor/drop counts, average RSBR score, and a priority score for each platform.
+- `target_species_presence`
+- `trade_volume`
+- `accessibility`
+- `data_quality`
+- `risk_and_ethics`
+- `operational_fit`
+
+The app sums the criteria values, sorts platforms by total score, and labels rows as **High priority**, **Monitor**, or **Low priority** using editable thresholds.
+
+## Exportable templates
+
+Both assessment tabs include **CSV template** and **Excel template** buttons. The templates include the relevant input columns but omit computed result columns. Users can fill in the templates, upload them back into the app, review or edit the rows, run scoring, and export completed results.
 
 ## Publishing on GitHub Pages
 
@@ -104,4 +117,4 @@ You can publish the app directly from the repository root because `index.html` i
 
 ## Responsible use
 
-Online IWT monitoring can involve sensitive species, personal information, risky actors, platform policy restrictions, and law-enforcement implications. Before deploying a monitoring workflow, review the selected fields, RSBR criteria, platform ranking method, retention plan, and sharing rules with appropriate subject-matter, legal, safety, privacy, and ethics expertise.
+Online IWT monitoring can involve sensitive species, personal information, risky actors, platform policy restrictions, and law-enforcement implications. Before deploying a monitoring workflow, review the selected fields, RSBA criteria, platform scoring method, retention plan, and sharing rules with appropriate subject-matter, legal, safety, privacy, and ethics expertise.
