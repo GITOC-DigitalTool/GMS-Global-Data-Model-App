@@ -5,20 +5,26 @@ This repository contains a **static GitHub Pages version** of the gmstools Globa
 ## Files
 
 - `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
-- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the field catalogue, baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
+- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the expanded field catalogue (84 fields across 12 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
 The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads and Excel template downloads work on GitHub Pages. CSV uploads and CSV template downloads work without the CDN.
 
 ## Global Data Model
 
-The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. It organizes fields into six practical categories:
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. It organizes fields into 12 practical field-selection categories:
 
-1. **Observation** — stable identifiers, collection dates, source references, and capture methods that make records auditable.
-2. **Taxon & Product** — common names, scientific names, product forms, quantities, and identification confidence.
-3. **Trade Signal** — trade intent, price, currency, shipping cues, and other indicators that observed content is relevant to trade monitoring.
-4. **Actor & Network** — minimum necessary account, role, and engagement fields used for de-duplication or authorized escalation.
-5. **Platform & Location** — platform names, platform features, jurisdictional cues, and location evidence.
-6. **Governance** — legal or policy flags, sensitivity ratings, reviewer notes, and data-handling notes.
+1. **Record metadata** — identifiers, collection dates, review states, and duplicate tracking.
+2. **Source and access** — source references, access level, screenshots, and archives.
+3. **Platform** — platform names, types, features, groups, channels, and policy flags.
+4. **Account and actor** — account references, display names, roles, contact cues, and repeat-seller flags.
+5. **Content** — post text, language, translation, media, and search-keyword context.
+6. **Taxonomy** — common names, scientific names, ranks, families, classes, and identification basis.
+7. **Product and specimen** — product forms, life stage, condition, quantity, origin claims, and permit claims.
+8. **Trade signal** — trade intent, cue text, price, currency, negotiation, availability, shipping, and payment cues.
+9. **Location and jurisdiction** — location cues, raw text, country, administrative area, market, and confidence.
+10. **Engagement and network** — engagement counts, group size, external links, and network notes.
+11. **Legal, policy, and conservation** — IUCN, CITES, national protection, suspected violation, and enforcement relevance fields.
+12. **Governance and quality** — sensitivity, handling notes, reviewer notes, QA flags, exclusion, escalation, and retention fields.
 
 Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set.
 
@@ -40,6 +46,7 @@ Profiles are meant to be starting points rather than final protocols. The includ
 - **Minimal monitoring baseline** — a lean field set for lightweight pilots.
 - **Species trend analysis** — fields focused on taxon/product consistency and trend comparison.
 - **Platform enforcement triage** — fields focused on platform, actor, trade signal, and governance decisions.
+- **Governance and QA review** — fields focused on audit, quality, sensitivity, exclusion, and retention decisions.
 
 ## How the model was curated
 
@@ -56,7 +63,7 @@ This makes the model a living schema. Teams should adapt the field list to their
 
 The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow in the browser. Users can:
 
-- load the bundled example species list;
+- load the bundled multi-row example species list;
 - upload a `.csv`, `.xlsx`, or `.xls` species list;
 - download CSV or Excel templates with the required criteria columns;
 - add species manually;
@@ -82,7 +89,7 @@ The recommendation is calculated from the score:
 
 The **Platform assessment** tab lets users score platforms interactively or from uploaded data. Users can:
 
-- load the bundled platform example;
+- load the bundled multi-row platform example;
 - upload a `.csv`, `.xlsx`, or `.xls` platform list;
 - download CSV or Excel templates with the required platform criteria columns;
 - add platforms manually;
