@@ -5,26 +5,27 @@ This repository contains a **static GitHub Pages version** of the gmstools Globa
 ## Files
 
 - `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
-- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the expanded field catalogue (84 fields across 12 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
+- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the complete R-app field catalogue export (289 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
 The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads and Excel template downloads work on GitHub Pages. CSV uploads and CSV template downloads work without the CDN.
 
 ## Global Data Model
 
-The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. It organizes fields into 12 practical field-selection categories:
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. The static app now uses the complete field export provided from the R app: **289 fields across 13 field-selection categories**.
 
-1. **Record metadata** — identifiers, collection dates, review states, and duplicate tracking.
-2. **Source and access** — source references, access level, screenshots, and archives.
-3. **Platform** — platform names, types, features, groups, channels, and policy flags.
-4. **Account and actor** — account references, display names, roles, contact cues, and repeat-seller flags.
-5. **Content** — post text, language, translation, media, and search-keyword context.
-6. **Taxonomy** — common names, scientific names, ranks, families, classes, and identification basis.
-7. **Product and specimen** — product forms, life stage, condition, quantity, origin claims, and permit claims.
-8. **Trade signal** — trade intent, cue text, price, currency, negotiation, availability, shipping, and payment cues.
-9. **Location and jurisdiction** — location cues, raw text, country, administrative area, market, and confidence.
-10. **Engagement and network** — engagement counts, group size, external links, and network notes.
-11. **Legal, policy, and conservation** — IUCN, CITES, national protection, suspected violation, and enforcement relevance fields.
-12. **Governance and quality** — sensitivity, handling notes, reviewer notes, QA flags, exclusion, escalation, and retention fields.
+1. **Automation, scraping, and model-assist fields** — model labels, fingerprints, extractor metadata, scraper provenance, and ML suggestions.
+2. **Core record and workflow metadata** — collection program, analyst workflow, dates, review state, priority, risk, validation, and handling flags.
+3. **Geography and geocoding (GADM compatible)** — raw ad locations, GADM IDs, ISO country codes, coordinates, confidence, precision, and masking levels.
+4. **Governance, interoperability, and export controls** — retention, export, schema, sharing, interoperability, and subset-profile controls.
+5. **Item, species, taxonomy, and product fields** — CITES, IUCN, item taxonomy, product form, quantity, life stage, permits, legality, and conservation fields.
+6. **Legal and enforcement tracking (optional)** — case, referral, prosecution, seizure, enforcement outcome, and recommendation fields.
+7. **Linking, dedupe, and network fields** — duplicate matching, related records, network nodes/edges, hashed seller identifiers, and similarity scores.
+8. **Media, evidence, and forensics metadata** — evidence storage, image/OCR, hashes, EXIF, media URLs, screenshots, and chain of custody fields.
+9. **Platform, content, and discovery context** — access, language, content IDs/text, engagement, groups, post dates, platform names, URLs, search terms, and website types.
+10. **Price, currency, and commercial terms** — price, currency, discounts, availability, shipping costs, order quantities, and trade terms.
+11. **Seller and account entity fields** — seller contacts, profile attributes, entity resolution, payment handles, follower counts, and profile URLs.
+12. **Shipping, routes, and movement indicators** — cross-border indicators, delivery, origin/destination countries, meetup cues, packaging, and shipping methods.
+13. **Vulnerability and bycatch indicators** — bycatch flags and vulnerable-group indicators with explicit-basis requirements.
 
 Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set.
 
@@ -42,11 +43,11 @@ The **Field catalogue** tab lets users:
 
 Profiles are meant to be starting points rather than final protocols. The included profiles are:
 
-- **Global Monitoring System** — the default current GMS field set.
-- **Minimal monitoring baseline** — a lean field set for lightweight pilots.
-- **Species trend analysis** — fields focused on taxon/product consistency and trend comparison.
-- **Platform enforcement triage** — fields focused on platform, actor, trade signal, and governance decisions.
-- **Governance and QA review** — fields focused on audit, quality, sensitivity, exclusion, and retention decisions.
+- **Global Monitoring System** — all fields marked `in_gms = TRUE` in the R-app export.
+- **Core public-monitoring export** — selected current GMS fields from core record, platform/content, and item/species categories.
+- **Geography and routes review** — GMS geography and route fields plus common geocoding/shipping review fields.
+- **Enforcement and case tracking** — GMS legal/case fields plus selected referral, risk, and priority fields.
+- **Automation and dedupe QA** — selected automation, duplicate matching, and media/evidence quality-assurance fields.
 
 ## How the model was curated
 

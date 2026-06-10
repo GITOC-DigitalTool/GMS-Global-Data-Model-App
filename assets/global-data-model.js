@@ -1,730 +1,2218 @@
 window.GDM_DATA = {
   "fields": [
     {
-      "field_id": "record_id",
-      "category": "Record metadata",
-      "description": "Stable identifier for each captured observation, listing, message, or record.",
-      "standardization_notes": "Use a non-meaningful unique ID; do not encode personal information.",
+      "field_id": "classification_label",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Model label (ad, non-ad, unsure)",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_fingerprint",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Text fingerprint for matching",
+      "standardization_notes": "Document algorithm",
+      "in_gms": false
+    },
+    {
+      "field_id": "extraction_confidence",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Extraction/classification confidence",
+      "standardization_notes": "Numeric; define range",
+      "in_gms": false
+    },
+    {
+      "field_id": "extraction_model_name",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Model used for extraction/classification",
+      "standardization_notes": "Versioned string; do not store secrets",
+      "in_gms": false
+    },
+    {
+      "field_id": "ingest_pipeline",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Pipeline name",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "ingest_run_id",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Pipeline run id",
+      "standardization_notes": "UUID",
+      "in_gms": false
+    },
+    {
+      "field_id": "location_ml_suggestion",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Model-suggested location",
+      "standardization_notes": "Structured geo fields + confidence",
+      "in_gms": false
+    },
+    {
+      "field_id": "pii_auto_detected_flag",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Automated PII detection flag",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "scraped_html_stored_flag",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Whether HTML was archived",
+      "standardization_notes": "Boolean (TRUE/FALSE); ensure policy compliance",
+      "in_gms": false
+    },
+    {
+      "field_id": "scraper_source",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Scraper tool name/version",
+      "standardization_notes": "Versioned string",
+      "in_gms": false
+    },
+    {
+      "field_id": "species_ml_confidence",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Confidence of species suggestion",
+      "standardization_notes": "Numeric; define range",
+      "in_gms": false
+    },
+    {
+      "field_id": "species_ml_suggestion",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Model-suggested taxon",
+      "standardization_notes": "Scientific name + taxon ID if possible",
+      "in_gms": false
+    },
+    {
+      "field_id": "text_embedding_id",
+      "category": "Automation, scraping, and model-assist fields",
+      "description": "Embedding reference id",
+      "standardization_notes": "Store id only; embeddings stored separately",
+      "in_gms": false
+    },
+    {
+      "field_id": "alert_source",
+      "category": "Core record and workflow metadata",
+      "description": "If found via alert, which system",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "analyst_id",
+      "category": "Core record and workflow metadata",
+      "description": "Collector/analyst identifier",
+      "standardization_notes": "Pseudonymous internal ID; avoid personal names",
+      "in_gms": false
+    },
+    {
+      "field_id": "analyst_role",
+      "category": "Core record and workflow metadata",
+      "description": "Role (monitor, reviewer, supervisor)",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "collecting_organization",
+      "category": "Core record and workflow metadata",
+      "description": "Organization that collected the record",
+      "standardization_notes": "Use canonical org registry / code",
+      "in_gms": false
+    },
+    {
+      "field_id": "collecting_unit",
+      "category": "Core record and workflow metadata",
+      "description": "Team/unit name",
+      "standardization_notes": "Controlled list; avoid free text drift",
+      "in_gms": false
+    },
+    {
+      "field_id": "collection_method",
+      "category": "Core record and workflow metadata",
+      "description": "How it was found (manual/alert/scraper/tip)",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "collection_program",
+      "category": "Core record and workflow metadata",
+      "description": "Program or project name",
+      "standardization_notes": "Controlled list; keep canonical names",
+      "in_gms": false
+    },
+    {
+      "field_id": "data_source_confidentiality",
+      "category": "Core record and workflow metadata",
+      "description": "Sharing restriction level",
+      "standardization_notes": "Controlled list (public, partner-only, LE-only, restricted)",
+      "in_gms": false
+    },
+    {
+      "field_id": "datahub",
+      "category": "Core record and workflow metadata",
+      "description": "Data hub / monitoring node responsible",
+      "standardization_notes": "Controlled list",
+      "in_gms": true
+    },
+    {
+      "field_id": "date_collected_utc",
+      "category": "Core record and workflow metadata",
+      "description": "When record was collected (UTC)",
+      "standardization_notes": "ISO 8601 UTC datetime (YYYY-MM-DDThh:mm:ssZ)",
+      "in_gms": false
+    },
+    {
+      "field_id": "date_last_updated_utc",
+      "category": "Core record and workflow metadata",
+      "description": "Last update timestamp (UTC)",
+      "standardization_notes": "ISO 8601 UTC datetime",
+      "in_gms": false
+    },
+    {
+      "field_id": "legal_sensitivity_flag",
+      "category": "Core record and workflow metadata",
+      "description": "Flags material needing restricted handling",
+      "standardization_notes": "Boolean (TRUE/FALSE); align to policy",
+      "in_gms": false
+    },
+    {
+      "field_id": "monitoring_mode",
+      "category": "Core record and workflow metadata",
+      "description": "Active search vs passive alerts",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "note",
+      "category": "Core record and workflow metadata",
+      "description": "Internal notes",
+      "standardization_notes": "Keep separate from evidence",
       "in_gms": true
     },
     {
       "field_id": "parent_record_id",
-      "category": "Record metadata",
-      "description": "Identifier linking duplicate, follow-up, or related observations.",
-      "standardization_notes": "Use when records are split across posts, screenshots, or collection passes.",
+      "category": "Core record and workflow metadata",
+      "description": "Links to a parent record (eg consolidated case record)",
+      "standardization_notes": "UUID; use for rollups and case aggregation",
       "in_gms": false
     },
     {
-      "field_id": "collection_datetime",
-      "category": "Record metadata",
-      "description": "Date and time the content was observed, captured, or entered.",
-      "standardization_notes": "Store as ISO 8601 with timezone when possible.",
-      "in_gms": true
-    },
-    {
-      "field_id": "posted_datetime",
-      "category": "Record metadata",
-      "description": "Date and time the original content appears to have been posted.",
-      "standardization_notes": "Preserve raw visible date if normalized date is uncertain.",
-      "in_gms": true
-    },
-    {
-      "field_id": "collector_id",
-      "category": "Record metadata",
-      "description": "Internal identifier for the analyst, partner, or workflow that collected the record.",
-      "standardization_notes": "Use internal IDs rather than personal names where possible.",
+      "field_id": "pii_present_flag",
+      "category": "Core record and workflow metadata",
+      "description": "Whether record contains PII",
+      "standardization_notes": "Boolean (TRUE/FALSE); define what counts as PII",
       "in_gms": false
     },
     {
-      "field_id": "capture_method",
-      "category": "Record metadata",
-      "description": "How the observation was collected, such as manual review, referral, export, or automated capture.",
-      "standardization_notes": "Use controlled values for auditability.",
+      "field_id": "priority_level",
+      "category": "Core record and workflow metadata",
+      "description": "Operational priority",
+      "standardization_notes": "Controlled list (low, medium, high, critical)",
+      "in_gms": false
+    },
+    {
+      "field_id": "record_date",
+      "category": "Core record and workflow metadata",
+      "description": "Date the record was created/entered",
+      "standardization_notes": "ISO 8601 date or datetime",
       "in_gms": true
+    },
+    {
+      "field_id": "record_id",
+      "category": "Core record and workflow metadata",
+      "description": "Unique record identifier for the monitoring entry",
+      "standardization_notes": "UUID preferred; immutable; never reuse",
+      "in_gms": false
+    },
+    {
+      "field_id": "record_status",
+      "category": "Core record and workflow metadata",
+      "description": "Lifecycle status",
+      "standardization_notes": "Controlled list (draft, reviewed, submitted, archived)",
+      "in_gms": false
+    },
+    {
+      "field_id": "record_version",
+      "category": "Core record and workflow metadata",
+      "description": "Version number for updates to the same record",
+      "standardization_notes": "Integer; increment on edits",
+      "in_gms": false
+    },
+    {
+      "field_id": "redaction_status",
+      "category": "Core record and workflow metadata",
+      "description": "Redaction state",
+      "standardization_notes": "Controlled list (none, partial, full)",
+      "in_gms": false
+    },
+    {
+      "field_id": "review_date_utc",
+      "category": "Core record and workflow metadata",
+      "description": "Review timestamp",
+      "standardization_notes": "ISO 8601 UTC datetime",
+      "in_gms": false
     },
     {
       "field_id": "review_status",
-      "category": "Record metadata",
-      "description": "Current workflow state for the record.",
-      "standardization_notes": "Suggested values: new, reviewed, verified, escalated, archived, excluded.",
+      "category": "Core record and workflow metadata",
+      "description": "QA status",
+      "standardization_notes": "Controlled list (unreviewed, reviewed, rejected, needs_fix)",
       "in_gms": false
     },
     {
-      "field_id": "duplicate_status",
-      "category": "Record metadata",
-      "description": "Whether the record is original, potential duplicate, confirmed duplicate, or merged.",
-      "standardization_notes": "Document duplicate resolution rules before collection.",
+      "field_id": "reviewed_by_analyst_id",
+      "category": "Core record and workflow metadata",
+      "description": "Reviewer identifier",
+      "standardization_notes": "Pseudonymous internal ID",
       "in_gms": false
     },
     {
-      "field_id": "source_url_or_reference",
-      "category": "Source and access",
-      "description": "Reference allowing an authorized reviewer to locate the original content.",
-      "standardization_notes": "Use durable URLs or internal references when direct links create risk.",
+      "field_id": "risk_score",
+      "category": "Core record and workflow metadata",
+      "description": "Numeric risk score",
+      "standardization_notes": "Define scale (0-10 or 0-100) and document method",
+      "in_gms": false
+    },
+    {
+      "field_id": "risk_score_method",
+      "category": "Core record and workflow metadata",
+      "description": "Risk scoring rubric used",
+      "standardization_notes": "Versioned rubric name (eg GMS_v1.2)",
+      "in_gms": false
+    },
+    {
+      "field_id": "tags",
+      "category": "Core record and workflow metadata",
+      "description": "Tags for filtering",
+      "standardization_notes": "Prefer controlled tags + optional free tags",
+      "in_gms": false
+    },
+    {
+      "field_id": "validation_status",
+      "category": "Core record and workflow metadata",
+      "description": "Overall validation confidence",
+      "standardization_notes": "Controlled list (unverified, partially_verified, verified)",
+      "in_gms": false
+    },
+    {
+      "field_id": "ad_location",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Raw location string from the ad",
+      "standardization_notes": "Preserve original",
       "in_gms": true
     },
     {
-      "field_id": "source_domain",
-      "category": "Source and access",
-      "description": "Domain, app, or service host associated with the content.",
-      "standardization_notes": "Normalize domains and app names for filtering.",
+      "field_id": "gadm_version",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "GADM version used",
+      "standardization_notes": "Store exact version string (eg 4.1)",
       "in_gms": false
     },
     {
-      "field_id": "source_access_level",
-      "category": "Source and access",
-      "description": "Whether content was public, permissioned, partner-provided, closed, or ephemeral.",
-      "standardization_notes": "Do not collect restricted content without authorization.",
+      "field_id": "geo_admin0_gadm_id",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "GADM admin0 ID",
+      "standardization_notes": "Store exact GADM ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin1_gadm_id",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin1 GADM ID",
+      "standardization_notes": "Store exact GADM ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin1_name",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin1 name (canonical)",
+      "standardization_notes": "Match GADM",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin2_gadm_id",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin2 GADM ID",
+      "standardization_notes": "Store exact GADM ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin2_name",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin2 name (canonical)",
+      "standardization_notes": "Match GADM",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin3_gadm_id",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin3 GADM ID",
+      "standardization_notes": "Store exact GADM ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_admin4_gadm_id",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin4 GADM ID",
+      "standardization_notes": "Store exact GADM ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_bbox",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Bounding box if only area known",
+      "standardization_notes": "min/max lat/lon or GeoJSON bbox",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_context_type",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "What the location represents",
+      "standardization_notes": "Controlled list (seller_claimed, ship_from, ship_to, origin_claimed, inferred, meetup, other)",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_coord_precision_m",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Coordinate precision estimate",
+      "standardization_notes": "Numeric meters; define method/categories",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_country_iso2",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Country ISO2",
+      "standardization_notes": "ISO 3166-1 alpha-2",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_country_iso3",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Country ISO3",
+      "standardization_notes": "ISO 3166-1 alpha-3",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_country_name",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Country name (canonical)",
+      "standardization_notes": "Use GADM/ISO canonical name",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_geocode_confidence",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Geocode confidence",
+      "standardization_notes": "Numeric; define scale",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_geocode_method",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Geocode method",
+      "standardization_notes": "Controlled list (manual, gazetteer, NER, reverse_geocode, ML)",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_geocoder_name",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Geocoder/tool used",
+      "standardization_notes": "Controlled list (Nominatim, Google, ArcGIS, internal)",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_lat",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Latitude",
+      "standardization_notes": "WGS84 decimal degrees",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_locality_name",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Locality/city name",
+      "standardization_notes": "Prefer gazetteer match",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_location_sensitivity",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Masking level for exports",
+      "standardization_notes": "Controlled list (public, masked_admin2, masked_admin1, masked_country)",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_lon",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Longitude",
+      "standardization_notes": "WGS84 decimal degrees",
+      "in_gms": false
+    },
+    {
+      "field_id": "geo_place_raw",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Raw place string",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "location_known",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Whether a usable location is present",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": true
     },
     {
-      "field_id": "screenshot_reference",
-      "category": "Source and access",
-      "description": "Internal reference to a stored screenshot or evidence capture.",
-      "standardization_notes": "Apply redaction and retention rules for screenshots.",
-      "in_gms": false
-    },
-    {
-      "field_id": "archive_reference",
-      "category": "Source and access",
-      "description": "Reference to an internal archive, evidence package, or chain-of-custody file.",
-      "standardization_notes": "Use only when archive creation is authorized.",
-      "in_gms": false
-    },
-    {
-      "field_id": "platform_name",
-      "category": "Platform",
-      "description": "Website, marketplace, social platform, messaging channel, forum, classified site, or app.",
-      "standardization_notes": "Use a controlled platform list.",
+      "field_id": "location_level0",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin level 0 (country name)",
+      "standardization_notes": "Use GADM naming for chosen version",
       "in_gms": true
     },
     {
-      "field_id": "platform_type",
-      "category": "Platform",
-      "description": "General platform class.",
-      "standardization_notes": "Suggested values: marketplace, social, messaging, forum, classified, livestream, other.",
+      "field_id": "location_level1",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin level 1 name",
+      "standardization_notes": "Use GADM naming",
       "in_gms": true
     },
     {
-      "field_id": "platform_feature",
-      "category": "Platform",
-      "description": "Specific feature where content appeared, such as group, listing, story, livestream, or comment.",
-      "standardization_notes": "Record the feature separately from platform name.",
+      "field_id": "location_level2",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin level 2 name",
+      "standardization_notes": "Use GADM naming",
       "in_gms": true
     },
     {
-      "field_id": "group_or_channel_name",
-      "category": "Platform",
-      "description": "Visible name of the group, channel, forum, shop, or board.",
-      "standardization_notes": "Minimize collection if names identify private communities.",
+      "field_id": "location_level3",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin level 3 name",
+      "standardization_notes": "Use GADM naming",
       "in_gms": false
     },
     {
-      "field_id": "group_or_channel_id",
-      "category": "Platform",
-      "description": "Platform-specific group or channel identifier.",
-      "standardization_notes": "Hash or restrict access where appropriate.",
+      "field_id": "location_level4",
+      "category": "Geography and geocoding (GADM compatible)",
+      "description": "Admin level 4 name",
+      "standardization_notes": "Use GADM naming",
       "in_gms": false
     },
     {
-      "field_id": "platform_policy_flag",
-      "category": "Platform",
-      "description": "Relevant platform policy issue or marketplace prohibition category.",
-      "standardization_notes": "Use as a triage flag, not a final policy determination.",
+      "field_id": "anonymization_level",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Anonymization level applied",
+      "standardization_notes": "Controlled list (none, partial, strong)",
       "in_gms": false
     },
     {
-      "field_id": "account_reference",
-      "category": "Account and actor",
-      "description": "Minimum necessary account, seller, group, or channel reference for de-duplication or escalation.",
-      "standardization_notes": "Minimize, hash, or pseudonymize personal data when possible.",
-      "in_gms": true
-    },
-    {
-      "field_id": "account_display_name",
-      "category": "Account and actor",
-      "description": "Visible display name associated with the content.",
-      "standardization_notes": "Collect only when necessary for documented monitoring purpose.",
+      "field_id": "data_retention_class",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Retention class",
+      "standardization_notes": "Controlled list (30d, 1y, 5y, indefinite)",
       "in_gms": false
     },
     {
-      "field_id": "account_role",
-      "category": "Account and actor",
-      "description": "Observed role such as seller, buyer, broker, administrator, influencer, or unknown.",
-      "standardization_notes": "Infer only from visible behavior and document uncertainty.",
-      "in_gms": true
-    },
-    {
-      "field_id": "account_location_text",
-      "category": "Account and actor",
-      "description": "Location text self-reported by the account.",
-      "standardization_notes": "Do not treat self-reported locations as verified.",
+      "field_id": "export_format",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Export format",
+      "standardization_notes": "Controlled list (csv, xlsx, json, parquet)",
       "in_gms": false
     },
     {
-      "field_id": "account_contact_method",
-      "category": "Account and actor",
-      "description": "Visible contact route such as comments, direct message, phone, email, or external app.",
-      "standardization_notes": "Avoid collecting direct contact details unless authorized.",
+      "field_id": "export_request_id",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Export request id",
+      "standardization_notes": "UUID",
       "in_gms": false
     },
     {
-      "field_id": "seller_type",
-      "category": "Account and actor",
-      "description": "Observed seller type such as individual, shop, breeder, wholesaler, transporter, or unknown.",
-      "standardization_notes": "Use controlled values and avoid unsupported assumptions.",
+      "field_id": "export_timestamp_utc",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Export timestamp",
+      "standardization_notes": "ISO 8601 UTC",
       "in_gms": false
     },
     {
-      "field_id": "repeat_seller_flag",
-      "category": "Account and actor",
-      "description": "Whether the actor appears in previous records.",
-      "standardization_notes": "Base on authorized internal matching rules.",
+      "field_id": "field_subset_profile",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Subset profile applied",
+      "standardization_notes": "Controlled list (eg NGO_light, LE_full)",
       "in_gms": false
     },
     {
-      "field_id": "post_title",
-      "category": "Content",
-      "description": "Title, listing headline, or leading caption for the content.",
-      "standardization_notes": "Preserve original language where useful.",
+      "field_id": "interoperability_profile",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Interoperability profile",
+      "standardization_notes": "Controlled list (DarwinCore, CITES_like, internal)",
       "in_gms": false
     },
     {
-      "field_id": "post_text_excerpt",
-      "category": "Content",
-      "description": "Short relevant text excerpt supporting the observation.",
-      "standardization_notes": "Avoid over-collecting unrelated personal content.",
-      "in_gms": true
-    },
-    {
-      "field_id": "language",
-      "category": "Content",
-      "description": "Primary language of the post, listing, or communication.",
-      "standardization_notes": "Use ISO language codes when possible.",
+      "field_id": "schema_version",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Data model version used",
+      "standardization_notes": "Semantic versioning (major.minor.patch)",
       "in_gms": false
     },
     {
-      "field_id": "translated_text",
-      "category": "Content",
-      "description": "Translation of relevant text.",
-      "standardization_notes": "Record translation method or reviewer where needed.",
+      "field_id": "sharing_license",
+      "category": "Governance, interoperability, and export controls",
+      "description": "Terms for downstream use",
+      "standardization_notes": "Controlled list (internal, partner, restricted, open)",
       "in_gms": false
     },
     {
-      "field_id": "media_type",
-      "category": "Content",
-      "description": "Type of media present, such as image, video, livestream, text-only, or mixed.",
-      "standardization_notes": "Use controlled media categories.",
-      "in_gms": true
-    },
-    {
-      "field_id": "image_count",
-      "category": "Content",
-      "description": "Number of relevant images visible or captured.",
-      "standardization_notes": "Record counts only when useful for quality or evidence review.",
+      "field_id": "captive_breeding_claim",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Captive breeding claim present",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": false
     },
     {
-      "field_id": "video_present",
-      "category": "Content",
-      "description": "Whether video or livestream evidence is present.",
-      "standardization_notes": "Use boolean values for analysis.",
+      "field_id": "cites_taxon_id",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "CITES Checklist ID",
+      "standardization_notes": "String; document checklist version",
       "in_gms": false
     },
     {
-      "field_id": "keyword_hit",
-      "category": "Content",
-      "description": "Search term, keyword, or query that surfaced the content.",
-      "standardization_notes": "Useful for reproducibility and sampling bias review.",
-      "in_gms": false
-    },
-    {
-      "field_id": "common_name",
-      "category": "Taxonomy",
-      "description": "Common or trade name used for the wildlife item, organism, part, derivative, or service.",
-      "standardization_notes": "Map observed terms to a preferred common name for analysis.",
-      "in_gms": true
-    },
-    {
-      "field_id": "scientific_name",
-      "category": "Taxonomy",
-      "description": "Scientific name associated with the observed species or lowest confident taxonomic unit.",
-      "standardization_notes": "Use an accepted taxonomy source and record uncertainty.",
-      "in_gms": true
-    },
-    {
-      "field_id": "taxon_rank",
-      "category": "Taxonomy",
-      "description": "Lowest confident rank identified, such as species, genus, family, or unknown.",
-      "standardization_notes": "Use when species-level identification is not possible.",
-      "in_gms": false
-    },
-    {
-      "field_id": "taxon_family",
-      "category": "Taxonomy",
-      "description": "Family associated with the identified taxon.",
-      "standardization_notes": "Derive from the accepted taxonomy where possible.",
-      "in_gms": false
-    },
-    {
-      "field_id": "taxon_class",
-      "category": "Taxonomy",
-      "description": "Class associated with the identified taxon.",
-      "standardization_notes": "Useful for high-level summaries.",
-      "in_gms": false
-    },
-    {
-      "field_id": "identification_basis",
-      "category": "Taxonomy",
-      "description": "Basis for identification, such as image, text claim, expert review, or metadata.",
-      "standardization_notes": "Record all relevant bases when possible.",
-      "in_gms": true
-    },
-    {
-      "field_id": "identification_confidence",
-      "category": "Taxonomy",
-      "description": "Reviewer confidence in the taxon or product identification.",
-      "standardization_notes": "Use controlled values or a numeric scale with notes.",
-      "in_gms": true
-    },
-    {
-      "field_id": "lookalike_notes",
-      "category": "Taxonomy",
-      "description": "Notes on lookalike species, ambiguous products, or identification caveats.",
-      "standardization_notes": "Use for quality assurance and expert review.",
-      "in_gms": false
-    },
-    {
-      "field_id": "product_form",
-      "category": "Product and specimen",
-      "description": "Observed form of the item, such as live animal, specimen, skin, meat, medicine, carving, plant, or derivative.",
-      "standardization_notes": "Use a controlled product-form vocabulary.",
-      "in_gms": true
-    },
-    {
-      "field_id": "life_stage",
-      "category": "Product and specimen",
-      "description": "Observed or stated life stage such as adult, juvenile, egg, seedling, or unknown.",
-      "standardization_notes": "Do not infer unless visible or stated.",
+      "field_id": "col_taxon_id",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Catalogue of Life taxon ID",
+      "standardization_notes": "String; record release version",
       "in_gms": false
     },
     {
       "field_id": "condition",
-      "category": "Product and specimen",
-      "description": "Observed condition such as live, dead, processed, raw, fresh, preserved, or unknown.",
-      "standardization_notes": "Use controlled values.",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Condition (alive/dead/processed)",
+      "standardization_notes": "Controlled list",
       "in_gms": false
     },
     {
-      "field_id": "quantity",
-      "category": "Product and specimen",
-      "description": "Visible or stated count, weight, volume, stock amount, or quantity indicator.",
-      "standardization_notes": "Separate raw quantity from normalized numeric value and unit.",
+      "field_id": "conservation_notes",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Conservation notes",
+      "standardization_notes": "Free text; keep concise",
+      "in_gms": false
+    },
+    {
+      "field_id": "gbif_species_key",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "GBIF identifier (speciesKey)",
+      "standardization_notes": "Integer; record backbone version/date",
+      "in_gms": false
+    },
+    {
+      "field_id": "health_documents_claimed",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Health/vet documents claimed",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "identification_confidence",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Confidence of identification",
+      "standardization_notes": "Numeric; define scale (0-1 or 0-100)",
+      "in_gms": false
+    },
+    {
+      "field_id": "identification_method",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "How identified",
+      "standardization_notes": "Controlled list (visual, text_only, seller_claim, expert, ML, mixed)",
+      "in_gms": false
+    },
+    {
+      "field_id": "illegality_indicators",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Reason codes for suspected illegality",
+      "standardization_notes": "Controlled list; stable codebook",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_CITES",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "CITES Appendix indicator",
+      "standardization_notes": "Controlled list (I, II, III, none, unknown)",
       "in_gms": true
     },
     {
-      "field_id": "quantity_unit",
-      "category": "Product and specimen",
-      "description": "Unit associated with the quantity.",
-      "standardization_notes": "Normalize units where possible.",
+      "field_id": "item_category",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Broad category",
+      "standardization_notes": "Controlled list (live_animal, part, derivative, plant, timber, medicine, other)",
       "in_gms": false
     },
     {
-      "field_id": "sex_or_morph",
-      "category": "Product and specimen",
-      "description": "Observed or advertised sex, morph, color form, or breed.",
-      "standardization_notes": "Capture only if relevant to trade pattern or identification.",
-      "in_gms": false
-    },
-    {
-      "field_id": "origin_claim",
-      "category": "Product and specimen",
-      "description": "Claim about wild-caught, captive-bred, farmed, cultivated, antique, or unknown origin.",
-      "standardization_notes": "Treat claims as unverified unless independently supported.",
+      "field_id": "item_class",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Class",
+      "standardization_notes": "Controlled list",
       "in_gms": true
     },
     {
-      "field_id": "permit_or_document_claim",
-      "category": "Product and specimen",
-      "description": "Claim that permits, paperwork, certificates, or legal documents are available.",
-      "standardization_notes": "Capture the claim without treating it as validated.",
-      "in_gms": false
-    },
-    {
-      "field_id": "trade_intent",
-      "category": "Trade signal",
-      "description": "Evidence that content represents an offer, request, sale, purchase, auction, brokered trade, or promotion.",
-      "standardization_notes": "Capture normalized intent and supporting cue.",
+      "field_id": "item_common_name",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Standardized common/vernacular name",
+      "standardization_notes": "Use GBIF/NCBI backbone or Catalogue of Life per language",
       "in_gms": true
     },
     {
-      "field_id": "trade_cue_text",
-      "category": "Trade signal",
-      "description": "Specific words, phrases, emojis, or context indicating trade intent.",
-      "standardization_notes": "Preserve original text if needed for review.",
+      "field_id": "item_common_name_raw",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Common name as written in the post",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_common_name_website",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Common grouping label (e.g., Parrots, Primates, Big Cats)",
+      "standardization_notes": "Controlled vernacular list",
       "in_gms": true
     },
     {
-      "field_id": "price_value",
-      "category": "Trade signal",
-      "description": "Advertised price, bid, requested value, or visible monetary amount.",
-      "standardization_notes": "Store numeric amount separately from raw text.",
+      "field_id": "item_count",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Quantity",
+      "standardization_notes": "Numeric",
       "in_gms": true
     },
     {
-      "field_id": "price_currency",
-      "category": "Trade signal",
-      "description": "Currency, token, barter term, or exchange unit associated with the offer.",
-      "standardization_notes": "Use ISO currency codes when clear.",
+      "field_id": "item_count_max",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Maximum quantity if range",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_count_min",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Minimum quantity if range",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_family",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Family",
+      "standardization_notes": "Controlled list",
       "in_gms": true
     },
     {
-      "field_id": "price_raw_text",
-      "category": "Trade signal",
-      "description": "Raw price text as shown in the content.",
-      "standardization_notes": "Useful when symbols or shorthand are ambiguous.",
-      "in_gms": false
-    },
-    {
-      "field_id": "negotiation_cue",
-      "category": "Trade signal",
-      "description": "Whether price, availability, or delivery appears negotiable or private-message based.",
-      "standardization_notes": "Use visible cues only.",
-      "in_gms": false
-    },
-    {
-      "field_id": "availability_status",
-      "category": "Trade signal",
-      "description": "Observed availability such as available, sold, wanted, pre-order, or unknown.",
-      "standardization_notes": "Use controlled values.",
-      "in_gms": false
-    },
-    {
-      "field_id": "shipping_or_delivery_cue",
-      "category": "Trade signal",
-      "description": "References to pickup, delivery, shipping, concealment, cross-border movement, or logistics.",
-      "standardization_notes": "Record only cues relevant to scope and safety protocols.",
+      "field_id": "item_genus",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Genus",
+      "standardization_notes": "Controlled list",
       "in_gms": true
     },
     {
-      "field_id": "payment_cue",
-      "category": "Trade signal",
-      "description": "Visible payment method or payment-platform cue.",
-      "standardization_notes": "Avoid collecting account numbers or personal financial details.",
-      "in_gms": false
-    },
-    {
-      "field_id": "location_cue",
-      "category": "Location and jurisdiction",
-      "description": "Self-reported, inferred, platform-provided, or content-derived geographic clue.",
-      "standardization_notes": "Separate raw location text, normalized place, and confidence.",
+      "field_id": "item_hasEggs",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Eggs involved",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": true
     },
     {
-      "field_id": "location_raw_text",
-      "category": "Location and jurisdiction",
-      "description": "Raw location text visible in the content or profile.",
-      "standardization_notes": "Preserve ambiguity; do not over-geocode.",
+      "field_id": "item_id",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Unique item line within a record",
+      "standardization_notes": "UUID or integer index within record",
       "in_gms": false
     },
     {
-      "field_id": "country",
-      "category": "Location and jurisdiction",
-      "description": "Normalized country associated with the record when justified.",
-      "standardization_notes": "Use ISO country names or codes.",
-      "in_gms": false
-    },
-    {
-      "field_id": "admin_area",
-      "category": "Location and jurisdiction",
-      "description": "State, province, region, or administrative area when justified.",
-      "standardization_notes": "Avoid precise locations unless necessary and authorized.",
-      "in_gms": false
-    },
-    {
-      "field_id": "jurisdiction_or_market",
-      "category": "Location and jurisdiction",
-      "description": "Country, region, or market context relevant to legal interpretation, referral, or sampling.",
-      "standardization_notes": "Do not infer jurisdiction from weak cues without notes.",
+      "field_id": "item_order",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Order",
+      "standardization_notes": "Controlled list",
       "in_gms": true
     },
     {
-      "field_id": "location_confidence",
-      "category": "Location and jurisdiction",
-      "description": "Confidence in the normalized location or jurisdiction.",
-      "standardization_notes": "Use controlled values such as low, medium, high.",
-      "in_gms": false
-    },
-    {
-      "field_id": "engagement_signals",
-      "category": "Engagement and network",
-      "description": "Visible likes, shares, comments, bids, replies, members, or interaction indicators.",
-      "standardization_notes": "Counts change; record date/time if used.",
-      "in_gms": false
-    },
-    {
-      "field_id": "comment_count",
-      "category": "Engagement and network",
-      "description": "Visible comment or reply count.",
-      "standardization_notes": "Use as context, not as proof of trade.",
-      "in_gms": false
-    },
-    {
-      "field_id": "share_count",
-      "category": "Engagement and network",
-      "description": "Visible share or repost count.",
-      "standardization_notes": "Use cautiously because visibility differs by platform.",
-      "in_gms": false
-    },
-    {
-      "field_id": "member_count",
-      "category": "Engagement and network",
-      "description": "Visible group, channel, or audience size.",
-      "standardization_notes": "Record only when relevant to platform assessment.",
-      "in_gms": false
-    },
-    {
-      "field_id": "external_link",
-      "category": "Engagement and network",
-      "description": "External website, payment, messaging, or cross-platform link referenced.",
-      "standardization_notes": "Classify link type without over-collecting sensitive identifiers.",
-      "in_gms": false
-    },
-    {
-      "field_id": "network_notes",
-      "category": "Engagement and network",
-      "description": "Structured notes on relationships, repeated actors, or cross-platform movement.",
-      "standardization_notes": "Use only when authorized and relevant.",
-      "in_gms": false
-    },
-    {
-      "field_id": "iucn_status",
-      "category": "Legal, policy, and conservation",
-      "description": "IUCN Red List category associated with the identified taxon when available.",
-      "standardization_notes": "Record source/date for conservation statuses in analytical outputs.",
-      "in_gms": false
-    },
-    {
-      "field_id": "cites_status",
-      "category": "Legal, policy, and conservation",
-      "description": "CITES appendix or listing information associated with the taxon when available.",
-      "standardization_notes": "Use as a reference flag, not final legal advice.",
+      "field_id": "item_phylum",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Phylum",
+      "standardization_notes": "Controlled list",
       "in_gms": true
+    },
+    {
+      "field_id": "item_scientific_name",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Standardized scientific name",
+      "standardization_notes": "Use GBIF/NCBI backbone or Catalogue of Life; store identifiers",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_scientific_name_raw",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Scientific name as written",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_species",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Species epithet or binomial (your convention)",
+      "standardization_notes": "Define convention",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_taxa",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Taxa grouping label (eg Birds/Reptiles)",
+      "standardization_notes": "Controlled list",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_type",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Item type in your system",
+      "standardization_notes": "Controlled list",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_unit",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Unit of quantity",
+      "standardization_notes": "Controlled list",
+      "in_gms": true
+    },
+    {
+      "field_id": "itis_tsn",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "ITIS TSN",
+      "standardization_notes": "Integer",
+      "in_gms": false
+    },
+    {
+      "field_id": "iucn_category",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "IUCN Red List category",
+      "standardization_notes": "Controlled list (LC, NT, VU, EN, CR, EW, EX, DD, NE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "iucn_taxon_id",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "IUCN taxon ID",
+      "standardization_notes": "String; access may be restricted by license",
+      "in_gms": false
+    },
+    {
+      "field_id": "legality_assessment",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Suspected legality",
+      "standardization_notes": "Controlled list (legal, suspect_illegal, illegal, unknown)",
+      "in_gms": false
+    },
+    {
+      "field_id": "life_stage",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Life stage",
+      "standardization_notes": "Controlled list (adult, juvenile, egg, seed, unknown)",
+      "in_gms": false
     },
     {
       "field_id": "national_protection_status",
-      "category": "Legal, policy, and conservation",
-      "description": "Relevant national or local protection flag.",
-      "standardization_notes": "Jurisdiction-dependent; document source.",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "National protection tier",
+      "standardization_notes": "Country-specific controlled list; document source/version",
       "in_gms": false
     },
     {
-      "field_id": "legal_or_policy_flag",
-      "category": "Legal, policy, and conservation",
-      "description": "Relevant law, CITES appendix, platform policy, internal category, or escalation concern.",
-      "standardization_notes": "Use as triage, not final legal determination.",
+      "field_id": "origin_claimed",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Claimed source (wild/captive/farmed)",
+      "standardization_notes": "Prefer CITES source codes where applicable",
+      "in_gms": false
+    },
+    {
+      "field_id": "permit_claimed_flag",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Permits claimed",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "permit_number_raw",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Permit number as posted",
+      "standardization_notes": "Sensitive; store redacted + hashed variant for sharing",
+      "in_gms": false
+    },
+    {
+      "field_id": "permit_type_claimed",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Type of permit claimed",
+      "standardization_notes": "Controlled list (CITES, national, veterinary, other, unknown)",
+      "in_gms": false
+    },
+    {
+      "field_id": "product_description_raw",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Raw description of product",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "product_form",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Form of item (skin, horn, ivory, meat, pet, etc)",
+      "standardization_notes": "Controlled list; consortium codebook",
+      "in_gms": false
+    },
+    {
+      "field_id": "sex",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Sex",
+      "standardization_notes": "Controlled list (male, female, mixed, unknown)",
+      "in_gms": false
+    },
+    {
+      "field_id": "taxon_rank",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Rank used for identification",
+      "standardization_notes": "Controlled list (species, genus, family, etc)",
+      "in_gms": false
+    },
+    {
+      "field_id": "volume_unit",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Volume unit",
+      "standardization_notes": "Controlled list (mL, L, gal)",
+      "in_gms": false
+    },
+    {
+      "field_id": "volume_value",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Volume value if stated",
+      "standardization_notes": "Numeric; store unit separately",
+      "in_gms": false
+    },
+    {
+      "field_id": "weight_unit",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Weight unit",
+      "standardization_notes": "Controlled list (g, kg, lb, oz)",
+      "in_gms": false
+    },
+    {
+      "field_id": "weight_value",
+      "category": "Item, species, taxonomy, and product fields",
+      "description": "Weight value if stated",
+      "standardization_notes": "Numeric; store unit separately",
+      "in_gms": false
+    },
+    {
+      "field_id": "case_id",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Internal case identifier",
+      "standardization_notes": "UUID/structured code",
       "in_gms": true
     },
     {
-      "field_id": "suspected_violation_type",
-      "category": "Legal, policy, and conservation",
-      "description": "Observed or suspected category of concern.",
-      "standardization_notes": "Avoid definitive legal language unless validated by authorized experts.",
+      "field_id": "case_status",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Case lifecycle status",
+      "standardization_notes": "Controlled list (open, active, paused, closed)",
       "in_gms": false
     },
     {
-      "field_id": "enforcement_relevance",
-      "category": "Legal, policy, and conservation",
-      "description": "Potential usefulness for enforcement, compliance, or policy response.",
-      "standardization_notes": "Use a documented scoring scale.",
+      "field_id": "court_case_reference",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Court reference",
+      "standardization_notes": "Sensitive; access-controlled",
       "in_gms": false
     },
     {
-      "field_id": "sensitivity_rating",
-      "category": "Governance and quality",
-      "description": "Handling level for sensitive taxa, personal data, investigator safety, enforcement value, or vulnerable contexts.",
-      "standardization_notes": "Tie ratings to retention, access, sharing, and redaction rules.",
+      "field_id": "enforcement_outcome",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Known outcome",
+      "standardization_notes": "Controlled list (seizure, arrest, warning, takedown, unknown)",
+      "in_gms": false
+    },
+    {
+      "field_id": "intelligence_product_type",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Product type",
+      "standardization_notes": "Controlled list (alert, brief, case_file, memo)",
+      "in_gms": false
+    },
+    {
+      "field_id": "is_case_of_interest",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Flag for elevated interest",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": true
     },
     {
-      "field_id": "data_handling_notes",
-      "category": "Governance and quality",
-      "description": "Instructions for retention, redaction, sharing restrictions, consent, or escalation pathway.",
-      "standardization_notes": "Complete before sharing sensitive records.",
+      "field_id": "legal_basis_jurisdiction",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Jurisdiction",
+      "standardization_notes": "ISO 3166-1 alpha-3",
+      "in_gms": false
+    },
+    {
+      "field_id": "outcome_date_utc",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Outcome date",
+      "standardization_notes": "ISO 8601 UTC",
+      "in_gms": false
+    },
+    {
+      "field_id": "prosecution_flag",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Prosecution initiated",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_channel",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Referral channel",
+      "standardization_notes": "Controlled list (email, portal, meeting, secure_link)",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_date_utc",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Referral date",
+      "standardization_notes": "ISO 8601 UTC",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_recipient_org",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Recipient agency",
+      "standardization_notes": "Canonical org registry code",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_reference_id",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Recipient reference number",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_to_le_flag",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Referred to law enforcement",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "seizure_quantity",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Quantity seized",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "seizure_species_confirmed",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Confirmed species post-seizure",
+      "standardization_notes": "Scientific name standard + taxon ID",
+      "in_gms": false
+    },
+    {
+      "field_id": "seizure_unit",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Unit seized",
+      "standardization_notes": "Controlled list aligned to item_unit",
+      "in_gms": false
+    },
+    {
+      "field_id": "suspected_offense_type",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Suspected offense category",
+      "standardization_notes": "Controlled list aligned to consortium taxonomy",
+      "in_gms": false
+    },
+    {
+      "field_id": "was_recommended",
+      "category": "Legal and enforcement tracking (optional)",
+      "description": "Recommended/escalated",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": true
     },
     {
-      "field_id": "reviewer_notes",
-      "category": "Governance and quality",
-      "description": "Structured notes documenting assumptions, translation issues, uncertainty, review decisions, or quality concerns.",
-      "standardization_notes": "Keep notes factual and suitable for audit.",
+      "field_id": "dedupe_key",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Key used to detect duplicates",
+      "standardization_notes": "Deterministic string; document construction",
+      "in_gms": false
+    },
+    {
+      "field_id": "duplicate_group_id",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Duplicate group ID",
+      "standardization_notes": "UUID",
+      "in_gms": false
+    },
+    {
+      "field_id": "duplicate_match_method",
+      "category": "Linking, dedupe, and network fields",
+      "description": "How match was made",
+      "standardization_notes": "Controlled list (url, hash, text_sim, image_phash, seller_id)",
+      "in_gms": false
+    },
+    {
+      "field_id": "duplicate_of_record_id",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Canonical record id if duplicate",
+      "standardization_notes": "UUID",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_multiple_detections",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Detected multiple times",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
       "in_gms": true
     },
     {
-      "field_id": "quality_flag",
-      "category": "Governance and quality",
-      "description": "Data quality flag such as complete, partial, uncertain, needs review, or exclude.",
-      "standardization_notes": "Use to filter outputs and QA queues.",
+      "field_id": "network_edge_id",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Network edge id",
+      "standardization_notes": "Stable ID mapping",
       "in_gms": false
     },
     {
-      "field_id": "exclusion_reason",
-      "category": "Governance and quality",
-      "description": "Reason a record is excluded from analysis or escalation.",
-      "standardization_notes": "Keep controlled values for reproducibility.",
+      "field_id": "network_edge_type",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Network edge type",
+      "standardization_notes": "Controlled list (contact_shared, reposted, co_listed, co_admin, co_comment)",
       "in_gms": false
     },
     {
-      "field_id": "escalation_status",
-      "category": "Governance and quality",
-      "description": "Whether and how the record was referred, escalated, or retained internally.",
-      "standardization_notes": "Follow organizational protocols.",
+      "field_id": "network_node_id",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Network node id",
+      "standardization_notes": "Stable ID mapping to entity",
       "in_gms": false
     },
     {
-      "field_id": "retention_date",
-      "category": "Governance and quality",
-      "description": "Date after which the record should be reviewed, deleted, archived, or minimized.",
-      "standardization_notes": "Align with data retention policy.",
+      "field_id": "related_record_ids",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Related records",
+      "standardization_notes": "Prefer relation table; list if needed",
       "in_gms": false
+    },
+    {
+      "field_id": "relatedness_type",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Relation type",
+      "standardization_notes": "Controlled list (same_seller, same_group, repost, same_images, same_phone)",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_email_hash",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Hashed email for matching",
+      "standardization_notes": "Salted hash; document policy",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_payment_hash",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Hashed payment handle for matching",
+      "standardization_notes": "Salted hash; document policy",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_phone_hash",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Hashed phone for matching",
+      "standardization_notes": "Salted hash; document policy",
+      "in_gms": false
+    },
+    {
+      "field_id": "similarity_score",
+      "category": "Linking, dedupe, and network fields",
+      "description": "Similarity score",
+      "standardization_notes": "Numeric; define range",
+      "in_gms": false
+    },
+    {
+      "field_id": "capture_browser_user_agent",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Capture browser UA",
+      "standardization_notes": "Standard UA string",
+      "in_gms": false
+    },
+    {
+      "field_id": "chain_of_custody_id",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Chain of custody reference",
+      "standardization_notes": "UUID/reference code",
+      "in_gms": false
+    },
+    {
+      "field_id": "evidence_access_control",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Evidence access class",
+      "standardization_notes": "Controlled list (team, org, LE_only)",
+      "in_gms": false
+    },
+    {
+      "field_id": "evidence_storage_system",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Evidence storage system",
+      "standardization_notes": "Controlled list (S3, Drive, internal vault)",
+      "in_gms": false
+    },
+    {
+      "field_id": "image_text",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Text extracted from images (OCR)",
+      "standardization_notes": "Record language + method",
+      "in_gms": true
+    },
+    {
+      "field_id": "integrity_check_date_utc",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Evidence integrity check date",
+      "standardization_notes": "ISO 8601 UTC",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_image",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Image(s) captured/linked",
+      "standardization_notes": "Store secure evidence refs",
+      "in_gms": true
+    },
+    {
+      "field_id": "media_count",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Number of media items",
+      "standardization_notes": "Integer",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_exif_datetime",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "EXIF datetime",
+      "standardization_notes": "ISO 8601",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_exif_gps_lat",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "EXIF GPS latitude",
+      "standardization_notes": "WGS84; sensitive",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_exif_gps_lon",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "EXIF GPS longitude",
+      "standardization_notes": "WGS84; sensitive",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_exif_present",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "EXIF present",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_file_hash_md5",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "MD5 hash (legacy)",
+      "standardization_notes": "Hex string",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_file_hash_sha256",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "SHA-256 hash for evidence",
+      "standardization_notes": "Hex string; preferred",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_phash",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Perceptual hash",
+      "standardization_notes": "Document algorithm (pHash/dHash/aHash)",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_types",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Types present",
+      "standardization_notes": "Controlled list (image, video, audio, document)",
+      "in_gms": false
+    },
+    {
+      "field_id": "media_url_list",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "List of media URLs",
+      "standardization_notes": "Normalize; access controls may apply",
+      "in_gms": false
+    },
+    {
+      "field_id": "screen_recording_flag",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Screen recording captured",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "screenshot_captured_flag",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "Screenshots taken",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "screenshot_file_refs",
+      "category": "Media, evidence, and forensics metadata",
+      "description": "References to stored screenshots",
+      "standardization_notes": "Use secure storage URIs",
+      "in_gms": false
+    },
+    {
+      "field_id": "access_level",
+      "category": "Platform, content, and discovery context",
+      "description": "Public vs requires login/membership",
+      "standardization_notes": "Controlled list (public, logged_in, closed_group, invite_only)",
+      "in_gms": false
+    },
+    {
+      "field_id": "ad_language",
+      "category": "Platform, content, and discovery context",
+      "description": "Detected language of ad/content",
+      "standardization_notes": "ISO 639-1/2; record method",
+      "in_gms": true
+    },
+    {
+      "field_id": "channel_id",
+      "category": "Platform, content, and discovery context",
+      "description": "Channel ID (video platforms)",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "channel_name",
+      "category": "Platform, content, and discovery context",
+      "description": "Channel name",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "coded_language_flag",
+      "category": "Platform, content, and discovery context",
+      "description": "Coded terms suspected",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "coded_terms",
+      "category": "Platform, content, and discovery context",
+      "description": "Coded terms list",
+      "standardization_notes": "Controlled list where possible; else free text",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_duration_seconds",
+      "category": "Platform, content, and discovery context",
+      "description": "Video/audio duration",
+      "standardization_notes": "Seconds as numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_hashtags",
+      "category": "Platform, content, and discovery context",
+      "description": "Hashtags",
+      "standardization_notes": "Store list normalized + raw",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_id",
+      "category": "Platform, content, and discovery context",
+      "description": "Platform content identifier",
+      "standardization_notes": "Store exact platform ID string",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_keywords",
+      "category": "Platform, content, and discovery context",
+      "description": "Extracted keywords",
+      "standardization_notes": "Token list; document extraction method",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_original_text",
+      "category": "Platform, content, and discovery context",
+      "description": "Full original text (if title+body not enough)",
+      "standardization_notes": "Preserve exactly",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_permalink",
+      "category": "Platform, content, and discovery context",
+      "description": "Stable permalink (if distinct)",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_summary",
+      "category": "Platform, content, and discovery context",
+      "description": "Analyst summary",
+      "standardization_notes": "Avoid speculation; label assumptions",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_translation",
+      "category": "Platform, content, and discovery context",
+      "description": "Translation (if needed)",
+      "standardization_notes": "Keep separate from original",
+      "in_gms": false
+    },
+    {
+      "field_id": "content_type",
+      "category": "Platform, content, and discovery context",
+      "description": "Content type",
+      "standardization_notes": "Controlled list (post, listing, story, reel, comment, profile, channel, group)",
+      "in_gms": false
+    },
+    {
+      "field_id": "date_observed_first_utc",
+      "category": "Platform, content, and discovery context",
+      "description": "First observed by monitoring team",
+      "standardization_notes": "ISO 8601 UTC",
+      "in_gms": false
+    },
+    {
+      "field_id": "date_observed_last_utc",
+      "category": "Platform, content, and discovery context",
+      "description": "Last confirmed live",
+      "standardization_notes": "ISO 8601 UTC",
+      "in_gms": false
+    },
+    {
+      "field_id": "date_posted_local",
+      "category": "Platform, content, and discovery context",
+      "description": "Local timestamp shown on platform",
+      "standardization_notes": "ISO 8601 with offset if possible",
+      "in_gms": false
+    },
+    {
+      "field_id": "discovery_query_language",
+      "category": "Platform, content, and discovery context",
+      "description": "Language of query terms",
+      "standardization_notes": "ISO 639-1/2",
+      "in_gms": false
+    },
+    {
+      "field_id": "engagement_comments",
+      "category": "Platform, content, and discovery context",
+      "description": "Comment count",
+      "standardization_notes": "Integer; unknown as NA",
+      "in_gms": false
+    },
+    {
+      "field_id": "engagement_likes",
+      "category": "Platform, content, and discovery context",
+      "description": "Likes/reactions count",
+      "standardization_notes": "Integer; unknown as NA",
+      "in_gms": false
+    },
+    {
+      "field_id": "engagement_shares",
+      "category": "Platform, content, and discovery context",
+      "description": "Share/forward count",
+      "standardization_notes": "Integer; unknown as NA",
+      "in_gms": false
+    },
+    {
+      "field_id": "engagement_views",
+      "category": "Platform, content, and discovery context",
+      "description": "View count (video)",
+      "standardization_notes": "Integer; unknown as NA",
+      "in_gms": false
+    },
+    {
+      "field_id": "group_id",
+      "category": "Platform, content, and discovery context",
+      "description": "Group/community ID",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "group_name",
+      "category": "Platform, content, and discovery context",
+      "description": "Group/community name",
+      "standardization_notes": "Preserve original; store translated separately if needed",
+      "in_gms": true
+    },
+    {
+      "field_id": "group_type",
+      "category": "Platform, content, and discovery context",
+      "description": "Group type",
+      "standardization_notes": "Controlled list (e.g., Social Media, MEssaging App)",
+      "in_gms": true
+    },
+    {
+      "field_id": "is_group",
+      "category": "Platform, content, and discovery context",
+      "description": "Whether content is from a group/community",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_date_posted",
+      "category": "Platform, content, and discovery context",
+      "description": "Date/time posted",
+      "standardization_notes": "ISO 8601 UTC preferred",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_text",
+      "category": "Platform, content, and discovery context",
+      "description": "Body text",
+      "standardization_notes": "Preserve original",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_title",
+      "category": "Platform, content, and discovery context",
+      "description": "Title/headline text",
+      "standardization_notes": "Preserve original",
+      "in_gms": true
+    },
+    {
+      "field_id": "moderation_status",
+      "category": "Platform, content, and discovery context",
+      "description": "Visible/removed/unknown",
+      "standardization_notes": "Controlled list; often unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "page_id",
+      "category": "Platform, content, and discovery context",
+      "description": "Page/business ID",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "page_name",
+      "category": "Platform, content, and discovery context",
+      "description": "Page/business name",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "platform_country",
+      "category": "Platform, content, and discovery context",
+      "description": "Platform primary jurisdiction (optional)",
+      "standardization_notes": "ISO 3166-1 alpha-2/3",
+      "in_gms": false
+    },
+    {
+      "field_id": "platform_language_default",
+      "category": "Platform, content, and discovery context",
+      "description": "Platform default language (optional)",
+      "standardization_notes": "ISO 639-1/2",
+      "in_gms": false
+    },
+    {
+      "field_id": "platform_name",
+      "category": "Platform, content, and discovery context",
+      "description": "Platform name",
+      "standardization_notes": "Controlled list; canonical names",
+      "in_gms": true
+    },
+    {
+      "field_id": "platform_type",
+      "category": "Platform, content, and discovery context",
+      "description": "Platform category",
+      "standardization_notes": "Controlled list (social, ecommerce, forum, messaging, classifieds, web)",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_source",
+      "category": "Platform, content, and discovery context",
+      "description": "How content was reached",
+      "standardization_notes": "Controlled list (SERP, internal_search, link, tip, scraper)",
+      "in_gms": false
+    },
+    {
+      "field_id": "referral_url",
+      "category": "Platform, content, and discovery context",
+      "description": "Referring URL (if any)",
+      "standardization_notes": "Normalize; can be NA",
+      "in_gms": false
+    },
+    {
+      "field_id": "search_term",
+      "category": "Platform, content, and discovery context",
+      "description": "Search term/query used to discover",
+      "standardization_notes": "Store as executed; may be sensitive",
+      "in_gms": true
+    },
+    {
+      "field_id": "thread_id",
+      "category": "Platform, content, and discovery context",
+      "description": "Thread/discussion ID",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "url",
+      "category": "Platform, content, and discovery context",
+      "description": "URL of the content",
+      "standardization_notes": "Store canonical + raw",
+      "in_gms": true
+    },
+    {
+      "field_id": "url_canonical",
+      "category": "Platform, content, and discovery context",
+      "description": "Normalized canonical URL",
+      "standardization_notes": "Lowercase host; strip tracking params when policy allows",
+      "in_gms": false
+    },
+    {
+      "field_id": "url_raw",
+      "category": "Platform, content, and discovery context",
+      "description": "Raw URL as captured",
+      "standardization_notes": "Preserve exactly for evidence fidelity",
+      "in_gms": false
+    },
+    {
+      "field_id": "website_type",
+      "category": "Platform, content, and discovery context",
+      "description": "Website/platform type in your system",
+      "standardization_notes": "Controlled list (e.g., Social Media, E-commerce, B2B)",
+      "in_gms": true
+    },
+    {
+      "field_id": "availability_status",
+      "category": "Price, currency, and commercial terms",
+      "description": "Availability (in_stock/sold/unknown)",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "bulk_terms",
+      "category": "Price, currency, and commercial terms",
+      "description": "Wholesale/bulk terms",
+      "standardization_notes": "Structured where possible",
+      "in_gms": false
+    },
+    {
+      "field_id": "discount_details",
+      "category": "Price, currency, and commercial terms",
+      "description": "Discount terms",
+      "standardization_notes": "Preserve raw or structure fields",
+      "in_gms": false
+    },
+    {
+      "field_id": "discount_flag",
+      "category": "Price, currency, and commercial terms",
+      "description": "Discount mentioned",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "item_currency",
+      "category": "Price, currency, and commercial terms",
+      "description": "Currency",
+      "standardization_notes": "ISO 4217",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_price",
+      "category": "Price, currency, and commercial terms",
+      "description": "Listed price value",
+      "standardization_notes": "Numeric; no currency symbols",
+      "in_gms": true
+    },
+    {
+      "field_id": "min_order_quantity",
+      "category": "Price, currency, and commercial terms",
+      "description": "Minimum order quantity",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_available",
+      "category": "Price, currency, and commercial terms",
+      "description": "Whether a price is stated",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": true
+    },
+    {
+      "field_id": "price_currency_raw",
+      "category": "Price, currency, and commercial terms",
+      "description": "Currency as written",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_max",
+      "category": "Price, currency, and commercial terms",
+      "description": "Maximum price if range",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_min",
+      "category": "Price, currency, and commercial terms",
+      "description": "Minimum price if range",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_total_value",
+      "category": "Price, currency, and commercial terms",
+      "description": "Total transaction value if stated",
+      "standardization_notes": "Numeric; define inclusion of shipping/tax",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_type",
+      "category": "Price, currency, and commercial terms",
+      "description": "Asking/negotiated/auction/wholesale",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "price_unit",
+      "category": "Price, currency, and commercial terms",
+      "description": "Unit price applies to",
+      "standardization_notes": "Controlled list aligned to item_unit",
+      "in_gms": false
+    },
+    {
+      "field_id": "shipping_cost_currency",
+      "category": "Price, currency, and commercial terms",
+      "description": "Shipping cost currency",
+      "standardization_notes": "ISO 4217",
+      "in_gms": false
+    },
+    {
+      "field_id": "shipping_cost_value",
+      "category": "Price, currency, and commercial terms",
+      "description": "Shipping cost",
+      "standardization_notes": "Numeric",
+      "in_gms": false
+    },
+    {
+      "field_id": "tax_included_flag",
+      "category": "Price, currency, and commercial terms",
+      "description": "Tax included flag",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "trade_terms",
+      "category": "Price, currency, and commercial terms",
+      "description": "Trade/Incoterms if stated",
+      "standardization_notes": "Controlled list (EXW, FOB, CIF, etc)",
+      "in_gms": false
+    },
+    {
+      "field_id": "contact_methods_json",
+      "category": "Seller and account entity fields",
+      "description": "Structured contact methods",
+      "standardization_notes": "JSON schema with type/value/raw/confidence",
+      "in_gms": false
+    },
+    {
+      "field_id": "payment_method",
+      "category": "Seller and account entity fields",
+      "description": "Payment method(s) mentioned",
+      "standardization_notes": "Controlled list, Comma Delimited (e.g., Visa/Mastera, PayPal, Cashapp)",
+      "in_gms": true
+    },
+    {
+      "field_id": "seller_account_type",
+      "category": "Seller and account entity fields",
+      "description": "Individual/business/breeder/shop/unknown",
+      "standardization_notes": "Controlled list",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_bio_text",
+      "category": "Seller and account entity fields",
+      "description": "Profile bio/about",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_email",
+      "category": "Seller and account entity fields",
+      "description": "Email address",
+      "standardization_notes": "Store raw only if policy allows; hash for sharing",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_known",
+      "category": "Seller and account entity fields",
+      "description": "Whether any seller contact info is present",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": true
+    },
+    {
+      "field_id": "seller_contact_other",
+      "category": "Seller and account entity fields",
+      "description": "Other contact info",
+      "standardization_notes": "Prefer structured contact_methods_json",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_phone",
+      "category": "Seller and account entity fields",
+      "description": "Phone number",
+      "standardization_notes": "E.164 preferred + raw; hash for sharing",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_telegram",
+      "category": "Seller and account entity fields",
+      "description": "Telegram handle/link",
+      "standardization_notes": "Normalize @handle + preserve raw",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_wechat",
+      "category": "Seller and account entity fields",
+      "description": "WeChat ID",
+      "standardization_notes": "String",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_contact_whatsapp",
+      "category": "Seller and account entity fields",
+      "description": "WhatsApp contact",
+      "standardization_notes": "E.164 where possible",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_display_name",
+      "category": "Seller and account entity fields",
+      "description": "Seller display name",
+      "standardization_notes": "Preserve original",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_entity_id",
+      "category": "Seller and account entity fields",
+      "description": "Internal seller entity ID",
+      "standardization_notes": "UUID; used for entity resolution",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_entity_resolution_status",
+      "category": "Seller and account entity fields",
+      "description": "Entity resolution status",
+      "standardization_notes": "Controlled list (new, matched, merged, split_needed)",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_external_links",
+      "category": "Seller and account entity fields",
+      "description": "External links from profile",
+      "standardization_notes": "Normalize and store list",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_followers_count",
+      "category": "Seller and account entity fields",
+      "description": "Followers/subscribers",
+      "standardization_notes": "Integer",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_following_count",
+      "category": "Seller and account entity fields",
+      "description": "Following count",
+      "standardization_notes": "Integer",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_linked_entity_ids",
+      "category": "Seller and account entity fields",
+      "description": "Linked seller_entity_id values",
+      "standardization_notes": "Prefer relation table; list if needed",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_payment_handles",
+      "category": "Seller and account entity fields",
+      "description": "Payment handles (eg PayPal IDs)",
+      "standardization_notes": "Controlled type list; hash sensitive IDs",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_posts_count",
+      "category": "Seller and account entity fields",
+      "description": "Total posts/listings",
+      "standardization_notes": "Integer",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_profile_image_hash",
+      "category": "Seller and account entity fields",
+      "description": "Profile image hash for matching",
+      "standardization_notes": "pHash recommended; record algorithm",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_profile_language",
+      "category": "Seller and account entity fields",
+      "description": "Language of profile",
+      "standardization_notes": "ISO 639-1/2",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_profile_location_text",
+      "category": "Seller and account entity fields",
+      "description": "Location text in profile",
+      "standardization_notes": "Preserve raw; parse to structured geo fields if possible",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_profile_url",
+      "category": "Seller and account entity fields",
+      "description": "Seller profile URL",
+      "standardization_notes": "Store canonical + raw if needed",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_user_id",
+      "category": "Seller and account entity fields",
+      "description": "Platform user ID",
+      "standardization_notes": "Store exact platform ID string",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_username",
+      "category": "Seller and account entity fields",
+      "description": "Seller handle/username",
+      "standardization_notes": "Preserve exact and normalized lowercase",
+      "in_gms": false
+    },
+    {
+      "field_id": "seller_verified_flag",
+      "category": "Seller and account entity fields",
+      "description": "Verified badge present",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": false
+    },
+    {
+      "field_id": "crossborder_flag",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Cross-border implied",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "delivery_method",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Delivery method (system)",
+      "standardization_notes": "Controlled list",
+      "in_gms": true
+    },
+    {
+      "field_id": "delivery_time_text",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Claimed delivery time",
+      "standardization_notes": "Preserve raw; optional parsed numeric days",
+      "in_gms": false
+    },
+    {
+      "field_id": "destination_country",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Destination country (claimed/inferred)",
+      "standardization_notes": "ISO 3166-1 alpha-3 preferred",
+      "in_gms": true
+    },
+    {
+      "field_id": "is_delivery_available",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Delivery/shipping offered (system flag)",
+      "standardization_notes": "Boolean (TRUE/FALSE)",
+      "in_gms": true
+    },
+    {
+      "field_id": "item_sold_in",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Market country where sold",
+      "standardization_notes": "ISO 3166-1 alpha-3",
+      "in_gms": true
+    },
+    {
+      "field_id": "meetup_flag",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Meetup/in-person handoff implied",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "meetup_location_text",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Meetup location (raw)",
+      "standardization_notes": "Preserve raw + parse",
+      "in_gms": false
+    },
+    {
+      "field_id": "origin_country",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Origin country (claimed/inferred)",
+      "standardization_notes": "ISO 3166-1 alpha-3 preferred",
+      "in_gms": true
+    },
+    {
+      "field_id": "packaging_text",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Packaging/concealment mentions",
+      "standardization_notes": "Sensitive; handle with policy",
+      "in_gms": false
+    },
+    {
+      "field_id": "ship_available_flag",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Shipping offered",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown",
+      "in_gms": false
+    },
+    {
+      "field_id": "ship_destination_text",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Shipping destination (raw)",
+      "standardization_notes": "Preserve raw + parse to geo",
+      "in_gms": false
+    },
+    {
+      "field_id": "ship_methods",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Shipping methods mentioned",
+      "standardization_notes": "Controlled list (courier, post, bus, air, hand_carry, unknown)",
+      "in_gms": false
+    },
+    {
+      "field_id": "ship_origin_text",
+      "category": "Shipping, routes, and movement indicators",
+      "description": "Shipping origin (raw)",
+      "standardization_notes": "Preserve raw + parse to geo",
+      "in_gms": false
+    },
+    {
+      "field_id": "is_bycatch",
+      "category": "Vulnerability and bycatch indicators",
+      "description": "Whether the item is bycatch or incidental take",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown; capture basis (seller claim, expert assessment) in notes",
+      "in_gms": true
+    },
+    {
+      "field_id": "is_seller_vulnerable_group",
+      "category": "Vulnerability and bycatch indicators",
+      "description": "Whether the seller appears to be a vulnerable group member (only if explicitly stated or clearly indicated in context)",
+      "standardization_notes": "Boolean (TRUE/FALSE)/unknown; do NOT infer protected attributes; record only explicit self-identification or direct statements; document basis in note",
+      "in_gms": true
+    },
+    {
+      "field_id": "vulnerable_group",
+      "category": "Vulnerability and bycatch indicators",
+      "description": "Vulnerable group category (if applicable)",
+      "standardization_notes": "Controlled list agreed by consortium; allow 'unknown'; avoid free text drift",
+      "in_gms": true
     }
   ],
   "profiles": {
     "Global Monitoring System": [
-      "record_id",
-      "collection_datetime",
-      "posted_datetime",
-      "capture_method",
-      "source_url_or_reference",
-      "source_access_level",
+      "datahub",
+      "note",
+      "record_date",
+      "ad_location",
+      "location_known",
+      "location_level0",
+      "location_level1",
+      "location_level2",
+      "item_CITES",
+      "item_class",
+      "item_common_name",
+      "item_common_name_website",
+      "item_count",
+      "item_family",
+      "item_genus",
+      "item_hasEggs",
+      "item_order",
+      "item_phylum",
+      "item_species",
+      "item_taxa",
+      "item_type",
+      "item_unit",
+      "case_id",
+      "is_case_of_interest",
+      "was_recommended",
+      "item_multiple_detections",
+      "image_text",
+      "item_image",
+      "ad_language",
+      "group_name",
+      "group_type",
+      "is_group",
+      "item_date_posted",
+      "item_text",
+      "item_title",
       "platform_name",
-      "platform_type",
-      "platform_feature",
-      "account_reference",
-      "account_role",
-      "post_text_excerpt",
-      "media_type",
-      "common_name",
-      "scientific_name",
-      "identification_basis",
-      "identification_confidence",
-      "product_form",
-      "quantity",
-      "origin_claim",
-      "trade_intent",
-      "trade_cue_text",
-      "price_value",
-      "price_currency",
-      "shipping_or_delivery_cue",
-      "location_cue",
-      "jurisdiction_or_market",
-      "cites_status",
-      "legal_or_policy_flag",
-      "sensitivity_rating",
-      "data_handling_notes",
-      "reviewer_notes"
+      "search_term",
+      "url",
+      "website_type",
+      "item_currency",
+      "item_price",
+      "price_available",
+      "payment_method",
+      "seller_contact_known",
+      "delivery_method",
+      "destination_country",
+      "is_delivery_available",
+      "item_sold_in",
+      "origin_country",
+      "is_bycatch",
+      "is_seller_vulnerable_group",
+      "vulnerable_group"
     ],
-    "Minimal monitoring baseline": [
-      "record_id",
-      "collection_datetime",
-      "source_url_or_reference",
+    "Core public-monitoring export": [
+      "datahub",
+      "note",
+      "record_date",
+      "item_CITES",
+      "item_class",
+      "item_common_name",
+      "item_common_name_website",
+      "item_count",
+      "item_family",
+      "item_genus",
+      "item_hasEggs",
+      "item_order",
+      "item_phylum",
+      "item_species",
+      "item_taxa",
+      "item_type",
+      "item_unit",
+      "ad_language",
+      "group_name",
+      "group_type",
+      "is_group",
+      "item_date_posted",
+      "item_text",
+      "item_title",
       "platform_name",
-      "common_name",
-      "scientific_name",
-      "product_form",
-      "identification_confidence",
-      "trade_intent",
-      "sensitivity_rating",
-      "reviewer_notes"
+      "search_term",
+      "url",
+      "website_type"
     ],
-    "Species trend analysis": [
-      "record_id",
-      "collection_datetime",
-      "posted_datetime",
-      "platform_name",
-      "common_name",
-      "scientific_name",
-      "taxon_rank",
-      "product_form",
-      "quantity",
-      "quantity_unit",
-      "identification_confidence",
-      "location_cue",
-      "country",
-      "reviewer_notes"
+    "Geography and routes review": [
+      "ad_location",
+      "geo_country_iso3",
+      "geo_geocode_confidence",
+      "geo_lat",
+      "geo_lon",
+      "location_known",
+      "location_level0",
+      "location_level1",
+      "location_level2",
+      "delivery_method",
+      "destination_country",
+      "is_delivery_available",
+      "item_sold_in",
+      "origin_country",
+      "ship_methods"
     ],
-    "Platform enforcement triage": [
-      "record_id",
-      "source_url_or_reference",
-      "platform_name",
-      "platform_type",
-      "platform_feature",
-      "account_reference",
-      "account_role",
-      "trade_intent",
-      "trade_cue_text",
-      "price_value",
-      "price_currency",
-      "shipping_or_delivery_cue",
-      "location_cue",
-      "legal_or_policy_flag",
-      "sensitivity_rating",
-      "data_handling_notes"
+    "Enforcement and case tracking": [
+      "datahub",
+      "note",
+      "priority_level",
+      "record_date",
+      "risk_score",
+      "case_id",
+      "case_status",
+      "is_case_of_interest",
+      "referral_date_utc",
+      "referral_recipient_org",
+      "suspected_offense_type",
+      "was_recommended"
     ],
-    "Governance and QA review": [
-      "record_id",
-      "collector_id",
-      "review_status",
-      "duplicate_status",
-      "screenshot_reference",
-      "archive_reference",
-      "identification_confidence",
-      "quality_flag",
-      "exclusion_reason",
-      "sensitivity_rating",
-      "data_handling_notes",
-      "retention_date"
+    "Automation and dedupe QA": [
+      "classification_label",
+      "content_fingerprint",
+      "extraction_confidence",
+      "species_ml_suggestion",
+      "dedupe_key",
+      "duplicate_group_id",
+      "item_multiple_detections",
+      "image_text",
+      "item_image",
+      "media_file_hash_sha256",
+      "media_phash"
     ]
   },
   "gmsFields": [
-    "record_id",
-    "collection_datetime",
-    "posted_datetime",
-    "capture_method",
-    "source_url_or_reference",
-    "source_access_level",
+    "datahub",
+    "note",
+    "record_date",
+    "ad_location",
+    "location_known",
+    "location_level0",
+    "location_level1",
+    "location_level2",
+    "item_CITES",
+    "item_class",
+    "item_common_name",
+    "item_common_name_website",
+    "item_count",
+    "item_family",
+    "item_genus",
+    "item_hasEggs",
+    "item_order",
+    "item_phylum",
+    "item_species",
+    "item_taxa",
+    "item_type",
+    "item_unit",
+    "case_id",
+    "is_case_of_interest",
+    "was_recommended",
+    "item_multiple_detections",
+    "image_text",
+    "item_image",
+    "ad_language",
+    "group_name",
+    "group_type",
+    "is_group",
+    "item_date_posted",
+    "item_text",
+    "item_title",
     "platform_name",
-    "platform_type",
-    "platform_feature",
-    "account_reference",
-    "account_role",
-    "post_text_excerpt",
-    "media_type",
-    "common_name",
-    "scientific_name",
-    "identification_basis",
-    "identification_confidence",
-    "product_form",
-    "quantity",
-    "origin_claim",
-    "trade_intent",
-    "trade_cue_text",
-    "price_value",
-    "price_currency",
-    "shipping_or_delivery_cue",
-    "location_cue",
-    "jurisdiction_or_market",
-    "cites_status",
-    "legal_or_policy_flag",
-    "sensitivity_rating",
-    "data_handling_notes",
-    "reviewer_notes"
+    "search_term",
+    "url",
+    "website_type",
+    "item_currency",
+    "item_price",
+    "price_available",
+    "payment_method",
+    "seller_contact_known",
+    "delivery_method",
+    "destination_country",
+    "is_delivery_available",
+    "item_sold_in",
+    "origin_country",
+    "is_bycatch",
+    "is_seller_vulnerable_group",
+    "vulnerable_group"
   ],
   "curationSteps": [
-    "Harmonize equivalent field names from monitoring protocols into a shared vocabulary.",
-    "Define each field in operational language so analysts collect the same thing consistently.",
-    "Mark current GMS fields and create reusable profiles for common monitoring objectives.",
-    "Limit sensitive or personal data to what is necessary for a documented monitoring purpose."
+    "Import the complete exported field table from the R app without dropping categories or optional fields.",
+    "Preserve each Field_ID, category, description, standardization note, and in_gms flag exactly for catalogue review.",
+    "Use profiles only as convenience subsets; the Field catalogue remains the authoritative complete list.",
+    "Scope sensitive, personal, enforcement, and automated fields according to governance and sharing policies."
   ],
   "rsbaCriteria": [
     {
