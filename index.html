@@ -42,7 +42,7 @@
     .hidden { display:none !important; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
     .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
     .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
-    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:22%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:24%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:31%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:18%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:5.5rem; text-align:center; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
+    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } .code-output { min-height:18rem; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.82rem; line-height:1.45; white-space:pre; } .warning-list { color:#ffeab0; padding-left:1.1rem; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:22%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:24%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:31%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:18%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:5.5rem; text-align:center; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
     footer { max-width:1180px; margin:0 auto; padding:2rem clamp(1rem, 3vw, 3rem); color:var(--muted); border-top:1px solid var(--line); }
     @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
   </style>
@@ -91,9 +91,15 @@
             <div class="row"><button class="primary" id="downloadFieldsWorkbook">Download Excel workbook</button><button id="downloadFieldsCsv">Download long-form CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
             <p class="help" id="selectionHelp"></p>
           </div>
+          <div class="card">
+            <h3>Google Form export</h3>
+            <p class="help">Generate a copy/paste Google Apps Script that creates a structured Google Form from the selected fields.</p>
+            <div class="row"><button class="primary" id="generateGoogleFormScript">Export Google Form Script</button><button id="generateGoogleFormJson">Export Google Form JSON schema</button></div>
+          </div>
         </aside>
         <div>
           <div class="card notice" id="selectionSummary"></div>
+          <div class="card hidden" id="googleFormExportPanel"></div>
           <div class="table-wrap"><table id="fieldsTable"><thead><tr><th>Field</th><th>Category</th><th>Description</th><th>Standardization notes</th><th></th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
@@ -272,6 +278,148 @@
       XLSX.writeFile(workbook, 'global-data-model-template.xlsx');
     }
 
+    function labelFromFieldId(fieldId) {
+      return String(fieldId || '')
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+    function inferControlledOptions(field) {
+      const id = field.field_id;
+      const lower = id.toLowerCase();
+      if (lower.includes('platform_name')) return ['Facebook', 'Instagram', 'TikTok', 'Telegram', 'Website', 'Other'];
+      if (lower.includes('cites')) return ['I', 'II', 'III', 'none', 'unknown'];
+      if (lower.includes('iucn')) return ['LC', 'NT', 'VU', 'EN', 'CR', 'EW', 'EX', 'DD', 'NE', 'unknown'];
+      if (lower.includes('currency')) return ['USD', 'EUR', 'GBP', 'CNY', 'THB', 'VND', 'IDR', 'Other'];
+      if (lower.includes('language')) return ['en', 'es', 'fr', 'pt', 'zh', 'vi', 'th', 'id', 'Other'];
+      if (lower.includes('status')) return ['unreviewed', 'reviewed', 'needs_fix', 'rejected', 'archived', 'unknown'];
+      if (lower.includes('priority')) return ['low', 'medium', 'high', 'critical'];
+      if (lower.includes('access_level')) return ['public', 'logged_in', 'closed_group', 'invite_only', 'unknown'];
+      if (lower.includes('delivery_method')) return ['pickup', 'courier', 'post', 'air', 'bus', 'hand_carry', 'unknown'];
+      if (lower.includes('payment_method')) return ['Visa/Mastercard', 'PayPal', 'Cash App', 'Bank transfer', 'Cash', 'Crypto', 'Other'];
+      if (lower.includes('group_type') || lower.includes('website_type') || lower.includes('platform_type')) return ['Social Media', 'E-commerce', 'Messaging App', 'Forum', 'Classifieds', 'Website', 'Other'];
+      if (lower.includes('item_unit')) return ['each', 'g', 'kg', 'lb', 'oz', 'mL', 'L', 'unknown'];
+      if (lower.includes('item_type')) return ['live_animal', 'part', 'derivative', 'plant', 'timber', 'medicine', 'other'];
+      return [];
+    }
+    function mapFieldTypeToGoogleFormType(field) {
+      const id = String(field.field_id || '').toLowerCase();
+      const text = `${field.description || ''} ${field.standardization_notes || ''}`.toLowerCase();
+      if (id.includes('url') || text.includes('url')) return 'url';
+      if (id.includes('date') && !id.includes('updated')) return 'date';
+      if (id.includes('time') && !id.includes('timezone')) return 'time';
+      if (text.includes('boolean') || id.endsWith('_flag') || id.startsWith('is_') || id.startsWith('was_')) return 'boolean';
+      if (id.includes('note') || id.includes('text') || id.includes('caption') || id.includes('description') || id.includes('summary') || id.includes('bio')) return 'long_text';
+      if (id.includes('tags') || id.includes('_list') || text.includes('list normalized') || text.includes('comma')) return 'multiple_choice';
+      if (text.includes('controlled list') || text.includes('controlled vocabulary')) return 'single_choice';
+      if (text.includes('numeric') || text.includes('integer') || id.includes('count') || id.includes('score') || id.includes('price') || id.includes('value') || id.includes('lat') || id.includes('lon')) return 'number';
+      return 'short_text';
+    }
+    function uniqueFieldName(name, usedNames) {
+      const base = String(name || 'field').trim() || 'field';
+      let candidate = base;
+      let index = 2;
+      while (usedNames.has(candidate)) {
+        candidate = `${base}_${index}`;
+        index += 1;
+      }
+      usedNames.add(candidate);
+      return candidate;
+    }
+    function buildGoogleFormSchema(dataModel) {
+      const sourceFields = dataModel.fields || [];
+      const usedNames = new Set();
+      const sectionsByName = new Map();
+      const sections = [];
+      for (const field of sourceFields) {
+        if (!field || !field.field_id) continue;
+        const sectionName = field.category || 'Uncategorized';
+        if (!sectionsByName.has(sectionName)) {
+          const section = {
+            name: sectionName,
+            description: `Fields from ${sectionName}.`,
+            fields: [],
+          };
+          sectionsByName.set(sectionName, section);
+          sections.push(section);
+        }
+        const type = mapFieldTypeToGoogleFormType(field);
+        const options = ['single_choice', 'multiple_choice'].includes(type) ? inferControlledOptions(field) : undefined;
+        const descriptionParts = [field.description, field.standardization_notes ? `Standardization: ${field.standardization_notes}` : ''].filter(Boolean);
+        if (type === 'url') descriptionParts.push('A URL is expected.');
+        if (type === 'number') descriptionParts.push('Enter a numeric value.');
+        sectionsByName.get(sectionName).fields.push({
+          name: uniqueFieldName(field.field_id, usedNames),
+          label: labelFromFieldId(field.field_id),
+          description: descriptionParts.join('\n'),
+          type,
+          required: Boolean(field.in_gms),
+          options,
+          source_field_id: field.field_id,
+        });
+      }
+      return {
+        title: 'GMS Data Entry Form',
+        description: 'Generated from the gmstools data model.',
+        sections,
+      };
+    }
+    function validateGoogleFormSchema(schema) {
+      const warnings = [];
+      const names = new Set();
+      for (const section of schema.sections || []) {
+        if (!section.name) warnings.push('A section is missing a name.');
+        for (const field of section.fields || []) {
+          if (!field.label) warnings.push(`Field ${field.name || '(unnamed)'} has no label.`);
+          if (field.required && !field.label) warnings.push(`Required field ${field.name || '(unnamed)'} has no label.`);
+          if (names.has(field.name)) warnings.push(`Duplicate field name detected: ${field.name}.`);
+          names.add(field.name);
+          if (['single_choice', 'multiple_choice'].includes(field.type) && (!field.options || !field.options.length)) {
+            warnings.push(`Controlled vocabulary field ${field.name} has no options and will be generated as text fallback.`);
+          }
+          if (!['short_text', 'url', 'number', 'long_text', 'date', 'time', 'single_choice', 'multiple_choice', 'boolean'].includes(field.type)) {
+            warnings.push(`Field ${field.name} has unknown type ${field.type}; Apps Script will use a text fallback.`);
+          }
+        }
+      }
+      return warnings;
+    }
+    function generateGoogleAppsScript(schema) {
+      const embeddedSchema = JSON.stringify(schema, null, 2).replace(/<\/script/gi, '<\\/script');
+      return `/**\n * Generated by the ECOSOLVE GMS Data Model Builder.\n * Copy this file into Google Apps Script and run buildGmsForm().\n */\nfunction buildGmsForm() {\n  // Embedded normalized Google Form schema generated from the gmstools data model.\n  const model = ${embeddedSchema};\n  const CREATE_RESPONSE_SPREADSHEET = true;\n\n  const form = FormApp.create(model.title || 'GMS Data Entry Form', false);\n  form.setDescription(model.description || '');\n  form.setCollectEmail(false);\n  form.setAllowResponseEdits(false);\n  form.setAcceptingResponses(true);\n\n  (model.sections || []).forEach(function(section, sectionIndex) {\n    if (sectionIndex > 0) {\n      form.addPageBreakItem()\n        .setTitle(section.name || 'Section ' + (sectionIndex + 1))\n        .setHelpText(section.description || '');\n    } else {\n      form.addSectionHeaderItem()\n        .setTitle(section.name || 'Section ' + (sectionIndex + 1))\n        .setHelpText(section.description || '');\n    }\n\n    (section.fields || []).forEach(function(field) {\n      let item;\n      let fallback = false;\n      switch (field.type) {\n        case 'short_text':\n          item = form.addTextItem();\n          break;\n        case 'url':\n          item = form.addTextItem();\n          item.setValidation(FormApp.createTextValidation().requireTextIsUrl().build());\n          break;\n        case 'number':\n          item = form.addTextItem();\n          item.setValidation(FormApp.createTextValidation().requireNumber().build());\n          break;\n        case 'long_text':\n          item = form.addParagraphTextItem();\n          break;\n        case 'date':\n          item = form.addDateItem();\n          break;\n        case 'time':\n          item = form.addTimeItem();\n          break;\n        case 'single_choice':\n          if (field.options && field.options.length) {\n            item = form.addListItem();\n            item.setChoiceValues(field.options);\n          } else {\n            item = form.addTextItem();\n            fallback = true;\n          }\n          break;\n        case 'multiple_choice':\n          if (field.options && field.options.length) {\n            item = form.addCheckboxItem();\n            item.setChoiceValues(field.options);\n          } else {\n            item = form.addTextItem();\n            fallback = true;\n          }\n          break;\n        case 'boolean':\n        case 'yes_no':\n          item = form.addMultipleChoiceItem();\n          item.setChoiceValues(['Yes', 'No']);\n          break;\n        default:\n          item = form.addTextItem();\n          fallback = true;\n      }\n\n      item.setTitle(field.label || field.name || 'Untitled field');\n      let help = field.description || '';\n      if (fallback) help += (help ? '\\n' : '') + 'Fallback: this field type was generated as a text question. Review manually.';\n      if (field.type === 'url') help += (help ? '\\n' : '') + 'URL expected.';\n      item.setHelpText(help);\n      item.setRequired(Boolean(field.required));\n    });\n  });\n\n  if (CREATE_RESPONSE_SPREADSHEET) {\n    const sheet = SpreadsheetApp.create((model.title || 'GMS Data Entry Form') + ' Responses');\n    form.setDestination(FormApp.DestinationType.SPREADSHEET, sheet.getId());\n    Logger.log('Response spreadsheet URL: ' + sheet.getUrl());\n  }\n\n  Logger.log('Edit URL: ' + form.getEditUrl());\n  Logger.log('Published URL: ' + form.getPublishedUrl());\n}\n`;
+    }
+    function downloadTextFile(filename, content) {
+      const type = filename.endsWith('.json') ? 'application/json' : 'text/plain';
+      download(filename, content, type);
+    }
+    async function copyTextToClipboard(text, statusElement) {
+      try {
+        await navigator.clipboard.writeText(text);
+        if (statusElement) statusElement.textContent = 'Copied to clipboard.';
+      } catch (error) {
+        if (statusElement) statusElement.textContent = 'Clipboard access unavailable. Select the text and copy manually.';
+      }
+    }
+    function renderGoogleFormExportPanel(mode = 'script') {
+      const schema = buildGoogleFormSchema({fields: selectedFieldRows()});
+      const warnings = validateGoogleFormSchema(schema);
+      const content = mode === 'json' ? JSON.stringify(schema, null, 2) : generateGoogleAppsScript(schema);
+      const filename = mode === 'json' ? 'gms-google-form-schema.json' : 'build-gms-form.gs';
+      const panel = $('googleFormExportPanel');
+      panel.classList.remove('hidden');
+      panel.innerHTML = `
+        <h2>${mode === 'json' ? 'Google Form JSON schema' : 'Google Form Apps Script'}</h2>
+        <p class="help">1. Go to Google Apps Script. 2. Create a new project. 3. Paste this script. 4. Run <code>buildGmsForm()</code>. 5. Authorize the script. 6. Open the edit or published form URL from the logs.</p>
+        ${warnings.length ? `<div class="notice"><strong>${warnings.length} warning(s)</strong><ul class="warning-list">${warnings.map(warning => `<li>${escapeHtml(warning)}</li>`).join('')}</ul></div>` : '<p class="help">No schema warnings detected.</p>'}
+        <textarea class="code-output" id="googleFormExportText" readonly></textarea>
+        <div class="row" style="margin-top:.8rem"><button class="primary" id="copyGoogleFormExport">Copy ${mode === 'json' ? 'schema' : 'script'}</button><button id="downloadGoogleFormExport">Download ${mode === 'json' ? '.json' : '.gs'} file</button></div>
+        <p class="help" id="googleFormExportStatus"></p>
+      `;
+      $('googleFormExportText').value = content;
+      $('copyGoogleFormExport').addEventListener('click', () => copyTextToClipboard(content, $('googleFormExportStatus')));
+      $('downloadGoogleFormExport').addEventListener('click', () => downloadTextFile(filename, content));
+      panel.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
     function renderFields() {
       const q = norm($('fieldSearch').value), cat = $('categoryFilter').value;
       const rows = fields.filter(f => (!q || norm(`${f.field_id} ${f.category} ${f.description} ${f.standardization_notes}`).includes(q)) && (!cat || f.category === cat) && (!$('gmsOnly').checked || f.in_gms) && (!$('selectedOnly').checked || selected.has(f.field_id)));
@@ -341,6 +489,9 @@
       const wb = XLSX.read(buf, {type:'array'});
       return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
     }
+
+    $('generateGoogleFormScript').addEventListener('click', () => renderGoogleFormExportPanel('script'));
+    $('generateGoogleFormJson').addEventListener('click', () => renderGoogleFormExportPanel('json'));
 
     ['fieldSearch','categoryFilter','gmsOnly','selectedOnly'].forEach(id => $(id).addEventListener('input', renderFields));
     $('applyProfile').addEventListener('click', () => { selected.clear(); profiles[$('profileSelect').value].forEach(x => selected.add(x)); renderFields(); });

@@ -70,6 +70,16 @@ The model is curated as a practical harmonization layer across online monitoring
 
 This makes the model a living schema. Teams should adapt the field list to their species scope, platforms, legal context, ethics review, and operational capacity.
 
+
+## Google Form export
+
+The Field catalogue includes a **Google Form export** panel with two utility outputs:
+
+- **Export Google Form Script** builds a copy/paste-ready Google Apps Script file. Paste it into a new Google Apps Script project, run `buildGmsForm()`, authorize it, and then open the edit or published form URL from the Apps Script logs.
+- **Export Google Form JSON schema** exports the normalized intermediate schema for reuse with a future Forms API, Sheets, or other intake system integration.
+
+The generated schema groups selected fields by category/module, preserves field order, converts field IDs into readable question labels, uses descriptions and standardization notes as help text, marks current GMS fields as required, infers Google Form item types, and includes warnings when a controlled vocabulary field has no known option list. The generated Apps Script creates sections, text questions, URL/number validated text questions, paragraph questions, date/time questions, dropdowns, checkboxes, and Yes/No questions where possible.
+
 ## Rapid Species Basket Assessment (RSBA)
 
 The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow in the browser. Users can:
