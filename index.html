@@ -147,7 +147,7 @@
           <div id="categoryPills"></div>
         </div>
         <div>
-          <div class="card"><h3>How it was curated</h3><ol class="help" id="curationSteps"></ol></div>
+          <div class="card"><h3>How to use</h3><ol class="help" id="curationSteps"></ol></div>
           <div class="card"><h3>RSBA workflow</h3><p class="help">The Rapid Species Basket Assessment turns species-list evidence into Retain, Monitor, or Drop recommendations. Edit criteria values directly in the table, then run scoring again.</p></div>
           <div class="card"><h3>Platform assessment workflow</h3><p class="help">Platform rows can be entered manually, loaded from the example, or uploaded with the template columns. Scores are summed and ranked as High priority, Monitor, or Low priority.</p></div>
         </div>
@@ -155,7 +155,7 @@
     </section>
   </main>
 
-  <footer>Static GitHub Pages app for the ECOSOLVE Global Monitoring System Data Model Builder. Publish this repository root or copy <code>index.html</code> and <code>assets/global-data-model.js</code> into a Pages branch or <code>/docs</code> directory.</footer>
+  <footer>Developed in cooperation with the Data Interoperability Working Group under the ECOSOLVE project by Global Initiative Against Transnational Organized Crime</footer>
 
   <script>
   window.addEventListener('DOMContentLoaded', () => {
@@ -183,7 +183,7 @@
     for (const cat of categories) $('categoryFilter').append(new Option(cat, cat));
     $('categoryPills').innerHTML = categories.map(cat => `<span class="pill">${escapeHtml(cat)}</span>`).join('');
     $('curationSteps').innerHTML = DATA.curationSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
-    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td>0–${escapeHtml(c.max)}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
+    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td>${escapeHtml(c.score_range || `0–${c.max}`)}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
     $('platformCriteria').innerHTML = DATA.platformCriteria.map(c => `<li><strong>${escapeHtml(c.label)}</strong> (${c.key}, 0-${c.max}): ${escapeHtml(c.help)}</li>`).join('');
 
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {

@@ -2256,36 +2256,42 @@ window.GDM_DATA = {
     {
       "key": "legislative_protection",
       "label": "Legislative protection",
+      "score_range": "0–3",
       "max": 3,
       "help": "Score is based on both international and national protections. (3) species is protected under CITES Appendix I and has a national trade ban/protection; (2) meets only one criterion, or is protected under CITES Appendix II with significant law-enforcement rationale and/or permit-based trade; (1) general protections or legal-origin requirements; (0) none."
     },
     {
       "key": "expert_identified_concern",
       "label": "Expert-identified concern",
+      "score_range": "0–2",
       "max": 2,
       "help": "(2) strong evidence of emerging threat or conservation concern; (1) some concern but insufficient data; (0) no flagged issues. Expert review ensures species of potential concern are not excluded due to limited monitoring."
     },
     {
       "key": "enforcement_priority",
       "label": "Enforcement priority",
+      "score_range": "0–3",
       "max": 3,
       "help": "(3) high priority with organized crime link; (2) medium priority with significant trafficking; (1) low priority; (0) not identified as a priority."
     },
     {
       "key": "trade_relevance_global_local",
       "label": "Trade relevance (global/local)",
+      "score_range": "0–2",
       "max": 2,
       "help": "(2) high relevance in global and local markets; (1) medium relevance in either global or local markets; (0) low relevance. For species traded primarily for traditional medicine, cultural purposes, or bushmeat, classify as local unless significant international demand exists."
     },
     {
       "key": "online_trade_relevance",
       "label": "Online trade relevance",
+      "score_range": "0–2",
       "max": 2,
       "help": "(2) strong evidence the species or product is actively advertised, searched, or transacted online; (1) occasional online signals or likely online displacement; (0) little or no online relevance for monitoring."
     },
     {
       "key": "ecological_impact",
       "label": "Ecological impact",
+      "score_range": "0–2",
       "max": 2,
       "help": "(2) Critically Endangered, keystone, or severe ecological impact; (1) vulnerable or moderate ecological impact; (0) Least Concern or low documented ecological impact."
     }
