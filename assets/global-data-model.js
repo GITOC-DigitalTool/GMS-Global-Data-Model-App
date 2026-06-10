@@ -2216,34 +2216,40 @@ window.GDM_DATA = {
   ],
   "rsbaCriteria": [
     {
-      "key": "conservation_concern",
-      "label": "Conservation concern",
+      "key": "legislative_protection",
+      "label": "Legislative protection",
       "max": 3,
-      "help": "Threat, protection, or sensitivity level for the species or taxon."
+      "help": "Score is based on both international and national protections. (3) species is protected under CITES Appendix I and has a national trade ban/protection; (2) meets only one criterion, or is protected under CITES Appendix II with significant law-enforcement rationale and/or permit-based trade; (1) general protections or legal-origin requirements; (0) none."
     },
     {
-      "key": "online_trade_evidence",
-      "label": "Online trade evidence",
-      "max": 3,
-      "help": "Evidence that the species or product appears in online trade channels."
+      "key": "expert_identified_concern",
+      "label": "Expert-identified concern",
+      "max": 2,
+      "help": "(2) strong evidence of emerging threat or conservation concern; (1) some concern but insufficient data; (0) no flagged issues. Expert review ensures species of potential concern are not excluded due to limited monitoring."
     },
     {
-      "key": "local_relevance",
-      "label": "Local relevance",
+      "key": "enforcement_priority",
+      "label": "Enforcement priority",
       "max": 3,
-      "help": "Relevance to the geography, language, taxa, or mandate of the monitoring program."
+      "help": "(3) high priority with organized crime link; (2) medium priority with significant trafficking; (1) low priority; (0) not identified as a priority."
     },
     {
-      "key": "enforcement_relevance",
-      "label": "Enforcement relevance",
-      "max": 3,
-      "help": "Likely usefulness for enforcement, compliance, or policy response."
+      "key": "trade_relevance_global_local",
+      "label": "Trade relevance (global/local)",
+      "max": 2,
+      "help": "(2) high relevance in global and local markets; (1) medium relevance in either global or local markets; (0) low relevance. For species traded primarily for traditional medicine, cultural purposes, or bushmeat, classify as local unless significant international demand exists."
     },
     {
-      "key": "identification_confidence",
-      "label": "Identification confidence",
-      "max": 3,
-      "help": "How reliably analysts can identify the species or product from available content."
+      "key": "online_trade_relevance",
+      "label": "Online trade relevance",
+      "max": 2,
+      "help": "(2) strong evidence the species or product is actively advertised, searched, or transacted online; (1) occasional online signals or likely online displacement; (0) little or no online relevance for monitoring."
+    },
+    {
+      "key": "ecological_impact",
+      "label": "Ecological impact",
+      "max": 2,
+      "help": "(2) Critically Endangered, keystone, or severe ecological impact; (1) vulnerable or moderate ecological impact; (0) Least Concern or low documented ecological impact."
     }
   ],
   "rsbaExample": [
@@ -2252,72 +2258,78 @@ window.GDM_DATA = {
       "scientific_name": "Psittacus erithacus",
       "iucn_status": "EN",
       "cites_status": "I",
-      "conservation_concern": 3,
-      "online_trade_evidence": 3,
-      "local_relevance": 2,
-      "enforcement_relevance": 3,
-      "identification_confidence": 2,
-      "notes": "High-risk example with strong online trade signal"
+      "legislative_protection": 3,
+      "expert_identified_concern": 2,
+      "enforcement_priority": 3,
+      "trade_relevance_global_local": 2,
+      "online_trade_relevance": 2,
+      "ecological_impact": 1,
+      "notes": "High priority parrot example with strong online trade signal."
     },
     {
       "common_name": "Pangolin",
       "scientific_name": "Manis spp.",
       "iucn_status": "VU-CR",
       "cites_status": "I",
-      "conservation_concern": 3,
-      "online_trade_evidence": 2,
-      "local_relevance": 3,
-      "enforcement_relevance": 3,
-      "identification_confidence": 2,
-      "notes": "Sensitive taxa; product identification may require expert review"
+      "legislative_protection": 3,
+      "expert_identified_concern": 2,
+      "enforcement_priority": 3,
+      "trade_relevance_global_local": 2,
+      "online_trade_relevance": 1,
+      "ecological_impact": 2,
+      "notes": "Sensitive taxa; products may be difficult to identify but enforcement relevance is high."
     },
     {
       "common_name": "Helmeted hornbill",
       "scientific_name": "Rhinoplax vigil",
       "iucn_status": "CR",
       "cites_status": "I",
-      "conservation_concern": 3,
-      "online_trade_evidence": 2,
-      "local_relevance": 2,
-      "enforcement_relevance": 3,
-      "identification_confidence": 2,
-      "notes": "High conservation concern and carved product risk"
+      "legislative_protection": 3,
+      "expert_identified_concern": 2,
+      "enforcement_priority": 3,
+      "trade_relevance_global_local": 2,
+      "online_trade_relevance": 1,
+      "ecological_impact": 2,
+      "notes": "High conservation concern and carved product risk."
     },
     {
       "common_name": "Ball python",
       "scientific_name": "Python regius",
       "iucn_status": "NT",
       "cites_status": "II",
-      "conservation_concern": 1,
-      "online_trade_evidence": 2,
-      "local_relevance": 2,
-      "enforcement_relevance": 1,
-      "identification_confidence": 2,
-      "notes": "Commonly detected in online reptile trade"
+      "legislative_protection": 2,
+      "expert_identified_concern": 1,
+      "enforcement_priority": 1,
+      "trade_relevance_global_local": 2,
+      "online_trade_relevance": 2,
+      "ecological_impact": 0,
+      "notes": "Commonly detected in online reptile trade; legality varies by context."
     },
     {
       "common_name": "Orchid",
       "scientific_name": "Orchidaceae spp.",
       "iucn_status": "varies",
       "cites_status": "II",
-      "conservation_concern": 2,
-      "online_trade_evidence": 2,
-      "local_relevance": 1,
-      "enforcement_relevance": 1,
-      "identification_confidence": 1,
-      "notes": "Identification often difficult from listing photos"
+      "legislative_protection": 2,
+      "expert_identified_concern": 1,
+      "enforcement_priority": 1,
+      "trade_relevance_global_local": 1,
+      "online_trade_relevance": 2,
+      "ecological_impact": 1,
+      "notes": "Identification often difficult from listing photos."
     },
     {
       "common_name": "Example low-priority species",
       "scientific_name": "Species exampleus",
       "iucn_status": "LC",
       "cites_status": "none",
-      "conservation_concern": 0,
-      "online_trade_evidence": 0,
-      "local_relevance": 1,
-      "enforcement_relevance": 0,
-      "identification_confidence": 1,
-      "notes": "Placeholder low-priority species"
+      "legislative_protection": 0,
+      "expert_identified_concern": 0,
+      "enforcement_priority": 0,
+      "trade_relevance_global_local": 0,
+      "online_trade_relevance": 0,
+      "ecological_impact": 0,
+      "notes": "Placeholder low-priority species."
     }
   ],
   "platformCriteria": [

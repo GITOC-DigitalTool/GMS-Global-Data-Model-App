@@ -1,6 +1,6 @@
-# gmstools Global Data Model Builder
+# ECOSOLVE - Global Monitoring System Data Model Builder
 
-This repository contains a **static GitHub Pages version** of the gmstools Global Data Model app. It runs entirely in the browser, so teams can review the field catalogue, build exportable schema profiles, run the Rapid Species Basket Assessment (RSBA), score platforms, and export templates or results without a Shiny server.
+This repository contains a **static GitHub Pages version** of the ECOSOLVE Global Monitoring System Data Model Builder. It runs entirely in the browser, so teams can review the field catalogue, build exportable schema profiles, run the Rapid Species Basket Assessment (RSBA), score platforms, and export templates or results without a Shiny server.
 
 ## Files
 
@@ -72,13 +72,16 @@ The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow
 - run scoring after edits; and
 - export the completed assessment as CSV.
 
-The RSBA scoring criteria are stored in `assets/global-data-model.js` and displayed in the app. The current criteria columns are:
+Priority-setting should balance conservation urgency, enforcement relevance, trade relevance, online trade relevance, and the practical likelihood that a species or product can be identified and assessed online with enough confidence to make monitoring useful. The current RSBA criteria are stored in `assets/global-data-model.js` and displayed in the app:
 
-- `conservation_concern`
-- `online_trade_evidence`
-- `local_relevance`
-- `enforcement_relevance`
-- `identification_confidence`
+| Criterion | Score range | Description |
+| --- | --- | --- |
+| Legislative protection | 0–3 | Based on international and national protections: 3 = CITES Appendix I plus national trade ban/protection; 2 = one of those criteria, or CITES Appendix II with significant law-enforcement rationale and/or permit-based trade; 1 = general protections or legal-origin requirements; 0 = none. |
+| Expert-identified concern | 0–2 | 2 = strong evidence of emerging threat or conservation concern; 1 = some concern but insufficient data; 0 = no flagged issues. |
+| Enforcement priority | 0–3 | 3 = high priority with organized-crime link; 2 = medium priority with significant trafficking; 1 = low priority; 0 = not identified as a priority. |
+| Trade relevance (global/local) | 0–2 | 2 = high relevance in global and local markets; 1 = medium relevance in either global or local markets; 0 = low relevance. |
+| Online trade relevance | 0–2 | 2 = strong evidence of active online advertising, searching, or transactions; 1 = occasional online signals or likely online displacement; 0 = little or no online relevance. |
+| Ecological impact | 0–2 | 2 = Critically Endangered, keystone, or severe ecological impact; 1 = Vulnerable or moderate ecological impact; 0 = Least Concern or low documented ecological impact. |
 
 The recommendation is calculated from the score:
 

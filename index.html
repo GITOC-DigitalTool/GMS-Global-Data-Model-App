@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Global Data Model Builder | gmstools</title>
-  <meta name="description" content="Static GitHub Pages version of the gmstools Global Data Model app." />
+  <title>ECOSOLVE - Global Monitoring System Data Model Builder</title>
+  <meta name="description" content="Static GitHub Pages version of the ECOSOLVE Global Monitoring System Data Model Builder." />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="assets/global-data-model.js" defer></script>
   <style>
@@ -17,7 +17,7 @@
     .eyebrow { color:var(--accent); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
     h1 { font-size:clamp(2.2rem, 6vw, 4.5rem); line-height:.95; margin:.2rem 0; max-width:980px; }
     .lead { max-width:870px; color:var(--muted); font-size:1.12rem; line-height:1.65; }
-    .stats { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:.9rem; margin-top:1.3rem; }
+    .stats { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.9rem; margin-top:1.3rem; }
     .stat, .card { background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
     .stat { padding:1rem; } .stat b { display:block; font-size:1.7rem; color:#fff; } .stat span { color:var(--muted); font-size:.9rem; }
     main { max-width:1180px; margin:0 auto; padding:1.3rem clamp(1rem, 3vw, 3rem) 4rem; }
@@ -50,14 +50,13 @@
 <body>
   <header>
     <div class="hero">
-      <div class="eyebrow">ECOSOLVE Global Monitoring System</div>
-      <h1>Global Data Model Builder</h1>
-      <p class="lead">A static, browser-only version of the gmstools Global Data Model app for GitHub Pages. Browse the master schema, build exportable field sets, run Rapid Species Basket Assessment scoring, and rank platforms without a Shiny server.</p>
+      <div class="eyebrow">ECOSOLVE - Global Monitoring System</div>
+      <h1>ECOSOLVE - Global Monitoring System Data Model Builder</h1>
+      <p class="lead">A static, browser-only version of the ECOSOLVE Global Monitoring System data model for GitHub Pages. Browse the master schema, build exportable field sets, run Rapid Species Basket Assessment scoring, and rank platforms without a Shiny server.</p>
       <div class="stats">
         <div class="stat"><b id="statFields">—</b><span>schema fields</span></div>
         <div class="stat"><b id="statCategories">—</b><span>categories</span></div>
         <div class="stat"><b id="statGms">—</b><span>current GMS fields</span></div>
-        <div class="stat"><b>100%</b><span>static GitHub Pages compatible</span></div>
       </div>
     </div>
   </header>
@@ -68,7 +67,6 @@
       <button class="tab-btn" data-tab="rsba">Species assessment (RSBA)</button>
       <button class="tab-btn" data-tab="platforms">Platform assessment</button>
       <button class="tab-btn" data-tab="about">Model notes</button>
-      <span class="button" aria-label="Static GitHub Pages app">No server required</span>
     </nav>
 
     <section id="catalogue" class="tab-panel">
@@ -107,12 +105,20 @@
         <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, and re-run scoring in the browser. Nothing is uploaded to a server.</p>
         <div class="row">
           <div><label for="rsbaFile">Upload .csv / .xlsx species list</label><input id="rsbaFile" type="file" accept=".csv,.xlsx,.xls" /></div>
-          <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="10" min="0" max="30" /></div>
-          <div><label for="dropCut">Drop threshold (≤)</label><input id="dropCut" type="number" value="5" min="0" max="30" /></div>
+          <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="9" min="0" max="30" /></div>
+          <div><label for="dropCut">Drop threshold (≤)</label><input id="dropCut" type="number" value="4" min="0" max="30" /></div>
         </div>
         <div class="row" style="margin-top:.9rem"><button class="primary" id="loadRsbaExample">Load example</button><button id="addRsbaRow">Add row</button><button id="scoreRsba">Run scoring</button><button id="downloadRsbaTemplateCsv">CSV template</button><button id="downloadRsbaTemplateXlsx">Excel template</button><button id="downloadRsbaCsv">Export results CSV</button><button class="danger" id="clearRsba">Clear</button></div>
       </div>
-      <div class="card"><h3>RSBA criteria</h3><ol class="help criteria-list" id="rsbaCriteria"></ol></div>
+      <div class="card">
+        <h3>Priority species and products</h3>
+        <p class="help">In cases where resources are limited, it is best to establish a shortlist of priority species or product types. Priority-setting should balance conservation urgency, enforcement relevance, and the practical likelihood that the species or product can be identified and assessed online with enough confidence to make monitoring useful.</p>
+        <p class="help">A simple weighted scoring system across these criteria helps analysts rank species or product groups during initial scoping for the ECOSOLVE Global Monitoring System (GMS), which uses open-source intelligence (OSINT) and artificial intelligence (AI) to track, analyze, and disrupt illicit wildlife markets on social media and e-commerce platforms.</p>
+      </div>
+      <div class="card">
+        <h3>RSBA criteria</h3>
+        <div class="table-wrap"><table><thead><tr><th>Criterion</th><th>Score range</th><th>Description</th></tr></thead><tbody id="rsbaCriteria"></tbody></table></div>
+      </div>
       <div class="card notice" id="rsbaSummary">No RSBA species loaded yet.</div>
       <div class="table-wrap"><table id="rsbaTable" class="editable"><thead></thead><tbody></tbody></table></div>
     </section>
@@ -149,7 +155,7 @@
     </section>
   </main>
 
-  <footer>Static GitHub Pages app for the gmstools Global Data Model. Publish this repository root or copy <code>index.html</code> and <code>assets/global-data-model.js</code> into a Pages branch or <code>/docs</code> directory.</footer>
+  <footer>Static GitHub Pages app for the ECOSOLVE Global Monitoring System Data Model Builder. Publish this repository root or copy <code>index.html</code> and <code>assets/global-data-model.js</code> into a Pages branch or <code>/docs</code> directory.</footer>
 
   <script>
   window.addEventListener('DOMContentLoaded', () => {
@@ -177,7 +183,7 @@
     for (const cat of categories) $('categoryFilter').append(new Option(cat, cat));
     $('categoryPills').innerHTML = categories.map(cat => `<span class="pill">${escapeHtml(cat)}</span>`).join('');
     $('curationSteps').innerHTML = DATA.curationSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
-    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<li><strong>${escapeHtml(c.label)}</strong> (${c.key}, 0-${c.max}): ${escapeHtml(c.help)}</li>`).join('');
+    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td>0–${escapeHtml(c.max)}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
     $('platformCriteria').innerHTML = DATA.platformCriteria.map(c => `<li><strong>${escapeHtml(c.label)}</strong> (${c.key}, 0-${c.max}): ${escapeHtml(c.help)}</li>`).join('');
 
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
@@ -224,8 +230,8 @@
     function scoreRsbaRow(row) {
       const total = rsbaScoreCols.reduce((sum, key) => sum + num(row[key]), 0);
       row.rsba_total = total;
-      const retain = num($('retainCut').value) || 10;
-      const drop = num($('dropCut').value) || 5;
+      const retain = num($('retainCut').value) || 9;
+      const drop = num($('dropCut').value) || 4;
       row.recommendation = total >= retain ? 'Retain' : total <= drop ? 'Drop' : 'Monitor';
       return row;
     }
