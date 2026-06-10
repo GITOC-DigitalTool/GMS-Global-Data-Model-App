@@ -242,7 +242,8 @@
       return 'Enter value here';
     }
     function selectedFieldRows() {
-      return fields.filter(f => selected.has(f.field_id));
+      const byId = new Map(fields.map(field => [field.field_id, field]));
+      return Array.from(selected).map(fieldId => byId.get(fieldId)).filter(Boolean);
     }
     function downloadFieldWorkbook() {
       const rows = selectedFieldRows();
