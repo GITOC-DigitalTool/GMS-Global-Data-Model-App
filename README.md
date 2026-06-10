@@ -39,7 +39,17 @@ The **Field catalogue** tab lets users:
 - show only current GMS fields;
 - show only selected fields;
 - apply baseline profiles; and
-- export selected fields as CSV or JSON.
+- export selected fields as a two-tab Excel workbook, a long-form CSV, or JSON.
+
+
+### Field catalogue Excel workbook
+
+The **Download Excel workbook** button exports the selected field set as a two-tab spreadsheet:
+
+1. **Data entry template** — the selected data fields are laid out as spreadsheet columns, with one example row showing the kind of value that should be entered for each field.
+2. **Field catalogue** — the long-form field reference table with category, `Field_ID`, description, standardization notes, and `in_gms` membership.
+
+This structure lets analysts fill out monitoring data in the first tab while keeping the full field definitions and standardization guidance in the second tab. The long-form CSV and JSON buttons remain available for metadata-only exports.
 
 Profiles are meant to be starting points rather than final protocols. The included profiles are:
 

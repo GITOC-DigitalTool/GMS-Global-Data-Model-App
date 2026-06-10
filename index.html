@@ -88,7 +88,7 @@
           </div>
           <div class="card">
             <h3>Export selected fields</h3>
-            <div class="row"><button id="downloadFieldsCsv">Download CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
+            <div class="row"><button class="primary" id="downloadFieldsWorkbook">Download Excel workbook</button><button id="downloadFieldsCsv">Download long-form CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
             <p class="help" id="selectionHelp"></p>
           </div>
         </aside>
@@ -218,12 +218,65 @@
       });
     }
 
+
+    function exampleValue(field) {
+      const id = field.field_id.toLowerCase();
+      const notes = `${field.description} ${field.standardization_notes}`.toLowerCase();
+      if (id.includes('date') || id.includes('timestamp') || notes.includes('iso 8601')) return '2026-01-01T00:00:00Z';
+      if (id.includes('url')) return 'https://example.org/listing/123';
+      if (id.includes('email')) return 'analyst@example.org';
+      if (id.includes('phone') || id.includes('whatsapp')) return '+15551234567';
+      if (id.includes('lat')) return '0.000000';
+      if (id.includes('lon')) return '0.000000';
+      if (id.includes('currency')) return 'USD';
+      if (id.includes('country_iso2')) return 'US';
+      if (id.includes('country_iso3') || id === 'origin_country' || id === 'destination_country' || id === 'item_sold_in') return 'USA';
+      if (id.includes('count') || id.includes('quantity') || id.includes('score') || id.includes('price') || id.includes('value') || id.includes('followers') || id.includes('views') || id.includes('seconds') || notes.includes('numeric') || notes.includes('integer')) return '1';
+      if (id.includes('flag') || id.startsWith('is_') || notes.includes('boolean')) return 'TRUE';
+      if (id.includes('id') || notes.includes('uuid')) return '00000000-0000-4000-8000-000000000000';
+      if (id.includes('species') || id.includes('scientific')) return 'Psittacus erithacus';
+      if (id.includes('common_name')) return 'African grey parrot';
+      if (id.includes('platform')) return 'Example marketplace';
+      if (id.includes('language')) return 'en';
+      if (notes.includes('controlled list')) return 'example_value';
+      return 'Enter value here';
+    }
+    function selectedFieldRows() {
+      return fields.filter(f => selected.has(f.field_id));
+    }
+    function downloadFieldWorkbook() {
+      const rows = selectedFieldRows();
+      if (!rows.length) {
+        alert('Select at least one field before exporting a workbook.');
+        return;
+      }
+      if (!window.XLSX) {
+        alert('Excel workbook export requires the XLSX library to load from the CDN. Please check your connection or use the long-form CSV export.');
+        return;
+      }
+      const workbook = XLSX.utils.book_new();
+      const headers = rows.map(field => field.field_id);
+      const example = rows.map(exampleValue);
+      const templateSheet = XLSX.utils.aoa_to_sheet([headers, example]);
+      const catalogueRows = rows.map(field => ({
+        category: field.category,
+        Field_ID: field.field_id,
+        description: field.description,
+        'notes on data standardization': field.standardization_notes,
+        in_gms: field.in_gms ? 'TRUE' : 'FALSE',
+      }));
+      const catalogueSheet = XLSX.utils.json_to_sheet(catalogueRows);
+      XLSX.utils.book_append_sheet(workbook, templateSheet, 'Data entry template');
+      XLSX.utils.book_append_sheet(workbook, catalogueSheet, 'Field catalogue');
+      XLSX.writeFile(workbook, 'global-data-model-template.xlsx');
+    }
+
     function renderFields() {
       const q = norm($('fieldSearch').value), cat = $('categoryFilter').value;
       const rows = fields.filter(f => (!q || norm(`${f.field_id} ${f.category} ${f.description} ${f.standardization_notes}`).includes(q)) && (!cat || f.category === cat) && (!$('gmsOnly').checked || f.in_gms) && (!$('selectedOnly').checked || selected.has(f.field_id)));
       $('fieldsTable').querySelector('tbody').innerHTML = rows.map(f => `<tr class="${selected.has(f.field_id) ? 'selected' : ''} ${f.in_gms ? 'gms' : ''}"><td><strong>${escapeHtml(f.field_id)}</strong></td><td>${escapeHtml(f.category)}</td><td>${escapeHtml(f.description)}</td><td>${escapeHtml(f.standardization_notes)}</td><td><button data-field="${escapeHtml(f.field_id)}">${selected.has(f.field_id) ? 'Remove' : 'Add'}</button></td></tr>`).join('');
       $('selectionSummary').innerHTML = `<strong>${selected.size}</strong> selected fields from <strong>${fields.length}</strong> total fields. Current view shows <strong>${rows.length}</strong> fields.`;
-      $('selectionHelp').textContent = `${selected.size} fields selected. Exports include category, field_id, description, standardization notes, and current GMS membership.`;
+      $('selectionHelp').textContent = `${selected.size} fields selected. Excel exports include a data-entry template tab plus a long-form field catalogue tab; CSV/JSON exports include the long-form field metadata.`;
       $('fieldsTable').querySelectorAll('button[data-field]').forEach(b => b.addEventListener('click', () => { selected.has(b.dataset.field) ? selected.delete(b.dataset.field) : selected.add(b.dataset.field); renderFields(); }));
     }
 
@@ -291,8 +344,9 @@
     ['fieldSearch','categoryFilter','gmsOnly','selectedOnly'].forEach(id => $(id).addEventListener('input', renderFields));
     $('applyProfile').addEventListener('click', () => { selected.clear(); profiles[$('profileSelect').value].forEach(x => selected.add(x)); renderFields(); });
     $('clearSelection').addEventListener('click', () => { selected.clear(); renderFields(); });
-    $('downloadFieldsCsv').addEventListener('click', () => download('global-data-model-fields.csv', toCsv(fields.filter(f => selected.has(f.field_id)))));
-    $('downloadFieldsJson').addEventListener('click', () => download('global-data-model-fields.json', JSON.stringify(fields.filter(f => selected.has(f.field_id)), null, 2), 'application/json'));
+    $('downloadFieldsWorkbook').addEventListener('click', downloadFieldWorkbook);
+    $('downloadFieldsCsv').addEventListener('click', () => download('global-data-model-field-catalogue.csv', toCsv(selectedFieldRows().map(field => ({category: field.category, Field_ID: field.field_id, description: field.description, 'notes on data standardization': field.standardization_notes, in_gms: field.in_gms ? 'TRUE' : 'FALSE'})))));
+    $('downloadFieldsJson').addEventListener('click', () => download('global-data-model-fields.json', JSON.stringify(selectedFieldRows(), null, 2), 'application/json'));
 
     ['retainCut','dropCut'].forEach(id => $(id).addEventListener('input', renderRsba));
     $('loadRsbaExample').addEventListener('click', () => { rsbaRows = DATA.rsbaExample.map(row => ({...row})); renderRsba(); });
