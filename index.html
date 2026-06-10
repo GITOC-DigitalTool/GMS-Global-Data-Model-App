@@ -35,14 +35,14 @@
     .help { color:var(--muted); font-size:.92rem; line-height:1.6; max-width:78ch; } .small { font-size:.84rem; }
     .pill { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.25rem .6rem; color:#d9f7ef; background:rgba(255,255,255,.05); margin:.1rem; font-size:.8rem; }
     table { width:100%; border-collapse:collapse; table-layout:fixed; background:#061519; border-radius:16px; overflow:hidden; }
-    th, td { padding:.8rem .85rem; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; text-align:left; white-space:normal; overflow-wrap:anywhere; word-break:normal; line-height:1.45; font-size:.94rem; }
+    th, td { padding:.8rem .85rem; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; text-align:left; white-space:normal; overflow-wrap:break-word; word-break:normal; line-height:1.45; font-size:.94rem; }
     th { background:#12363d; color:#cffff2; position:sticky; top:59px; z-index:2; }
     tr.selected { background:rgba(71,215,172,.13); } tr.gms td:first-child::before { content:"GMS"; color:#061519; background:var(--warn); border-radius:999px; padding:.12rem .35rem; margin-right:.4rem; font-size:.68rem; font-weight:900; }
     .table-wrap { width:100%; max-width:100%; max-height:690px; overflow:auto; border:1px solid var(--line); border-radius:16px; }
     .hidden { display:none !important; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
     .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
     .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
-    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } .code-output { min-height:18rem; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.82rem; line-height:1.45; white-space:pre; } .warning-list { color:#ffeab0; padding-left:1.1rem; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:22%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:24%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:31%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:18%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:5.5rem; text-align:center; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
+    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable { min-width:960px; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:20%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:22%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:29%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:22%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:6.75rem; text-align:center; } .table-wrap button { min-width:4.75rem; justify-content:center; white-space:nowrap; padding:.55rem .8rem; flex:0 0 auto; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
     footer { max-width:1180px; margin:0 auto; padding:2rem clamp(1rem, 3vw, 3rem); color:var(--muted); border-top:1px solid var(--line); }
     @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
   </style>
@@ -77,7 +77,7 @@
             <label for="profileSelect">Baseline profile</label>
             <select id="profileSelect"></select>
             <div class="row" style="margin-top:.8rem"><button class="primary" id="applyProfile">Apply profile</button><button class="ghost" id="clearSelection">Clear</button></div>
-            <p class="help">Selected fields are highlighted and included in CSV / JSON exports. Use profiles as starting points, then add or remove individual fields.</p>
+            <p class="help">Selected fields are highlighted and included in the Excel workbook export. Use profiles as starting points, then add or remove individual fields.</p>
           </div>
           <div class="card">
             <h3>Filters</h3>
@@ -88,18 +88,12 @@
           </div>
           <div class="card">
             <h3>Export selected fields</h3>
-            <div class="row"><button class="primary" id="downloadFieldsWorkbook">Download Excel workbook</button><button id="downloadFieldsCsv">Download long-form CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
+            <div class="row"><button class="primary" id="downloadFieldsWorkbook">Download Excel workbook</button></div>
             <p class="help" id="selectionHelp"></p>
-          </div>
-          <div class="card">
-            <h3>Google Form export</h3>
-            <p class="help">Generate a copy/paste Google Apps Script that creates a structured Google Form from the selected fields.</p>
-            <div class="row"><button class="primary" id="generateGoogleFormScript">Export Google Form Script</button><button id="generateGoogleFormJson">Export Google Form JSON schema</button></div>
           </div>
         </aside>
         <div>
           <div class="card notice" id="selectionSummary"></div>
-          <div class="card hidden" id="googleFormExportPanel"></div>
           <div class="table-wrap"><table id="fieldsTable"><thead><tr><th>Field</th><th>Category</th><th>Description</th><th>Standardization notes</th><th></th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
@@ -114,7 +108,7 @@
           <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="9" min="0" max="30" /></div>
           <div><label for="dropCut">Drop threshold (≤)</label><input id="dropCut" type="number" value="4" min="0" max="30" /></div>
         </div>
-        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadRsbaExample">Load example</button><button id="addRsbaRow">Add row</button><button id="scoreRsba">Run scoring</button><button id="downloadRsbaTemplateCsv">CSV template</button><button id="downloadRsbaTemplateXlsx">Excel template</button><button id="downloadRsbaCsv">Export results CSV</button><button class="danger" id="clearRsba">Clear</button></div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadRsbaExample">Load example</button><button id="addRsbaRow">Add row</button><button id="scoreRsba">Run scoring</button><button id="downloadRsbaTemplateXlsx">Excel template</button><button id="downloadRsbaXlsx">Export results Excel</button><button class="danger" id="clearRsba">Clear</button></div>
       </div>
       <div class="card">
         <h3>Priority species and products</h3>
@@ -138,7 +132,7 @@
           <div><label for="platformRetainCut">High priority threshold (≥)</label><input id="platformRetainCut" type="number" value="14" min="0" max="30" /></div>
           <div><label for="platformDropCut">Low priority threshold (≤)</label><input id="platformDropCut" type="number" value="7" min="0" max="30" /></div>
         </div>
-        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadPlatformExample">Load example</button><button id="addPlatformRow">Add platform</button><button id="scorePlatforms">Run scoring</button><button id="downloadPlatformTemplateCsv">CSV template</button><button id="downloadPlatformTemplateXlsx">Excel template</button><button id="downloadPlatformCsv">Export results CSV</button><button class="danger" id="clearPlatform">Clear</button></div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadPlatformExample">Load example</button><button id="addPlatformRow">Add platform</button><button id="scorePlatforms">Run scoring</button><button id="downloadPlatformTemplateXlsx">Excel template</button><button id="downloadPlatformXlsx">Export results Excel</button><button class="danger" id="clearPlatform">Clear</button></div>
       </div>
       <div class="card"><h3>Platform criteria</h3><ol class="help criteria-list" id="platformCriteria"></ol></div>
       <div class="card notice" id="platformSummary">No platform assessment loaded yet.</div>
@@ -202,11 +196,8 @@
     function escapeHtml(v) { return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
     function norm(v) { return String(v ?? '').trim().toLowerCase(); }
     function num(v) { return Number(v) || 0; }
-    function csvEscape(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s; }
-    function download(name, content, type='text/csv') { const blob = new Blob([content], {type}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
-    function toCsv(rows) { if (!rows.length) return ''; const cols = Object.keys(rows[0]); return [cols.join(','), ...rows.map(r => cols.map(c => csvEscape(r[c])).join(','))].join('\n'); }
     function downloadXlsx(name, rows, sheetName) {
-      if (!window.XLSX) { download(name.replace(/\.xlsx$/i, '.csv'), toCsv(rows)); return; }
+      if (!window.XLSX) { alert('Excel export requires the XLSX library to load from the CDN. Please check your connection and try again.'); return; }
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(rows);
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
@@ -258,7 +249,7 @@
         return;
       }
       if (!window.XLSX) {
-        alert('Excel workbook export requires the XLSX library to load from the CDN. Please check your connection or use the long-form CSV export.');
+        alert('Excel workbook export requires the XLSX library to load from the CDN. Please check your connection and try again.');
         return;
       }
       const workbook = XLSX.utils.book_new();
@@ -278,154 +269,12 @@
       XLSX.writeFile(workbook, 'global-data-model-template.xlsx');
     }
 
-    function labelFromFieldId(fieldId) {
-      return String(fieldId || '')
-        .replace(/_/g, ' ')
-        .replace(/\b\w/g, char => char.toUpperCase());
-    }
-    function inferControlledOptions(field) {
-      const id = field.field_id;
-      const lower = id.toLowerCase();
-      if (lower.includes('platform_name')) return ['Facebook', 'Instagram', 'TikTok', 'Telegram', 'Website', 'Other'];
-      if (lower.includes('cites')) return ['I', 'II', 'III', 'none', 'unknown'];
-      if (lower.includes('iucn')) return ['LC', 'NT', 'VU', 'EN', 'CR', 'EW', 'EX', 'DD', 'NE', 'unknown'];
-      if (lower.includes('currency')) return ['USD', 'EUR', 'GBP', 'CNY', 'THB', 'VND', 'IDR', 'Other'];
-      if (lower.includes('language')) return ['en', 'es', 'fr', 'pt', 'zh', 'vi', 'th', 'id', 'Other'];
-      if (lower.includes('status')) return ['unreviewed', 'reviewed', 'needs_fix', 'rejected', 'archived', 'unknown'];
-      if (lower.includes('priority')) return ['low', 'medium', 'high', 'critical'];
-      if (lower.includes('access_level')) return ['public', 'logged_in', 'closed_group', 'invite_only', 'unknown'];
-      if (lower.includes('delivery_method')) return ['pickup', 'courier', 'post', 'air', 'bus', 'hand_carry', 'unknown'];
-      if (lower.includes('payment_method')) return ['Visa/Mastercard', 'PayPal', 'Cash App', 'Bank transfer', 'Cash', 'Crypto', 'Other'];
-      if (lower.includes('group_type') || lower.includes('website_type') || lower.includes('platform_type')) return ['Social Media', 'E-commerce', 'Messaging App', 'Forum', 'Classifieds', 'Website', 'Other'];
-      if (lower.includes('item_unit')) return ['each', 'g', 'kg', 'lb', 'oz', 'mL', 'L', 'unknown'];
-      if (lower.includes('item_type')) return ['live_animal', 'part', 'derivative', 'plant', 'timber', 'medicine', 'other'];
-      return [];
-    }
-    function mapFieldTypeToGoogleFormType(field) {
-      const id = String(field.field_id || '').toLowerCase();
-      const text = `${field.description || ''} ${field.standardization_notes || ''}`.toLowerCase();
-      if (id.includes('url') || text.includes('url')) return 'url';
-      if (id.includes('date') && !id.includes('updated')) return 'date';
-      if (id.includes('time') && !id.includes('timezone')) return 'time';
-      if (text.includes('boolean') || id.endsWith('_flag') || id.startsWith('is_') || id.startsWith('was_')) return 'boolean';
-      if (id.includes('note') || id.includes('text') || id.includes('caption') || id.includes('description') || id.includes('summary') || id.includes('bio')) return 'long_text';
-      if (id.includes('tags') || id.includes('_list') || text.includes('list normalized') || text.includes('comma')) return 'multiple_choice';
-      if (text.includes('controlled list') || text.includes('controlled vocabulary')) return 'single_choice';
-      if (text.includes('numeric') || text.includes('integer') || id.includes('count') || id.includes('score') || id.includes('price') || id.includes('value') || id.includes('lat') || id.includes('lon')) return 'number';
-      return 'short_text';
-    }
-    function uniqueFieldName(name, usedNames) {
-      const base = String(name || 'field').trim() || 'field';
-      let candidate = base;
-      let index = 2;
-      while (usedNames.has(candidate)) {
-        candidate = `${base}_${index}`;
-        index += 1;
-      }
-      usedNames.add(candidate);
-      return candidate;
-    }
-    function buildGoogleFormSchema(dataModel) {
-      const sourceFields = dataModel.fields || [];
-      const usedNames = new Set();
-      const sectionsByName = new Map();
-      const sections = [];
-      for (const field of sourceFields) {
-        if (!field || !field.field_id) continue;
-        const sectionName = field.category || 'Uncategorized';
-        if (!sectionsByName.has(sectionName)) {
-          const section = {
-            name: sectionName,
-            description: `Fields from ${sectionName}.`,
-            fields: [],
-          };
-          sectionsByName.set(sectionName, section);
-          sections.push(section);
-        }
-        const type = mapFieldTypeToGoogleFormType(field);
-        const options = ['single_choice', 'multiple_choice'].includes(type) ? inferControlledOptions(field) : undefined;
-        const descriptionParts = [field.description, field.standardization_notes ? `Standardization: ${field.standardization_notes}` : ''].filter(Boolean);
-        if (type === 'url') descriptionParts.push('A URL is expected.');
-        if (type === 'number') descriptionParts.push('Enter a numeric value.');
-        sectionsByName.get(sectionName).fields.push({
-          name: uniqueFieldName(field.field_id, usedNames),
-          label: labelFromFieldId(field.field_id),
-          description: descriptionParts.join('\n'),
-          type,
-          required: Boolean(field.in_gms),
-          options,
-          source_field_id: field.field_id,
-        });
-      }
-      return {
-        title: 'GMS Data Entry Form',
-        description: 'Generated from the gmstools data model.',
-        sections,
-      };
-    }
-    function validateGoogleFormSchema(schema) {
-      const warnings = [];
-      const names = new Set();
-      for (const section of schema.sections || []) {
-        if (!section.name) warnings.push('A section is missing a name.');
-        for (const field of section.fields || []) {
-          if (!field.label) warnings.push(`Field ${field.name || '(unnamed)'} has no label.`);
-          if (field.required && !field.label) warnings.push(`Required field ${field.name || '(unnamed)'} has no label.`);
-          if (names.has(field.name)) warnings.push(`Duplicate field name detected: ${field.name}.`);
-          names.add(field.name);
-          if (['single_choice', 'multiple_choice'].includes(field.type) && (!field.options || !field.options.length)) {
-            warnings.push(`Controlled vocabulary field ${field.name} has no options and will be generated as text fallback.`);
-          }
-          if (!['short_text', 'url', 'number', 'long_text', 'date', 'time', 'single_choice', 'multiple_choice', 'boolean'].includes(field.type)) {
-            warnings.push(`Field ${field.name} has unknown type ${field.type}; Apps Script will use a text fallback.`);
-          }
-        }
-      }
-      return warnings;
-    }
-    function generateGoogleAppsScript(schema) {
-      const embeddedSchema = JSON.stringify(schema, null, 2).replace(/<\/script/gi, '<\\/script');
-      return `/**\n * Generated by the ECOSOLVE GMS Data Model Builder.\n * Copy this file into Google Apps Script and run buildGmsForm().\n */\nfunction buildGmsForm() {\n  // Embedded normalized Google Form schema generated from the gmstools data model.\n  const model = ${embeddedSchema};\n  const CREATE_RESPONSE_SPREADSHEET = true;\n\n  const form = FormApp.create(model.title || 'GMS Data Entry Form', false);\n  form.setDescription(model.description || '');\n  form.setCollectEmail(false);\n  form.setAllowResponseEdits(false);\n  form.setAcceptingResponses(true);\n\n  (model.sections || []).forEach(function(section, sectionIndex) {\n    if (sectionIndex > 0) {\n      form.addPageBreakItem()\n        .setTitle(section.name || 'Section ' + (sectionIndex + 1))\n        .setHelpText(section.description || '');\n    } else {\n      form.addSectionHeaderItem()\n        .setTitle(section.name || 'Section ' + (sectionIndex + 1))\n        .setHelpText(section.description || '');\n    }\n\n    (section.fields || []).forEach(function(field) {\n      let item;\n      let fallback = false;\n      switch (field.type) {\n        case 'short_text':\n          item = form.addTextItem();\n          break;\n        case 'url':\n          item = form.addTextItem();\n          item.setValidation(FormApp.createTextValidation().requireTextIsUrl().build());\n          break;\n        case 'number':\n          item = form.addTextItem();\n          item.setValidation(FormApp.createTextValidation().requireNumber().build());\n          break;\n        case 'long_text':\n          item = form.addParagraphTextItem();\n          break;\n        case 'date':\n          item = form.addDateItem();\n          break;\n        case 'time':\n          item = form.addTimeItem();\n          break;\n        case 'single_choice':\n          if (field.options && field.options.length) {\n            item = form.addListItem();\n            item.setChoiceValues(field.options);\n          } else {\n            item = form.addTextItem();\n            fallback = true;\n          }\n          break;\n        case 'multiple_choice':\n          if (field.options && field.options.length) {\n            item = form.addCheckboxItem();\n            item.setChoiceValues(field.options);\n          } else {\n            item = form.addTextItem();\n            fallback = true;\n          }\n          break;\n        case 'boolean':\n        case 'yes_no':\n          item = form.addMultipleChoiceItem();\n          item.setChoiceValues(['Yes', 'No']);\n          break;\n        default:\n          item = form.addTextItem();\n          fallback = true;\n      }\n\n      item.setTitle(field.label || field.name || 'Untitled field');\n      let help = field.description || '';\n      if (fallback) help += (help ? '\\n' : '') + 'Fallback: this field type was generated as a text question. Review manually.';\n      if (field.type === 'url') help += (help ? '\\n' : '') + 'URL expected.';\n      item.setHelpText(help);\n      item.setRequired(Boolean(field.required));\n    });\n  });\n\n  if (CREATE_RESPONSE_SPREADSHEET) {\n    const sheet = SpreadsheetApp.create((model.title || 'GMS Data Entry Form') + ' Responses');\n    form.setDestination(FormApp.DestinationType.SPREADSHEET, sheet.getId());\n    Logger.log('Response spreadsheet URL: ' + sheet.getUrl());\n  }\n\n  Logger.log('Edit URL: ' + form.getEditUrl());\n  Logger.log('Published URL: ' + form.getPublishedUrl());\n}\n`;
-    }
-    function downloadTextFile(filename, content) {
-      const type = filename.endsWith('.json') ? 'application/json' : 'text/plain';
-      download(filename, content, type);
-    }
-    async function copyTextToClipboard(text, statusElement) {
-      try {
-        await navigator.clipboard.writeText(text);
-        if (statusElement) statusElement.textContent = 'Copied to clipboard.';
-      } catch (error) {
-        if (statusElement) statusElement.textContent = 'Clipboard access unavailable. Select the text and copy manually.';
-      }
-    }
-    function renderGoogleFormExportPanel(mode = 'script') {
-      const schema = buildGoogleFormSchema({fields: selectedFieldRows()});
-      const warnings = validateGoogleFormSchema(schema);
-      const content = mode === 'json' ? JSON.stringify(schema, null, 2) : generateGoogleAppsScript(schema);
-      const filename = mode === 'json' ? 'gms-google-form-schema.json' : 'build-gms-form.gs';
-      const panel = $('googleFormExportPanel');
-      panel.classList.remove('hidden');
-      panel.innerHTML = `
-        <h2>${mode === 'json' ? 'Google Form JSON schema' : 'Google Form Apps Script'}</h2>
-        <p class="help">1. Go to Google Apps Script. 2. Create a new project. 3. Paste this script. 4. Run <code>buildGmsForm()</code>. 5. Authorize the script. 6. Open the edit or published form URL from the logs.</p>
-        ${warnings.length ? `<div class="notice"><strong>${warnings.length} warning(s)</strong><ul class="warning-list">${warnings.map(warning => `<li>${escapeHtml(warning)}</li>`).join('')}</ul></div>` : '<p class="help">No schema warnings detected.</p>'}
-        <textarea class="code-output" id="googleFormExportText" readonly></textarea>
-        <div class="row" style="margin-top:.8rem"><button class="primary" id="copyGoogleFormExport">Copy ${mode === 'json' ? 'schema' : 'script'}</button><button id="downloadGoogleFormExport">Download ${mode === 'json' ? '.json' : '.gs'} file</button></div>
-        <p class="help" id="googleFormExportStatus"></p>
-      `;
-      $('googleFormExportText').value = content;
-      $('copyGoogleFormExport').addEventListener('click', () => copyTextToClipboard(content, $('googleFormExportStatus')));
-      $('downloadGoogleFormExport').addEventListener('click', () => downloadTextFile(filename, content));
-      panel.scrollIntoView({behavior: 'smooth', block: 'start'});
-    }
-
     function renderFields() {
       const q = norm($('fieldSearch').value), cat = $('categoryFilter').value;
       const rows = fields.filter(f => (!q || norm(`${f.field_id} ${f.category} ${f.description} ${f.standardization_notes}`).includes(q)) && (!cat || f.category === cat) && (!$('gmsOnly').checked || f.in_gms) && (!$('selectedOnly').checked || selected.has(f.field_id)));
       $('fieldsTable').querySelector('tbody').innerHTML = rows.map(f => `<tr class="${selected.has(f.field_id) ? 'selected' : ''} ${f.in_gms ? 'gms' : ''}"><td><strong>${escapeHtml(f.field_id)}</strong></td><td>${escapeHtml(f.category)}</td><td>${escapeHtml(f.description)}</td><td>${escapeHtml(f.standardization_notes)}</td><td><button data-field="${escapeHtml(f.field_id)}">${selected.has(f.field_id) ? 'Remove' : 'Add'}</button></td></tr>`).join('');
       $('selectionSummary').innerHTML = `<strong>${selected.size}</strong> selected fields from <strong>${fields.length}</strong> total fields. Current view shows <strong>${rows.length}</strong> fields.`;
-      $('selectionHelp').textContent = `${selected.size} fields selected. Excel exports include a data-entry template tab plus a long-form field catalogue tab; CSV/JSON exports include the long-form field metadata.`;
+      $('selectionHelp').textContent = `${selected.size} fields selected. The Excel workbook includes a data-entry template tab plus a long-form field catalogue tab.`;
       $('fieldsTable').querySelectorAll('button[data-field]').forEach(b => b.addEventListener('click', () => { selected.has(b.dataset.field) ? selected.delete(b.dataset.field) : selected.add(b.dataset.field); renderFields(); }));
     }
 
@@ -490,24 +339,19 @@
       return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
     }
 
-    $('generateGoogleFormScript').addEventListener('click', () => renderGoogleFormExportPanel('script'));
-    $('generateGoogleFormJson').addEventListener('click', () => renderGoogleFormExportPanel('json'));
 
     ['fieldSearch','categoryFilter','gmsOnly','selectedOnly'].forEach(id => $(id).addEventListener('input', renderFields));
     $('applyProfile').addEventListener('click', () => { selected.clear(); profiles[$('profileSelect').value].forEach(x => selected.add(x)); renderFields(); });
     $('clearSelection').addEventListener('click', () => { selected.clear(); renderFields(); });
     $('downloadFieldsWorkbook').addEventListener('click', downloadFieldWorkbook);
-    $('downloadFieldsCsv').addEventListener('click', () => download('global-data-model-field-catalogue.csv', toCsv(selectedFieldRows().map(field => ({category: field.category, Field_ID: field.field_id, description: field.description, 'notes on data standardization': field.standardization_notes, in_gms: field.in_gms ? 'TRUE' : 'FALSE'})))));
-    $('downloadFieldsJson').addEventListener('click', () => download('global-data-model-fields.json', JSON.stringify(selectedFieldRows(), null, 2), 'application/json'));
 
     ['retainCut','dropCut'].forEach(id => $(id).addEventListener('input', renderRsba));
     $('loadRsbaExample').addEventListener('click', () => { rsbaRows = DATA.rsbaExample.map(row => ({...row})); renderRsba(); });
     $('addRsbaRow').addEventListener('click', () => { rsbaRows.push(Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, rsbaScoreCols.includes(c) ? 0 : '']))); renderRsba(); });
     $('scoreRsba').addEventListener('click', renderRsba);
     $('clearRsba').addEventListener('click', () => { rsbaRows = []; renderRsba(); });
-    $('downloadRsbaCsv').addEventListener('click', () => download('rapid-species-basket-assessment-results.csv', toCsv(rsbaRows.map(scoreRsbaRow))));
-    $('downloadRsbaTemplateCsv').addEventListener('click', () => download('rapid-species-basket-assessment-template.csv', toCsv([Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, '']))])));
     $('downloadRsbaTemplateXlsx').addEventListener('click', () => downloadXlsx('rapid-species-basket-assessment-template.xlsx', [Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, '']))], 'RSBA template'));
+    $('downloadRsbaXlsx').addEventListener('click', () => downloadXlsx('rapid-species-basket-assessment-results.xlsx', rsbaRows.map(scoreRsbaRow), 'RSBA results'));
     $('rsbaFile').addEventListener('change', async (e) => { if (e.target.files[0]) { rsbaRows = normalizeRows(await readFileRows(e.target.files[0]), rsbaCols); renderRsba(); } });
 
     ['platformRetainCut','platformDropCut'].forEach(id => $(id).addEventListener('input', renderPlatforms));
@@ -515,9 +359,8 @@
     $('addPlatformRow').addEventListener('click', () => { platformRows.push(Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, platformScoreCols.includes(c) ? 0 : '']))); renderPlatforms(); });
     $('scorePlatforms').addEventListener('click', renderPlatforms);
     $('clearPlatform').addEventListener('click', () => { platformRows = []; renderPlatforms(); });
-    $('downloadPlatformCsv').addEventListener('click', () => download('platform-assessment-results.csv', toCsv(platformRows.map(scorePlatformRow))));
-    $('downloadPlatformTemplateCsv').addEventListener('click', () => download('platform-assessment-template.csv', toCsv([Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, '']))])));
     $('downloadPlatformTemplateXlsx').addEventListener('click', () => downloadXlsx('platform-assessment-template.xlsx', [Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, '']))], 'Platform template'));
+    $('downloadPlatformXlsx').addEventListener('click', () => downloadXlsx('platform-assessment-results.xlsx', platformRows.map(scorePlatformRow), 'Platform results'));
     $('platformFile').addEventListener('change', async (e) => { if (e.target.files[0]) { platformRows = normalizeRows(await readFileRows(e.target.files[0]), platformCols); renderPlatforms(); } });
 
     renderFields(); renderRsba(); renderPlatforms();

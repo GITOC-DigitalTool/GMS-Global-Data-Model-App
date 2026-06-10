@@ -7,7 +7,7 @@ This repository contains a **static GitHub Pages version** of the ECOSOLVE Globa
 - `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
 - `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the complete R-app field catalogue export (294 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
-The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads and Excel template downloads work on GitHub Pages. CSV uploads and CSV template downloads work without the CDN.
+The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads plus Excel workbook/template downloads work on GitHub Pages. CSV uploads are still accepted for assessment data, but downloads are kept to Excel workbooks/templates only.
 
 ## Global Data Model
 
@@ -39,7 +39,7 @@ The **Field catalogue** tab lets users:
 - show only current GMS fields;
 - show only selected fields;
 - apply baseline profiles; and
-- export selected fields as a two-tab Excel workbook, a long-form CSV, or JSON.
+- export selected fields as a two-tab Excel workbook.
 
 
 ### Field catalogue Excel workbook
@@ -49,7 +49,7 @@ The **Download Excel workbook** button exports the selected field set as a two-t
 1. **Data entry template** — the selected data fields are laid out as spreadsheet columns, with one example row showing the kind of value that should be entered for each field.
 2. **Field catalogue** — the long-form field reference table with category, `Field_ID`, description, standardization notes, and `in_gms` membership.
 
-This structure lets analysts fill out monitoring data in the first tab while keeping the full field definitions and standardization guidance in the second tab. The long-form CSV and JSON buttons remain available for metadata-only exports.
+This structure lets analysts fill out monitoring data in the first tab while keeping the full field definitions and standardization guidance in the second tab.
 
 Profiles are meant to be starting points rather than final protocols. The included profiles are:
 
@@ -71,14 +71,6 @@ The model is curated as a practical harmonization layer across online monitoring
 This makes the model a living schema. Teams should adapt the field list to their species scope, platforms, legal context, ethics review, and operational capacity.
 
 
-## Google Form export
-
-The Field catalogue includes a **Google Form export** panel with two utility outputs:
-
-- **Export Google Form Script** builds a copy/paste-ready Google Apps Script file. Paste it into a new Google Apps Script project, run `buildGmsForm()`, authorize it, and then open the edit or published form URL from the Apps Script logs.
-- **Export Google Form JSON schema** exports the normalized intermediate schema for reuse with a future Forms API, Sheets, or other intake system integration.
-
-The generated schema groups selected fields by category/module, preserves field order, converts field IDs into readable question labels, uses descriptions and standardization notes as help text, marks current GMS fields as required, infers Google Form item types, and includes warnings when a controlled vocabulary field has no known option list. The generated Apps Script creates sections, text questions, URL/number validated text questions, paragraph questions, date/time questions, dropdowns, checkboxes, and Yes/No questions where possible.
 
 ## Rapid Species Basket Assessment (RSBA)
 
@@ -86,11 +78,11 @@ The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow
 
 - load the bundled multi-row example species list;
 - upload a `.csv`, `.xlsx`, or `.xls` species list;
-- download CSV or Excel templates with the required criteria columns;
+- download an Excel template with the required criteria columns;
 - add species manually;
 - edit criteria values directly in the table;
 - run scoring after edits; and
-- export the completed assessment as CSV.
+- export the completed assessment as an Excel workbook.
 
 Priority-setting should balance conservation urgency, enforcement relevance, trade relevance, online trade relevance, and the practical likelihood that a species or product can be identified and assessed online with enough confidence to make monitoring useful. The current RSBA criteria are stored in `assets/global-data-model.js` and displayed in the app:
 
@@ -115,11 +107,11 @@ The **Platform assessment** tab lets users score platforms interactively or from
 
 - load the bundled multi-row platform example;
 - upload a `.csv`, `.xlsx`, or `.xls` platform list;
-- download CSV or Excel templates with the required platform criteria columns;
+- download an Excel template with the required platform criteria columns;
 - add platforms manually;
 - edit criteria values directly in the browser table;
 - re-run scoring after edits; and
-- export the ranked platform assessment as CSV.
+- export the ranked platform assessment as an Excel workbook.
 
 The platform scoring criteria are stored in `assets/global-data-model.js` and displayed in the app. The current criteria columns are:
 
@@ -134,7 +126,7 @@ The app sums the criteria values, sorts platforms by total score, and labels row
 
 ## Exportable templates
 
-Both assessment tabs include **CSV template** and **Excel template** buttons. The templates include the relevant input columns but omit computed result columns. Users can fill in the templates, upload them back into the app, review or edit the rows, run scoring, and export completed results.
+Both assessment tabs include **Excel template** and **Export results Excel** buttons. The templates include the relevant input columns but omit computed result columns. Users can fill in the templates, upload them back into the app, review or edit the rows, run scoring, and export completed results as Excel workbooks.
 
 ## Publishing on GitHub Pages
 
