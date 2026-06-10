@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ECOSOLVE - Global Monitoring System Data Model Builder</title>
+  <meta name="description" content="Static GitHub Pages version of the ECOSOLVE Global Monitoring System Data Model Builder." />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <script src="assets/global-data-model.js" defer></script>
+  <style>
+    :root { --bg:#071b1f; --panel:#0d2a30; --panel-2:#12363d; --ink:#eef8f6; --muted:#aac3c0; --accent:#47d7ac; --accent-2:#9be564; --warn:#ffd166; --danger:#ff6b6b; --line:rgba(255,255,255,.12); --shadow:0 22px 60px rgba(0,0,0,.35); }
+    * { box-sizing:border-box; }
+    body { margin:0; overflow-x:hidden; font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); background:radial-gradient(circle at top left, #174b4e 0, var(--bg) 38rem); text-align:left; }
+    a { color:var(--accent-2); }
+    header { padding:3rem clamp(1rem, 3vw, 3rem) 1.5rem; border-bottom:1px solid var(--line); }
+    .hero { max-width:1280px; margin:0 auto; display:grid; gap:1rem; }
+    .eyebrow { color:var(--accent); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
+    h1 { font-size:clamp(2.15rem, 5vw, 3.8rem); line-height:1.02; margin:.2rem 0; max-width:980px; letter-spacing:-.03em; }
+    .lead { max-width:870px; color:var(--muted); font-size:1.12rem; line-height:1.65; }
+    .stats { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.9rem; margin-top:1.3rem; }
+    .stat, .card { background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
+    .stat { padding:1rem; } .stat b { display:block; font-size:1.7rem; color:#fff; } .stat span { color:var(--muted); font-size:.9rem; }
+    main { max-width:1280px; margin:0 auto; padding:1.3rem clamp(1rem, 3vw, 3rem) 4rem; }
+    nav.tabs { display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0; position:sticky; top:0; z-index:5; padding:.7rem 0; background:linear-gradient(180deg, rgba(7,27,31,.98), rgba(7,27,31,.86)); backdrop-filter:blur(10px); }
+    .tab-btn, button, .button { border:1px solid var(--line); background:var(--panel-2); color:var(--ink); border-radius:999px; padding:.68rem 1rem; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; gap:.4rem; align-items:center; }
+    .tab-btn.active, button.primary { background:linear-gradient(135deg, #24b58f, #89d66a); color:#06201d; border-color:transparent; }
+    button.ghost { background:transparent; } button.danger { background:rgba(255,107,107,.14); color:#ffd2d2; }
+    .grid { display:grid; grid-template-columns:minmax(260px, 300px) minmax(0, 1fr); gap:1rem; align-items:start; }
+    .card { padding:1rem; margin-bottom:1rem; min-width:0; }
+    h2, h3 { margin:.2rem 0 1rem; } h3 { font-size:1.05rem; }
+    label { display:block; font-weight:800; color:#dff5ef; margin:.7rem 0 .35rem; }
+    input, select, textarea { width:100%; border:1px solid var(--line); background:#061519; color:var(--ink); border-radius:12px; padding:.75rem; font:inherit; }
+    input[type="checkbox"] { width:auto; accent-color:var(--accent); }
+    .row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; } .row > * { flex:1 1 auto; }
+    .help { color:var(--muted); font-size:.92rem; line-height:1.6; max-width:78ch; } .small { font-size:.84rem; }
+    .pill { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.25rem .6rem; color:#d9f7ef; background:rgba(255,255,255,.05); margin:.1rem; font-size:.8rem; }
+    table { width:100%; border-collapse:collapse; table-layout:fixed; background:#061519; border-radius:16px; overflow:hidden; }
+    th, td { padding:.8rem .85rem; border-bottom:1px solid rgba(255,255,255,.08); vertical-align:top; text-align:left; white-space:normal; overflow-wrap:anywhere; word-break:normal; line-height:1.45; font-size:.94rem; }
+    th { background:#12363d; color:#cffff2; position:sticky; top:59px; z-index:2; }
+    tr.selected { background:rgba(71,215,172,.13); } tr.gms td:first-child::before { content:"GMS"; color:#061519; background:var(--warn); border-radius:999px; padding:.12rem .35rem; margin-right:.4rem; font-size:.68rem; font-weight:900; }
+    .table-wrap { width:100%; max-width:100%; max-height:690px; overflow:auto; border:1px solid var(--line); border-radius:16px; }
+    .hidden { display:none !important; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
+    .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
+    .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
+    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:22%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:24%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:31%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:18%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:5.5rem; text-align:center; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
+    footer { max-width:1180px; margin:0 auto; padding:2rem clamp(1rem, 3vw, 3rem); color:var(--muted); border-top:1px solid var(--line); }
+    @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <div class="eyebrow">ECOSOLVE - Global Monitoring System</div>
+      <h1>ECOSOLVE - Global Monitoring System Data Model Builder</h1>
+      <p class="lead">A static, browser-only version of the ECOSOLVE Global Monitoring System data model for GitHub Pages. Browse the master schema, build exportable field sets, run Rapid Species Basket Assessment scoring, and rank platforms without a Shiny server.</p>
+      <div class="stats">
+        <div class="stat"><b id="statFields">—</b><span>schema fields</span></div>
+        <div class="stat"><b id="statCategories">—</b><span>categories</span></div>
+        <div class="stat"><b id="statGms">—</b><span>current GMS fields</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="Application sections">
+      <button class="tab-btn active" data-tab="catalogue">Field catalogue</button>
+      <button class="tab-btn" data-tab="rsba">Species assessment (RSBA)</button>
+      <button class="tab-btn" data-tab="platforms">Platform assessment</button>
+      <button class="tab-btn" data-tab="about">Model notes</button>
+    </nav>
+
+    <section id="catalogue" class="tab-panel">
+      <div class="grid">
+        <aside>
+          <div class="card">
+            <h2>Field selection</h2>
+            <label for="profileSelect">Baseline profile</label>
+            <select id="profileSelect"></select>
+            <div class="row" style="margin-top:.8rem"><button class="primary" id="applyProfile">Apply profile</button><button class="ghost" id="clearSelection">Clear</button></div>
+            <p class="help">Selected fields are highlighted and included in CSV / JSON exports. Use profiles as starting points, then add or remove individual fields.</p>
+          </div>
+          <div class="card">
+            <h3>Filters</h3>
+            <label for="fieldSearch">Search</label><input id="fieldSearch" placeholder="field, category, description…" />
+            <label for="categoryFilter">Category</label><select id="categoryFilter"></select>
+            <label><input type="checkbox" id="gmsOnly" /> Show only current GMS fields</label>
+            <label><input type="checkbox" id="selectedOnly" /> Show only selected fields</label>
+          </div>
+          <div class="card">
+            <h3>Export selected fields</h3>
+            <div class="row"><button class="primary" id="downloadFieldsWorkbook">Download Excel workbook</button><button id="downloadFieldsCsv">Download long-form CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
+            <p class="help" id="selectionHelp"></p>
+          </div>
+        </aside>
+        <div>
+          <div class="card notice" id="selectionSummary"></div>
+          <div class="table-wrap"><table id="fieldsTable"><thead><tr><th>Field</th><th>Category</th><th>Description</th><th>Standardization notes</th><th></th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsba" class="tab-panel hidden">
+      <div class="card">
+        <h2>Rapid Species Basket Assessment (RSBA)</h2>
+        <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, and re-run scoring in the browser. Nothing is uploaded to a server.</p>
+        <div class="row">
+          <div><label for="rsbaFile">Upload .csv / .xlsx species list</label><input id="rsbaFile" type="file" accept=".csv,.xlsx,.xls" /></div>
+          <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="9" min="0" max="30" /></div>
+          <div><label for="dropCut">Drop threshold (≤)</label><input id="dropCut" type="number" value="4" min="0" max="30" /></div>
+        </div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadRsbaExample">Load example</button><button id="addRsbaRow">Add row</button><button id="scoreRsba">Run scoring</button><button id="downloadRsbaTemplateCsv">CSV template</button><button id="downloadRsbaTemplateXlsx">Excel template</button><button id="downloadRsbaCsv">Export results CSV</button><button class="danger" id="clearRsba">Clear</button></div>
+      </div>
+      <div class="card">
+        <h3>Priority species and products</h3>
+        <p class="help">In cases where resources are limited, it is best to establish a shortlist of priority species or product types. Priority-setting should balance conservation urgency, enforcement relevance, and the practical likelihood that the species or product can be identified and assessed online with enough confidence to make monitoring useful.</p>
+        <p class="help">A simple weighted scoring system across these criteria helps analysts rank species or product groups during initial scoping for the ECOSOLVE Global Monitoring System (GMS), which uses open-source intelligence (OSINT) and artificial intelligence (AI) to track, analyze, and disrupt illicit wildlife markets on social media and e-commerce platforms.</p>
+      </div>
+      <div class="card">
+        <h3>RSBA criteria</h3>
+        <div class="table-wrap"><table><thead><tr><th>Criterion</th><th>Score range</th><th>Description</th></tr></thead><tbody id="rsbaCriteria"></tbody></table></div>
+      </div>
+      <div class="card notice" id="rsbaSummary">No RSBA species loaded yet.</div>
+      <div class="table-wrap"><table id="rsbaTable" class="editable"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="platforms" class="tab-panel hidden">
+      <div class="card">
+        <h2>Platform assessment</h2>
+        <p class="help">Upload a platform list or use the example data. The table is editable, so teams can enter scores manually and export the ranked assessment. Uploaded data is auto-scored when it contains matching criteria columns.</p>
+        <div class="row">
+          <div><label for="platformFile">Upload .csv / .xlsx platform assessment</label><input id="platformFile" type="file" accept=".csv,.xlsx,.xls" /></div>
+          <div><label for="platformRetainCut">High priority threshold (≥)</label><input id="platformRetainCut" type="number" value="14" min="0" max="30" /></div>
+          <div><label for="platformDropCut">Low priority threshold (≤)</label><input id="platformDropCut" type="number" value="7" min="0" max="30" /></div>
+        </div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadPlatformExample">Load example</button><button id="addPlatformRow">Add platform</button><button id="scorePlatforms">Run scoring</button><button id="downloadPlatformTemplateCsv">CSV template</button><button id="downloadPlatformTemplateXlsx">Excel template</button><button id="downloadPlatformCsv">Export results CSV</button><button class="danger" id="clearPlatform">Clear</button></div>
+      </div>
+      <div class="card"><h3>Platform criteria</h3><ol class="help criteria-list" id="platformCriteria"></ol></div>
+      <div class="card notice" id="platformSummary">No platform assessment loaded yet.</div>
+      <div class="table-wrap"><table id="platformTable" class="editable"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="about" class="tab-panel hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Global Data Model</h2>
+          <p class="help">The Global Data Model is a browser-readable schema for online IWT monitoring. It organizes observation metadata, taxon and product evidence, trade signals, actor and network context, platform and location cues, and governance fields into one exportable catalogue.</p>
+          <div id="categoryPills"></div>
+        </div>
+        <div>
+          <div class="card"><h3>How it was curated</h3><ol class="help" id="curationSteps"></ol></div>
+          <div class="card"><h3>RSBA workflow</h3><p class="help">The Rapid Species Basket Assessment turns species-list evidence into Retain, Monitor, or Drop recommendations. Edit criteria values directly in the table, then run scoring again.</p></div>
+          <div class="card"><h3>Platform assessment workflow</h3><p class="help">Platform rows can be entered manually, loaded from the example, or uploaded with the template columns. Scores are summed and ranked as High priority, Monitor, or Low priority.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Static GitHub Pages app for the ECOSOLVE Global Monitoring System Data Model Builder. Publish this repository root or copy <code>index.html</code> and <code>assets/global-data-model.js</code> into a Pages branch or <code>/docs</code> directory.</footer>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const DATA = window.GDM_DATA;
+    const fields = DATA.fields;
+    const profiles = DATA.profiles;
+    const selected = new Set(profiles['Global Monitoring System']);
+    const $ = (id) => document.getElementById(id);
+    const categories = [...new Set(fields.map(f => f.category))];
+    let rsbaRows = [];
+    let platformRows = [];
+
+    const rsbaBaseCols = ['common_name','scientific_name','iucn_status','cites_status'];
+    const rsbaScoreCols = DATA.rsbaCriteria.map(c => c.key);
+    const rsbaCols = [...rsbaBaseCols, ...rsbaScoreCols, 'notes', 'rsba_total', 'recommendation'];
+    const platformBaseCols = ['platform_name','platform_type'];
+    const platformScoreCols = DATA.platformCriteria.map(c => c.key);
+    const platformCols = [...platformBaseCols, ...platformScoreCols, 'notes', 'platform_total', 'priority'];
+
+    $('statFields').textContent = fields.length;
+    $('statCategories').textContent = categories.length;
+    $('statGms').textContent = DATA.gmsFields.length;
+    for (const name of Object.keys(profiles)) $('profileSelect').append(new Option(`${name} (${profiles[name].length})`, name));
+    $('categoryFilter').append(new Option('All categories', ''));
+    for (const cat of categories) $('categoryFilter').append(new Option(cat, cat));
+    $('categoryPills').innerHTML = categories.map(cat => `<span class="pill">${escapeHtml(cat)}</span>`).join('');
+    $('curationSteps').innerHTML = DATA.curationSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
+    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td>0–${escapeHtml(c.max)}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
+    $('platformCriteria').innerHTML = DATA.platformCriteria.map(c => `<li><strong>${escapeHtml(c.label)}</strong> (${c.key}, 0-${c.max}): ${escapeHtml(c.help)}</li>`).join('');
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      btn.classList.add('active');
+      $(btn.dataset.tab).classList.remove('hidden');
+    }));
+
+    function escapeHtml(v) { return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function norm(v) { return String(v ?? '').trim().toLowerCase(); }
+    function num(v) { return Number(v) || 0; }
+    function csvEscape(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s; }
+    function download(name, content, type='text/csv') { const blob = new Blob([content], {type}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
+    function toCsv(rows) { if (!rows.length) return ''; const cols = Object.keys(rows[0]); return [cols.join(','), ...rows.map(r => cols.map(c => csvEscape(r[c])).join(','))].join('\n'); }
+    function downloadXlsx(name, rows, sheetName) {
+      if (!window.XLSX) { download(name.replace(/\.xlsx$/i, '.csv'), toCsv(rows)); return; }
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+      XLSX.writeFile(workbook, name);
+    }
+    function normalizeRows(rows, cols) {
+      return rows.map(row => {
+        const keys = Object.keys(row);
+        const out = {};
+        for (const col of cols) {
+          const key = keys.find(k => norm(k) === norm(col) || norm(k).replaceAll(' ', '_') === norm(col));
+          out[col] = key ? row[key] : '';
+        }
+        return out;
+      });
+    }
+
+
+    function exampleValue(field) {
+      const id = field.field_id.toLowerCase();
+      const notes = `${field.description} ${field.standardization_notes}`.toLowerCase();
+      if (id.includes('date') || id.includes('timestamp') || notes.includes('iso 8601')) return '2026-01-01T00:00:00Z';
+      if (id.includes('url')) return 'https://example.org/listing/123';
+      if (id.includes('email')) return 'analyst@example.org';
+      if (id.includes('phone') || id.includes('whatsapp')) return '+15551234567';
+      if (id.includes('lat')) return '0.000000';
+      if (id.includes('lon')) return '0.000000';
+      if (id.includes('currency')) return 'USD';
+      if (id.includes('country_iso2')) return 'US';
+      if (id.includes('country_iso3') || id === 'origin_country' || id === 'destination_country' || id === 'item_sold_in') return 'USA';
+      if (id.includes('count') || id.includes('quantity') || id.includes('score') || id.includes('price') || id.includes('value') || id.includes('followers') || id.includes('views') || id.includes('seconds') || notes.includes('numeric') || notes.includes('integer')) return '1';
+      if (id.includes('flag') || id.startsWith('is_') || notes.includes('boolean')) return 'TRUE';
+      if (id.includes('id') || notes.includes('uuid')) return '00000000-0000-4000-8000-000000000000';
+      if (id.includes('species') || id.includes('scientific')) return 'Psittacus erithacus';
+      if (id.includes('common_name')) return 'African grey parrot';
+      if (id.includes('platform')) return 'Example marketplace';
+      if (id.includes('language')) return 'en';
+      if (notes.includes('controlled list')) return 'example_value';
+      return 'Enter value here';
+    }
+    function selectedFieldRows() {
+      return fields.filter(f => selected.has(f.field_id));
+    }
+    function downloadFieldWorkbook() {
+      const rows = selectedFieldRows();
+      if (!rows.length) {
+        alert('Select at least one field before exporting a workbook.');
+        return;
+      }
+      if (!window.XLSX) {
+        alert('Excel workbook export requires the XLSX library to load from the CDN. Please check your connection or use the long-form CSV export.');
+        return;
+      }
+      const workbook = XLSX.utils.book_new();
+      const headers = rows.map(field => field.field_id);
+      const example = rows.map(exampleValue);
+      const templateSheet = XLSX.utils.aoa_to_sheet([headers, example]);
+      const catalogueRows = rows.map(field => ({
+        category: field.category,
+        Field_ID: field.field_id,
+        description: field.description,
+        'notes on data standardization': field.standardization_notes,
+        in_gms: field.in_gms ? 'TRUE' : 'FALSE',
+      }));
+      const catalogueSheet = XLSX.utils.json_to_sheet(catalogueRows);
+      XLSX.utils.book_append_sheet(workbook, templateSheet, 'Data entry template');
+      XLSX.utils.book_append_sheet(workbook, catalogueSheet, 'Field catalogue');
+      XLSX.writeFile(workbook, 'global-data-model-template.xlsx');
+    }
+
+    function renderFields() {
+      const q = norm($('fieldSearch').value), cat = $('categoryFilter').value;
+      const rows = fields.filter(f => (!q || norm(`${f.field_id} ${f.category} ${f.description} ${f.standardization_notes}`).includes(q)) && (!cat || f.category === cat) && (!$('gmsOnly').checked || f.in_gms) && (!$('selectedOnly').checked || selected.has(f.field_id)));
+      $('fieldsTable').querySelector('tbody').innerHTML = rows.map(f => `<tr class="${selected.has(f.field_id) ? 'selected' : ''} ${f.in_gms ? 'gms' : ''}"><td><strong>${escapeHtml(f.field_id)}</strong></td><td>${escapeHtml(f.category)}</td><td>${escapeHtml(f.description)}</td><td>${escapeHtml(f.standardization_notes)}</td><td><button data-field="${escapeHtml(f.field_id)}">${selected.has(f.field_id) ? 'Remove' : 'Add'}</button></td></tr>`).join('');
+      $('selectionSummary').innerHTML = `<strong>${selected.size}</strong> selected fields from <strong>${fields.length}</strong> total fields. Current view shows <strong>${rows.length}</strong> fields.`;
+      $('selectionHelp').textContent = `${selected.size} fields selected. Excel exports include a data-entry template tab plus a long-form field catalogue tab; CSV/JSON exports include the long-form field metadata.`;
+      $('fieldsTable').querySelectorAll('button[data-field]').forEach(b => b.addEventListener('click', () => { selected.has(b.dataset.field) ? selected.delete(b.dataset.field) : selected.add(b.dataset.field); renderFields(); }));
+    }
+
+    function scoreRsbaRow(row) {
+      const total = rsbaScoreCols.reduce((sum, key) => sum + num(row[key]), 0);
+      row.rsba_total = total;
+      const retain = num($('retainCut').value) || 9;
+      const drop = num($('dropCut').value) || 4;
+      row.recommendation = total >= retain ? 'Retain' : total <= drop ? 'Drop' : 'Monitor';
+      return row;
+    }
+    function renderRsba() {
+      rsbaRows.forEach(scoreRsbaRow);
+      $('rsbaTable').querySelector('thead').innerHTML = '<tr>' + rsbaCols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '<th></th></tr>';
+      $('rsbaTable').querySelector('tbody').innerHTML = rsbaRows.map((r, i) => `<tr class="${norm(r.recommendation)}">${rsbaCols.map(c => `<td ${['rsba_total','recommendation'].includes(c) ? '' : 'contenteditable="true"'} data-row="${i}" data-col="${c}">${escapeHtml(r[c])}</td>`).join('')}<td><button data-del-rsba="${i}">Delete</button></td></tr>`).join('');
+      const counts = rsbaRows.reduce((a, r) => { a[r.recommendation] = (a[r.recommendation] || 0) + 1; return a; }, {});
+      $('rsbaSummary').innerHTML = rsbaRows.length ? `<strong>${rsbaRows.length}</strong> species assessed: <span class="retain">${counts.Retain||0} retain</span>, <span class="monitor">${counts.Monitor||0} monitor</span>, <span class="drop">${counts.Drop||0} drop</span>.` : 'No RSBA species loaded yet.';
+      $('rsbaTable').querySelectorAll('td[contenteditable]').forEach(td => td.addEventListener('blur', () => { rsbaRows[td.dataset.row][td.dataset.col] = td.textContent.trim(); renderRsba(); }));
+      $('rsbaTable').querySelectorAll('button[data-del-rsba]').forEach(b => b.addEventListener('click', () => { rsbaRows.splice(Number(b.dataset.delRsba), 1); renderRsba(); }));
+    }
+    function scorePlatformRow(row) {
+      const total = platformScoreCols.reduce((sum, key) => sum + num(row[key]), 0);
+      row.platform_total = total;
+      const high = num($('platformRetainCut').value) || 14;
+      const low = num($('platformDropCut').value) || 7;
+      row.priority = total >= high ? 'High priority' : total <= low ? 'Low priority' : 'Monitor';
+      return row;
+    }
+    function renderPlatforms() {
+      platformRows.forEach(scorePlatformRow);
+      platformRows.sort((a, b) => num(b.platform_total) - num(a.platform_total));
+      $('platformTable').querySelector('thead').innerHTML = '<tr>' + platformCols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '<th></th></tr>';
+      $('platformTable').querySelector('tbody').innerHTML = platformRows.map((r, i) => `<tr class="${norm(r.priority).replaceAll(' ', '-')}">${platformCols.map(c => `<td ${['platform_total','priority'].includes(c) ? '' : 'contenteditable="true"'} data-row="${i}" data-col="${c}">${escapeHtml(r[c])}</td>`).join('')}<td><button data-del-platform="${i}">Delete</button></td></tr>`).join('');
+      const counts = platformRows.reduce((a, r) => { a[r.priority] = (a[r.priority] || 0) + 1; return a; }, {});
+      $('platformSummary').innerHTML = platformRows.length ? `<strong>${platformRows.length}</strong> platforms scored: <span class="retain">${counts['High priority']||0} high priority</span>, <span class="monitor">${counts.Monitor||0} monitor</span>, <span class="drop">${counts['Low priority']||0} low priority</span>.` : 'No platform assessment loaded yet.';
+      $('platformTable').querySelectorAll('td[contenteditable]').forEach(td => td.addEventListener('blur', () => { platformRows[td.dataset.row][td.dataset.col] = td.textContent.trim(); renderPlatforms(); }));
+      $('platformTable').querySelectorAll('button[data-del-platform]').forEach(b => b.addEventListener('click', () => { platformRows.splice(Number(b.dataset.delPlatform), 1); renderPlatforms(); }));
+    }
+
+    function parseCsv(text) {
+      const rows = []; let row = [], cell = '', quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], next = text[i + 1];
+        if (char === '"' && quoted && next === '"') { cell += '"'; i++; }
+        else if (char === '"') quoted = !quoted;
+        else if (char === ',' && !quoted) { row.push(cell); cell = ''; }
+        else if ((char === '\n' || char === '\r') && !quoted) { if (char === '\r' && next === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+        else cell += char;
+      }
+      if (cell || row.length) { row.push(cell); rows.push(row); }
+      const headers = rows.shift() || [];
+      return rows.filter(r => r.some(v => String(v).trim())).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ''])));
+    }
+    async function readFileRows(file) {
+      const buf = await file.arrayBuffer();
+      if (/\.csv$/i.test(file.name)) {
+        const text = new TextDecoder().decode(buf);
+        return window.XLSX ? XLSX.utils.sheet_to_json(XLSX.read(text, {type:'string'}).Sheets.Sheet1, {defval:''}) : parseCsv(text);
+      }
+      if (!window.XLSX) { alert('Excel uploads require the XLSX library to load from the CDN. Use CSV or check your connection.'); return []; }
+      const wb = XLSX.read(buf, {type:'array'});
+      return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
+    }
+
+    ['fieldSearch','categoryFilter','gmsOnly','selectedOnly'].forEach(id => $(id).addEventListener('input', renderFields));
+    $('applyProfile').addEventListener('click', () => { selected.clear(); profiles[$('profileSelect').value].forEach(x => selected.add(x)); renderFields(); });
+    $('clearSelection').addEventListener('click', () => { selected.clear(); renderFields(); });
+    $('downloadFieldsWorkbook').addEventListener('click', downloadFieldWorkbook);
+    $('downloadFieldsCsv').addEventListener('click', () => download('global-data-model-field-catalogue.csv', toCsv(selectedFieldRows().map(field => ({category: field.category, Field_ID: field.field_id, description: field.description, 'notes on data standardization': field.standardization_notes, in_gms: field.in_gms ? 'TRUE' : 'FALSE'})))));
+    $('downloadFieldsJson').addEventListener('click', () => download('global-data-model-fields.json', JSON.stringify(selectedFieldRows(), null, 2), 'application/json'));
+
+    ['retainCut','dropCut'].forEach(id => $(id).addEventListener('input', renderRsba));
+    $('loadRsbaExample').addEventListener('click', () => { rsbaRows = DATA.rsbaExample.map(row => ({...row})); renderRsba(); });
+    $('addRsbaRow').addEventListener('click', () => { rsbaRows.push(Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, rsbaScoreCols.includes(c) ? 0 : '']))); renderRsba(); });
+    $('scoreRsba').addEventListener('click', renderRsba);
+    $('clearRsba').addEventListener('click', () => { rsbaRows = []; renderRsba(); });
+    $('downloadRsbaCsv').addEventListener('click', () => download('rapid-species-basket-assessment-results.csv', toCsv(rsbaRows.map(scoreRsbaRow))));
+    $('downloadRsbaTemplateCsv').addEventListener('click', () => download('rapid-species-basket-assessment-template.csv', toCsv([Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, '']))])));
+    $('downloadRsbaTemplateXlsx').addEventListener('click', () => downloadXlsx('rapid-species-basket-assessment-template.xlsx', [Object.fromEntries(rsbaCols.filter(c => !['rsba_total','recommendation'].includes(c)).map(c => [c, '']))], 'RSBA template'));
+    $('rsbaFile').addEventListener('change', async (e) => { if (e.target.files[0]) { rsbaRows = normalizeRows(await readFileRows(e.target.files[0]), rsbaCols); renderRsba(); } });
+
+    ['platformRetainCut','platformDropCut'].forEach(id => $(id).addEventListener('input', renderPlatforms));
+    $('loadPlatformExample').addEventListener('click', () => { platformRows = DATA.platformExample.map(row => ({...row})); renderPlatforms(); });
+    $('addPlatformRow').addEventListener('click', () => { platformRows.push(Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, platformScoreCols.includes(c) ? 0 : '']))); renderPlatforms(); });
+    $('scorePlatforms').addEventListener('click', renderPlatforms);
+    $('clearPlatform').addEventListener('click', () => { platformRows = []; renderPlatforms(); });
+    $('downloadPlatformCsv').addEventListener('click', () => download('platform-assessment-results.csv', toCsv(platformRows.map(scorePlatformRow))));
+    $('downloadPlatformTemplateCsv').addEventListener('click', () => download('platform-assessment-template.csv', toCsv([Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, '']))])));
+    $('downloadPlatformTemplateXlsx').addEventListener('click', () => downloadXlsx('platform-assessment-template.xlsx', [Object.fromEntries(platformCols.filter(c => !['platform_total','priority'].includes(c)).map(c => [c, '']))], 'Platform template'));
+    $('platformFile').addEventListener('change', async (e) => { if (e.target.files[0]) { platformRows = normalizeRows(await readFileRows(e.target.files[0]), platformCols); renderPlatforms(); } });
+
+    renderFields(); renderRsba(); renderPlatforms();
+  });
+  </script>
+</body>
+</html>
