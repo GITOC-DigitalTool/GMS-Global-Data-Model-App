@@ -8,19 +8,19 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="assets/global-data-model.js" defer></script>
   <style>
-    :root { --bg:#071b1f; --panel:#0d2a30; --panel-2:#12363d; --ink:#eef8f6; --muted:#aac3c0; --accent:#47d7ac; --accent-2:#9be564; --warn:#ffd166; --danger:#ff6b6b; --line:rgba(255,255,255,.12); --shadow:0 22px 60px rgba(0,0,0,.35); }
+    :root { --bg:#071b1f; --panel:#0d2a30; --panel-2:#12363d; --ink:#eef8f6; --muted:#aac3c0; --accent:#47d7ac; --accent-2:#9be564; --warn:#ffd166; --danger:#ff6b6b; --line:rgba(255,255,255,.12); --shadow:0 22px 60px rgba(0,0,0,.35); --page-gutter:clamp(1rem, 4.5vw, 4rem); --page-max:1280px; }
     * { box-sizing:border-box; }
     body { margin:0; overflow-x:hidden; font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); background:radial-gradient(circle at top left, #174b4e 0, var(--bg) 38rem); text-align:left; }
     a { color:var(--accent-2); }
-    header { padding:3rem clamp(1rem, 3vw, 3rem) 1.5rem; border-bottom:1px solid var(--line); }
-    .hero { max-width:1280px; margin:0 auto; display:grid; gap:1rem; }
+    header { padding:3rem 0 1.5rem; border-bottom:1px solid var(--line); }
+    .hero { width:calc(100% - var(--page-gutter) - var(--page-gutter)); max-width:var(--page-max); margin:0 auto; display:grid; gap:1rem; }
     .eyebrow { color:var(--accent); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
     h1 { font-size:clamp(2.15rem, 5vw, 3.8rem); line-height:1.02; margin:.2rem 0; max-width:980px; letter-spacing:-.03em; }
     .lead { max-width:870px; color:var(--muted); font-size:1.12rem; line-height:1.65; }
     .stats { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.9rem; margin-top:1.3rem; }
     .stat, .card { background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
     .stat { padding:1rem; } .stat b { display:block; font-size:1.7rem; color:#fff; } .stat span { color:var(--muted); font-size:.9rem; }
-    main { max-width:1280px; margin:0 auto; padding:1.3rem clamp(1rem, 3vw, 3rem) 4rem; }
+    main { width:calc(100% - var(--page-gutter) - var(--page-gutter)); max-width:var(--page-max); margin:0 auto; padding:1.3rem 0 4rem; }
     nav.tabs { display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0; position:sticky; top:0; z-index:5; padding:.7rem 0; background:linear-gradient(180deg, rgba(7,27,31,.98), rgba(7,27,31,.86)); backdrop-filter:blur(10px); }
     .tab-btn, button, .button { border:1px solid var(--line); background:var(--panel-2); color:var(--ink); border-radius:999px; padding:.68rem 1rem; font-weight:800; cursor:pointer; text-decoration:none; display:inline-flex; gap:.4rem; align-items:center; }
     .tab-btn.active, button.primary { background:linear-gradient(135deg, #24b58f, #89d66a); color:#06201d; border-color:transparent; }
@@ -43,7 +43,7 @@
     .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
     .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
     .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable { min-width:960px; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:20%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:22%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:29%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:22%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:6.75rem; text-align:center; } .table-wrap button { min-width:4.75rem; justify-content:center; white-space:nowrap; padding:.55rem .8rem; flex:0 0 auto; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
-    footer { max-width:1180px; margin:0 auto; padding:2rem clamp(1rem, 3vw, 3rem); color:var(--muted); border-top:1px solid var(--line); }
+    footer { width:calc(100% - var(--page-gutter) - var(--page-gutter)); max-width:var(--page-max); margin:0 auto; padding:2rem 0; color:var(--muted); border-top:1px solid var(--line); }
     @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
   </style>
 </head>
