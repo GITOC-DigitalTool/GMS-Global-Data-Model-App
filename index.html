@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ECOSOLVE - Global Monitoring System Data Model Builder</title>
-  <meta name="description" content="Static GitHub Pages version of the ECOSOLVE Global Monitoring System Data Model Builder." />
+  <meta name="description" content="ECOSOLVE Global Monitoring System tools for field selection, species assessment, and platform assessment." />
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="assets/global-data-model.js" defer></script>
   <style>
@@ -53,7 +53,7 @@
     <div class="hero">
       <div class="eyebrow">ECOSOLVE - Global Monitoring System</div>
       <h1>ECOSOLVE - Global Monitoring System Data Model Builder</h1>
-      <p class="lead">A static, browser-only version of the ECOSOLVE Global Monitoring System data model for GitHub Pages. Browse the master schema, build exportable field sets, run Rapid Species Basket Assessment scoring, and rank platforms without a Shiny server.</p>
+      <p class="lead">Review the Global Data Model, select and export monitoring fields, run Rapid Species Basket Assessment scoring, and prioritize platforms for online wildlife-trade monitoring.</p>
       <div class="stats">
         <div class="stat"><b id="statFields">—</b><span>schema fields</span></div>
         <div class="stat"><b id="statCategories">—</b><span>categories</span></div>
@@ -103,7 +103,7 @@
     <section id="rsba" class="tab-panel hidden">
       <div class="card">
         <h2>Rapid Species Basket Assessment (RSBA)</h2>
-        <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, and re-run scoring in the browser. Nothing is uploaded to a server.</p>
+        <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, re-run scoring, and export the completed assessment.</p>
         <div class="row">
           <div><label for="rsbaFile">Upload .csv / .xlsx species list</label><input id="rsbaFile" type="file" accept=".csv,.xlsx,.xls" /></div>
           <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="9" min="0" max="30" /></div>
@@ -144,7 +144,7 @@
       <div class="grid">
         <div class="card">
           <h2>Global Data Model</h2>
-          <p class="help">The Global Data Model is a browser-readable schema for online IWT monitoring. It organizes observation metadata, taxon and product evidence, trade signals, actor and network context, platform and location cues, and governance fields into one exportable catalogue.</p>
+          <p class="help">The Global Data Model is a structured schema for online IWT monitoring. It organizes observation metadata, taxon and product evidence, trade signals, actor and network context, platform and location cues, and governance fields into one exportable catalogue.</p>
           <div id="categoryPills"></div>
         </div>
         <div>
@@ -199,7 +199,7 @@
     function norm(v) { return String(v ?? '').trim().toLowerCase(); }
     function num(v) { return Number(v) || 0; }
     function downloadXlsx(name, rows, sheetName) {
-      if (!window.XLSX) { alert('Excel export requires the XLSX library to load from the CDN. Please check your connection and try again.'); return; }
+      if (!window.XLSX) { alert('Excel export is unavailable because the workbook library did not load. Please check your connection and try again.'); return; }
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(rows);
       XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
@@ -251,7 +251,7 @@
         return;
       }
       if (!window.XLSX) {
-        alert('Excel workbook export requires the XLSX library to load from the CDN. Please check your connection and try again.');
+        alert('Excel workbook export is unavailable because the workbook library did not load. Please check your connection and try again.');
         return;
       }
       const workbook = XLSX.utils.book_new();
@@ -336,7 +336,7 @@
         const text = new TextDecoder().decode(buf);
         return window.XLSX ? XLSX.utils.sheet_to_json(XLSX.read(text, {type:'string'}).Sheets.Sheet1, {defval:''}) : parseCsv(text);
       }
-      if (!window.XLSX) { alert('Excel uploads require the XLSX library to load from the CDN. Use CSV or check your connection.'); return []; }
+      if (!window.XLSX) { alert('Excel uploads are unavailable because the workbook library did not load. Use CSV or check your connection.'); return []; }
       const wb = XLSX.read(buf, {type:'array'});
       return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
     }

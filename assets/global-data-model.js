@@ -2787,7 +2787,7 @@ window.GDM_DATA = {
     "datahub"
   ],
   "curationSteps": [
-    "Import the complete exported field table from the R app without dropping categories or optional fields.",
+    "Review the complete field table without dropping categories or optional fields.",
     "Preserve each Field_ID, category, description, standardization note, and in_gms flag exactly for catalogue review.",
     "Use profiles only as convenience subsets; the Field catalogue remains the authoritative complete list.",
     "Scope sensitive, personal, enforcement, and automated fields according to governance and sharing policies."

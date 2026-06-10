@@ -1,17 +1,17 @@
 # ECOSOLVE - Global Monitoring System Data Model Builder
 
-This repository contains a **static GitHub Pages version** of the ECOSOLVE Global Monitoring System Data Model Builder. It runs entirely in the browser, so teams can review the field catalogue, build exportable schema profiles, run the Rapid Species Basket Assessment (RSBA), score platforms, and export templates or results without a Shiny server.
+The ECOSOLVE Global Monitoring System Data Model Builder helps teams review the field catalogue, build exportable schema profiles, run the Rapid Species Basket Assessment (RSBA), score platforms, and export templates or results for monitoring workflows.
 
 ## Files
 
-- `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
-- `assets/global-data-model.js` — the browser data bundle exposed as `window.GDM_DATA`. It contains the complete R-app field catalogue export (293 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
+- `index.html` — the application interface, including tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
+- `assets/global-data-model.js` — the application data bundle. It contains the complete field catalogue (293 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
-The app loads SheetJS from a CDN so `.xlsx` and `.xls` uploads plus Excel workbook/template downloads work on GitHub Pages. CSV uploads are still accepted for assessment data, but downloads are kept to Excel workbooks/templates only.
+The app supports `.xlsx`, `.xls`, and `.csv` uploads for assessment data. Downloads are kept to Excel workbooks/templates only.
 
 ## Global Data Model
 
-The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. The static app now uses the complete field export provided from the R app: **293 fields across 13 field-selection categories**.
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection: **293 fields across 13 field-selection categories**.
 
 1. **Automation, scraping, and model-assist fields** — model labels, fingerprints, extractor metadata, scraper provenance, and ML suggestions.
 2. **Core record and workflow metadata** — collection program, analyst workflow, dates, review state, priority, risk, validation, and handling flags.
@@ -51,11 +51,11 @@ The **Download Excel workbook** button exports the selected field set as a two-t
 
 This structure lets analysts fill out monitoring data in the first tab while keeping the full field definitions and standardization guidance in the second tab.
 
-Profiles are meant to be starting points rather than final protocols. The included profiles mirror the R app subsets:
+Profiles are meant to be starting points rather than final protocols. The included profiles are:
 
-- **Global Monitoring System** — all fields marked `in_gms = TRUE` in the R-app export.
+- **Global Monitoring System** — all fields marked `in_gms = TRUE`.
 - **All fields** — the full field catalogue.
-- **Category subsets** — one baseline profile for each field-selection category in the R app, including automation/model-assist, core workflow metadata, geography/geocoding, governance/export controls, item/species/product fields, legal/enforcement tracking, linking/dedupe/network fields, media/evidence metadata, platform/content/discovery context, price/commercial terms, seller/account fields, shipping/routes indicators, and vulnerability/bycatch indicators.
+- **Category subsets** — one baseline profile for each field-selection category, including automation/model-assist, core workflow metadata, geography/geocoding, governance/export controls, item/species/product fields, legal/enforcement tracking, linking/dedupe/network fields, media/evidence metadata, platform/content/discovery context, price/commercial terms, seller/account fields, shipping/routes indicators, and vulnerability/bycatch indicators.
 
 ## How the model was curated
 
@@ -72,7 +72,7 @@ This makes the model a living schema. Teams should adapt the field list to their
 
 ## Rapid Species Basket Assessment (RSBA)
 
-The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow in the browser. Users can:
+The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow. Users can:
 
 - load the bundled multi-row example species list;
 - upload a `.csv`, `.xlsx`, or `.xls` species list;
@@ -107,7 +107,7 @@ The **Platform assessment** tab lets users score platforms interactively or from
 - upload a `.csv`, `.xlsx`, or `.xls` platform list;
 - download an Excel template with the required platform criteria columns;
 - add platforms manually;
-- edit criteria values directly in the browser table;
+- edit criteria values directly in the table;
 - re-run scoring after edits; and
 - export the ranked platform assessment as an Excel workbook.
 
@@ -126,15 +126,6 @@ The app sums the criteria values, sorts platforms by total score, and labels row
 
 Both assessment tabs include **Excel template** and **Export results Excel** buttons. The templates include the relevant input columns but omit computed result columns. Users can fill in the templates, upload them back into the app, review or edit the rows, run scoring, and export completed results as Excel workbooks.
 
-## Publishing on GitHub Pages
-
-You can publish the app directly from the repository root because `index.html` is at the top level.
-
-1. Commit and push this repository to GitHub.
-2. Open **Settings → Pages** for the repository.
-3. Choose the branch that contains `index.html`.
-4. Choose the repository root as the Pages source, or copy `index.html` and `assets/global-data-model.js` into `/docs` and publish from `/docs`.
-5. Save the Pages settings and wait for the published URL.
 
 ## Responsible use
 
