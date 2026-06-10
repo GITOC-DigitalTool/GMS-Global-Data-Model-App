@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="GMS Tools Global Data Model app for scoping online illegal wildlife trade monitoring data collection programs."
+    />
+    <title>GMS Tools | Global Data Model</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="GMS Tools Global Data Model home">GMS Tools</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+          Menu
+        </button>
+        <div class="nav-links" id="nav-links">
+          <a href="#model">Global Data Model</a>
+          <a href="#curation">Curation</a>
+          <a href="#rsba">RSBA</a>
+          <a href="#platforms">Platform Assessment</a>
+          <a href="#builder">Program Builder</a>
+        </div>
+      </nav>
+      <section class="hero" id="top">
+        <div>
+          <p class="eyebrow">Online IWT monitoring program design</p>
+          <h1>Global Data Model for consistent, comparable wildlife trade monitoring.</h1>
+          <p class="hero-copy">
+            This static GitHub Pages app turns the GMS Tools Global Data Model workflow into an
+            interactive guide for selecting collection fields, documenting risk, and prioritizing
+            online platforms before a monitoring program launches.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#builder">Build a field list</a>
+            <a class="button secondary" href="#rsba">Calculate RSBA</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Key model summary">
+          <span class="metric" id="field-count">0</span>
+          <span class="metric-label">candidate fields</span>
+          <span class="metric" id="dimension-count">0</span>
+          <span class="metric-label">collection dimensions</span>
+          <span class="metric" id="platform-count">0</span>
+          <span class="metric-label">platform criteria</span>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="section" id="model">
+        <div class="section-heading">
+          <p class="eyebrow">The model</p>
+          <h2>Global Data Model</h2>
+          <p>
+            The model is a normalized field catalogue for online illegal wildlife trade (IWT)
+            monitoring. It separates universal fields that every program should capture from
+            conditional fields that depend on the investigation objective, platform type, or
+            collection capacity.
+          </p>
+        </div>
+        <div class="cards" id="dimension-cards"></div>
+      </section>
+
+      <section class="section split" id="curation">
+        <div>
+          <p class="eyebrow">How it was curated</p>
+          <h2>Evidence-informed field selection</h2>
+          <p>
+            The catalogue is organized around practical monitoring decisions: what was observed,
+            where it was observed, who posted it, how it was traded, and how confidently it can be
+            interpreted. Field definitions emphasize repeatability and defensibility so independent
+            teams can compare outputs without forcing every team to collect unnecessary detail.
+          </p>
+          <ol class="timeline">
+            <li>
+              <strong>Harmonize terms.</strong> Similar fields are merged into a common label and
+              plain-language definition.
+            </li>
+            <li>
+              <strong>Assign collection status.</strong> Fields are marked as required, recommended,
+              conditional, or optional.
+            </li>
+            <li>
+              <strong>Map decisions.</strong> Each field is tied to the program questions it supports,
+              such as species identification, seller behavior, enforcement triage, or trend analysis.
+            </li>
+            <li>
+              <strong>Reduce risk.</strong> Sensitive or personally identifying data is scoped to the
+              minimum needed for a legitimate monitoring purpose.
+            </li>
+          </ol>
+        </div>
+        <div class="callout">
+          <h3>Use the model as a living protocol</h3>
+          <p>
+            Before collection starts, export a scoped field list, document inclusion and exclusion
+            decisions, and revisit the list when platforms, taxa, legislation, or program goals change.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="rsba">
+        <div class="section-heading">
+          <p class="eyebrow">Risk-based scoping</p>
+          <h2>RSBA: Rapid Scoping &amp; Baseline Assessment</h2>
+          <p>
+            The RSBA helps teams score whether a monitoring concept is ready for collection. It does
+            not replace expert review; it creates a transparent first-pass baseline across four areas.
+          </p>
+        </div>
+        <div class="rsba-layout">
+          <form class="panel" id="rsba-form">
+            <label>
+              Conservation or enforcement priority
+              <input type="range" name="priority" min="1" max="5" value="3" />
+              <span class="range-value">3</span>
+            </label>
+            <label>
+              Evidence of online trade activity
+              <input type="range" name="activity" min="1" max="5" value="3" />
+              <span class="range-value">3</span>
+            </label>
+            <label>
+              Data collection feasibility
+              <input type="range" name="feasibility" min="1" max="5" value="3" />
+              <span class="range-value">3</span>
+            </label>
+            <label>
+              Safety, privacy, and ethics readiness
+              <input type="range" name="readiness" min="1" max="5" value="3" />
+              <span class="range-value">3</span>
+            </label>
+          </form>
+          <aside class="score-card" aria-live="polite">
+            <span class="score" id="rsba-score">12</span>
+            <span class="score-label">RSBA score / 20</span>
+            <p id="rsba-guidance"></p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="platforms">
+        <div class="section-heading">
+          <p class="eyebrow">Where to monitor</p>
+          <h2>Platform assessment</h2>
+          <p>
+            Platform assessment compares channels using the same criteria before a team commits time
+            to manual review, scraping, or partner data requests. Scores are meant to support
+            prioritization, not to label a platform as inherently high or low risk.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Criterion</th>
+                <th scope="col">What to document</th>
+                <th scope="col">Collection implication</th>
+              </tr>
+            </thead>
+            <tbody id="platform-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="builder">
+        <div class="section-heading">
+          <p class="eyebrow">Interactive scoping</p>
+          <h2>Program field-list builder</h2>
+          <p>
+            Filter the Global Data Model by collection status or dimension, then copy the selected
+            field list into a protocol, spreadsheet, or issue tracker.
+          </p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter fields">
+          <label>
+            Collection status
+            <select id="status-filter">
+              <option value="all">All statuses</option>
+              <option value="Required">Required</option>
+              <option value="Recommended">Recommended</option>
+              <option value="Conditional">Conditional</option>
+              <option value="Optional">Optional</option>
+            </select>
+          </label>
+          <label>
+            Dimension
+            <select id="dimension-filter">
+              <option value="all">All dimensions</option>
+            </select>
+          </label>
+          <button class="button secondary" type="button" id="copy-fields">Copy visible fields</button>
+        </div>
+        <div class="field-grid" id="field-grid"></div>
+        <p class="copy-status" id="copy-status" role="status"></p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Built as a static HTML app for GitHub Pages. Review and adapt fields with subject-matter,
+        legal, safety, and ethics expertise before deployment.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
