@@ -42,7 +42,7 @@
     .hidden { display:none !important; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
     .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
     .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
-    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable { min-width:960px; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:20%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:22%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:29%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:22%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:6.75rem; text-align:center; } .table-wrap button { min-width:4.75rem; justify-content:center; white-space:nowrap; padding:.55rem .8rem; flex:0 0 auto; } #rsbaCriteria td:nth-child(2) { width:7rem; white-space:nowrap; } #rsbaCriteria th[scope="row"] { width:15rem; }
+    .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable { min-width:960px; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:20%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:22%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:29%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:22%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:6.75rem; text-align:center; } .table-wrap button { min-width:4.75rem; justify-content:center; white-space:nowrap; padding:.55rem .8rem; flex:0 0 auto; } #rsbaCriteriaTable { min-width:900px; table-layout:fixed; } #rsbaCriteriaTable .criterion-col { width:32%; } #rsbaCriteriaTable .score-col { width:8rem; } #rsbaCriteriaTable td.score-range { white-space:nowrap; font-weight:800; color:#fff; }
     footer { width:calc(100% - var(--page-gutter) - var(--page-gutter)); max-width:var(--page-max); margin:0 auto; padding:2rem 0; color:var(--muted); border-top:1px solid var(--line); }
     @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
   </style>
@@ -117,7 +117,7 @@
       </div>
       <div class="card">
         <h3>RSBA criteria</h3>
-        <div class="table-wrap"><table><thead><tr><th>Criterion</th><th>Score range</th><th>Description</th></tr></thead><tbody id="rsbaCriteria"></tbody></table></div>
+        <div class="table-wrap"><table id="rsbaCriteriaTable"><colgroup><col class="criterion-col"><col class="score-col"><col class="description-col"></colgroup><thead><tr><th>Criterion</th><th>Score range</th><th>Description</th></tr></thead><tbody id="rsbaCriteriaRows"></tbody></table></div>
       </div>
       <div class="card notice" id="rsbaSummary">No RSBA species loaded yet.</div>
       <div class="table-wrap"><table id="rsbaTable" class="editable"><thead></thead><tbody></tbody></table></div>
@@ -183,7 +183,8 @@
     for (const cat of categories) $('categoryFilter').append(new Option(cat, cat));
     $('categoryPills').innerHTML = categories.map(cat => `<span class="pill">${escapeHtml(cat)}</span>`).join('');
     $('curationSteps').innerHTML = DATA.curationSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
-    $('rsbaCriteria').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td>${escapeHtml(c.score_range || `0–${c.max}`)}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
+    const rsbaRange = c => c.score_range || (c.max !== undefined && c.max !== null ? `0–${c.max}` : '');
+    $('rsbaCriteriaRows').innerHTML = DATA.rsbaCriteria.map(c => `<tr><th scope="row">${escapeHtml(c.label)}</th><td class="score-range">${escapeHtml(rsbaRange(c))}</td><td>${escapeHtml(c.help)}</td></tr>`).join('');
     $('platformCriteria').innerHTML = DATA.platformCriteria.map(c => `<li><strong>${escapeHtml(c.label)}</strong> (${c.key}, 0-${c.max}): ${escapeHtml(c.help)}</li>`).join('');
 
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
