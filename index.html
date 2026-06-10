@@ -1,212 +1,308 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="GMS Tools Global Data Model app for scoping online illegal wildlife trade monitoring data collection programs."
-    />
-    <title>GMS Tools | Global Data Model</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="brand" href="#top" aria-label="GMS Tools Global Data Model home">GMS Tools</a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-          Menu
-        </button>
-        <div class="nav-links" id="nav-links">
-          <a href="#model">Global Data Model</a>
-          <a href="#curation">Curation</a>
-          <a href="#rsba">RSBA</a>
-          <a href="#platforms">Platform Assessment</a>
-          <a href="#builder">Program Builder</a>
-        </div>
-      </nav>
-      <section class="hero" id="top">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Global Data Model Builder | gmstools</title>
+  <meta name="description" content="Static GitHub Pages version of the gmstools Global Data Model app." />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <script src="assets/global-data-model.js" defer></script>
+  <style>
+    :root {
+      --bg: #071b1f; --panel: #0d2a30; --panel-2: #12363d; --ink: #eef8f6;
+      --muted: #aac3c0; --accent: #47d7ac; --accent-2: #9be564; --warn: #ffd166;
+      --danger: #ff6b6b; --line: rgba(255,255,255,.12); --shadow: 0 22px 60px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--ink); background: radial-gradient(circle at top left, #174b4e 0, var(--bg) 38rem); }
+    a { color: var(--accent-2); }
+    header { padding: 3rem clamp(1rem, 3vw, 3rem) 1.5rem; border-bottom: 1px solid var(--line); }
+    .hero { max-width: 1180px; margin: 0 auto; display: grid; gap: 1rem; }
+    .eyebrow { color: var(--accent); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; }
+    h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); line-height: .95; margin: .2rem 0; max-width: 980px; }
+    .lead { max-width: 830px; color: var(--muted); font-size: 1.12rem; line-height: 1.65; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .9rem; margin-top: 1.3rem; }
+    .stat, .card { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025)); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+    .stat { padding: 1rem; }
+    .stat b { display:block; font-size: 1.7rem; color: #fff; } .stat span { color: var(--muted); font-size:.9rem; }
+    main { max-width: 1180px; margin: 0 auto; padding: 1.3rem clamp(1rem, 3vw, 3rem) 4rem; }
+    nav.tabs { display:flex; gap:.6rem; flex-wrap:wrap; margin: 1rem 0; position: sticky; top:0; z-index:5; padding:.7rem 0; background: linear-gradient(180deg, rgba(7,27,31,.98), rgba(7,27,31,.86)); backdrop-filter: blur(10px); }
+    .tab-btn, button, .button { border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); border-radius: 999px; padding: .68rem 1rem; font-weight: 800; cursor:pointer; text-decoration:none; display:inline-flex; gap:.4rem; align-items:center; }
+    .tab-btn.active, button.primary { background: linear-gradient(135deg, #24b58f, #89d66a); color: #06201d; border-color: transparent; }
+    button.ghost { background: transparent; } button.danger { background: rgba(255,107,107,.14); color:#ffd2d2; }
+    .grid { display:grid; grid-template-columns: 320px 1fr; gap: 1rem; align-items:start; }
+    .card { padding: 1rem; margin-bottom: 1rem; }
+    h2, h3 { margin: .2rem 0 1rem; } h3 { font-size: 1.05rem; }
+    label { display:block; font-weight:800; color:#dff5ef; margin:.7rem 0 .35rem; }
+    input, select, textarea { width:100%; border:1px solid var(--line); background:#061519; color:var(--ink); border-radius:12px; padding:.75rem; font:inherit; }
+    input[type="checkbox"] { width:auto; accent-color: var(--accent); }
+    .row { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; } .row > * { flex: 1 1 auto; }
+    .help { color: var(--muted); font-size:.9rem; line-height:1.55; } .small { font-size:.84rem; }
+    .pill { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.25rem .6rem; color:#d9f7ef; background:rgba(255,255,255,.05); margin:.1rem; font-size:.8rem; }
+    table { width:100%; border-collapse: collapse; background:#061519; border-radius:16px; overflow:hidden; }
+    th, td { padding:.72rem .8rem; border-bottom:1px solid rgba(255,255,255,.08); vertical-align: top; text-align:left; }
+    th { background:#12363d; color:#cffff2; position: sticky; top: 59px; z-index: 2; }
+    tr.selected { background: rgba(71,215,172,.13); } tr.gms td:first-child::before { content:"GMS"; color:#061519; background:var(--warn); border-radius:999px; padding:.12rem .35rem; margin-right:.4rem; font-size:.68rem; font-weight:900; }
+    .table-wrap { max-height: 690px; overflow:auto; border:1px solid var(--line); border-radius:16px; }
+    .hidden { display:none !important; } .right { text-align:right; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
+    .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color: var(--muted); }
+    .editable td[contenteditable="true"] { outline: none; } .editable td[contenteditable="true"]:focus { background: rgba(155,229,100,.16); box-shadow: inset 0 0 0 2px var(--accent-2); }
+    footer { max-width:1180px; margin:0 auto; padding:2rem clamp(1rem, 3vw, 3rem); color:var(--muted); border-top:1px solid var(--line); }
+    @media (max-width: 900px) { .grid, .stats { grid-template-columns: 1fr; } th { top: 0; } nav.tabs { position: static; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <div class="eyebrow">ECOSOLVE Global Monitoring System</div>
+      <h1>Global Data Model Builder</h1>
+      <p class="lead">A static, browser-only version of the gmstools Global Data Model app for GitHub Pages. Browse the master schema, build exportable field sets, score species baskets, and rank platforms without a Shiny server.</p>
+      <div class="stats">
+        <div class="stat"><b id="statFields">—</b><span>schema fields</span></div>
+        <div class="stat"><b id="statCategories">—</b><span>categories</span></div>
+        <div class="stat"><b id="statGms">—</b><span>current GMS fields</span></div>
+        <div class="stat"><b>100%</b><span>static GitHub Pages compatible</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="Application sections">
+      <button class="tab-btn active" data-tab="catalogue">Field catalogue</button>
+      <button class="tab-btn" data-tab="rsbr">Species prioritisation (RSBR)</button>
+      <button class="tab-btn" data-tab="platforms">Platform prioritisation</button>
+      <button class="tab-btn" data-tab="about">Model notes</button>
+      <span class="button" aria-label="Static GitHub Pages app">No server required</span>
+    </nav>
+
+    <section id="catalogue" class="tab-panel">
+      <div class="grid">
+        <aside>
+          <div class="card">
+            <h2>Field selection</h2>
+            <label for="profileSelect">Baseline profile</label>
+            <select id="profileSelect"></select>
+            <div class="row" style="margin-top:.8rem">
+              <button class="primary" id="applyProfile">Apply profile</button>
+              <button class="ghost" id="clearSelection">Clear</button>
+            </div>
+            <p class="help">Selected fields are highlighted and included in CSV / JSON exports. Use profiles as starting points, then add or remove individual fields.</p>
+          </div>
+          <div class="card">
+            <h3>Filters</h3>
+            <label for="fieldSearch">Search</label><input id="fieldSearch" placeholder="field, category, description…" />
+            <label for="categoryFilter">Category</label><select id="categoryFilter"></select>
+            <label><input type="checkbox" id="gmsOnly" /> Show only current GMS fields</label>
+            <label><input type="checkbox" id="selectedOnly" /> Show only selected fields</label>
+          </div>
+          <div class="card">
+            <h3>Export selected fields</h3>
+            <div class="row"><button id="downloadFieldsCsv">Download CSV</button><button id="downloadFieldsJson">Download JSON</button></div>
+            <p class="help" id="selectionHelp"></p>
+          </div>
+        </aside>
         <div>
-          <p class="eyebrow">Online IWT monitoring program design</p>
-          <h1>Global Data Model for consistent, comparable wildlife trade monitoring.</h1>
-          <p class="hero-copy">
-            This static GitHub Pages app turns the GMS Tools Global Data Model workflow into an
-            interactive guide for selecting collection fields, documenting risk, and prioritizing
-            online platforms before a monitoring program launches.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#builder">Build a field list</a>
-            <a class="button secondary" href="#rsba">Calculate RSBA</a>
+          <div class="card notice" id="selectionSummary"></div>
+          <div class="table-wrap"><table id="fieldsTable"><thead><tr><th>Field</th><th>Category</th><th>Description</th><th>Standardization notes</th><th></th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rsbr" class="tab-panel hidden">
+      <div class="card">
+        <h2>Rapid Species Basket Review (RSBR)</h2>
+        <p class="help">Load a species list or use the example data. The browser computes a total score and recommendation from editable criteria. Nothing is uploaded to a server.</p>
+        <div class="row">
+          <div><label for="rsbrFile">Upload .csv / .xlsx species list</label><input id="rsbrFile" type="file" accept=".csv,.xlsx,.xls" /></div>
+          <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="8" min="0" max="30" /></div>
+          <div><label for="dropCut">Drop threshold (≤)</label><input id="dropCut" type="number" value="4" min="0" max="30" /></div>
+        </div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadRsbrExample">Load example</button><button id="addRsbrRow">Add row</button><button id="downloadRsbrCsv">Export RSBR CSV</button><button class="danger" id="clearRsbr">Clear</button></div>
+      </div>
+      <div class="card notice" id="rsbrSummary">No RSBR species loaded yet.</div>
+      <div class="table-wrap"><table id="rsbrTable" class="editable"><thead></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="platforms" class="tab-panel hidden">
+      <div class="card">
+        <h2>Platform prioritisation</h2>
+        <p class="help">Upload exploratory monitoring data with platform and species columns. If RSBR data is loaded, the ranking links detections to species scores; otherwise it uses any score / recommendation columns present in the workbook.</p>
+        <div class="row">
+          <div><label for="platformFile">Upload .csv / .xlsx monitoring data</label><input id="platformFile" type="file" accept=".csv,.xlsx,.xls" /></div>
+          <div><label for="platformColumn">Platform column</label><select id="platformColumn"></select></div>
+          <div><label for="speciesColumn">Species column</label><select id="speciesColumn"></select></div>
+        </div>
+        <div class="row" style="margin-top:.9rem"><button class="primary" id="loadPlatformExample">Load example</button><button id="downloadPlatformCsv">Export platform CSV</button><button class="danger" id="clearPlatform">Clear</button></div>
+      </div>
+      <div class="card notice" id="platformSummary">No monitoring workbook loaded yet.</div>
+      <div class="table-wrap"><table id="platformTable"><thead><tr><th>Platform</th><th>Detections</th><th>Distinct species</th><th>Retain</th><th>Monitor</th><th>Drop</th><th>Average RSBR</th><th>Priority score</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="about" class="tab-panel hidden">
+      <div class="grid">
+        <div class="card">
+          <h2>Global Data Model</h2>
+          <p class="help">The Global Data Model is a browser-readable schema for online IWT monitoring. It organizes observation metadata, taxon and product evidence, trade signals, actor and network context, platform and location cues, and governance fields into one exportable catalogue.</p>
+          <div id="categoryPills"></div>
+        </div>
+        <div>
+          <div class="card">
+            <h3>How it was curated</h3>
+            <ol class="help" id="curationSteps"></ol>
+          </div>
+          <div class="card">
+            <h3>Platform assessment criteria</h3>
+            <ul class="help" id="platformCriteria"></ul>
+          </div>
+          <div class="card">
+            <h3>RSBA and RSBR</h3>
+            <p class="help">The requested RSBA concept is represented here as a practical rapid baseline workflow: use the field catalogue to scope data collection, the RSBR table to prioritize species baskets, and the platform ranking to decide where monitoring capacity should be focused first.</p>
           </div>
         </div>
-        <aside class="hero-card" aria-label="Key model summary">
-          <span class="metric" id="field-count">0</span>
-          <span class="metric-label">candidate fields</span>
-          <span class="metric" id="dimension-count">0</span>
-          <span class="metric-label">collection dimensions</span>
-          <span class="metric" id="platform-count">0</span>
-          <span class="metric-label">platform criteria</span>
-        </aside>
-      </section>
-    </header>
+      </div>
+    </section>
+  </main>
 
-    <main>
-      <section class="section" id="model">
-        <div class="section-heading">
-          <p class="eyebrow">The model</p>
-          <h2>Global Data Model</h2>
-          <p>
-            The model is a normalized field catalogue for online illegal wildlife trade (IWT)
-            monitoring. It separates universal fields that every program should capture from
-            conditional fields that depend on the investigation objective, platform type, or
-            collection capacity.
-          </p>
-        </div>
-        <div class="cards" id="dimension-cards"></div>
-      </section>
+  <footer>
+    Static GitHub Pages app for the gmstools Global Data Model. Publish this repository root or copy <code>index.html</code> and <code>assets/global-data-model.js</code> into a Pages branch or <code>/docs</code> directory.
+  </footer>
 
-      <section class="section split" id="curation">
-        <div>
-          <p class="eyebrow">How it was curated</p>
-          <h2>Evidence-informed field selection</h2>
-          <p>
-            The catalogue is organized around practical monitoring decisions: what was observed,
-            where it was observed, who posted it, how it was traded, and how confidently it can be
-            interpreted. Field definitions emphasize repeatability and defensibility so independent
-            teams can compare outputs without forcing every team to collect unnecessary detail.
-          </p>
-          <ol class="timeline">
-            <li>
-              <strong>Harmonize terms.</strong> Similar fields are merged into a common label and
-              plain-language definition.
-            </li>
-            <li>
-              <strong>Assign collection status.</strong> Fields are marked as required, recommended,
-              conditional, or optional.
-            </li>
-            <li>
-              <strong>Map decisions.</strong> Each field is tied to the program questions it supports,
-              such as species identification, seller behavior, enforcement triage, or trend analysis.
-            </li>
-            <li>
-              <strong>Reduce risk.</strong> Sensitive or personally identifying data is scoped to the
-              minimum needed for a legitimate monitoring purpose.
-            </li>
-          </ol>
-        </div>
-        <div class="callout">
-          <h3>Use the model as a living protocol</h3>
-          <p>
-            Before collection starts, export a scoped field list, document inclusion and exclusion
-            decisions, and revisit the list when platforms, taxa, legislation, or program goals change.
-          </p>
-        </div>
-      </section>
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const DATA = window.GDM_DATA;
+    const fields = DATA.fields;
+    const profiles = DATA.profiles;
+    const selected = new Set(profiles['Global Monitoring System']);
+    let rsbrRows = [];
+    let platformRows = [];
+    let platformRankings = [];
 
-      <section class="section" id="rsba">
-        <div class="section-heading">
-          <p class="eyebrow">Risk-based scoping</p>
-          <h2>RSBA: Rapid Scoping &amp; Baseline Assessment</h2>
-          <p>
-            The RSBA helps teams score whether a monitoring concept is ready for collection. It does
-            not replace expert review; it creates a transparent first-pass baseline across four areas.
-          </p>
-        </div>
-        <div class="rsba-layout">
-          <form class="panel" id="rsba-form">
-            <label>
-              Conservation or enforcement priority
-              <input type="range" name="priority" min="1" max="5" value="3" />
-              <span class="range-value">3</span>
-            </label>
-            <label>
-              Evidence of online trade activity
-              <input type="range" name="activity" min="1" max="5" value="3" />
-              <span class="range-value">3</span>
-            </label>
-            <label>
-              Data collection feasibility
-              <input type="range" name="feasibility" min="1" max="5" value="3" />
-              <span class="range-value">3</span>
-            </label>
-            <label>
-              Safety, privacy, and ethics readiness
-              <input type="range" name="readiness" min="1" max="5" value="3" />
-              <span class="range-value">3</span>
-            </label>
-          </form>
-          <aside class="score-card" aria-live="polite">
-            <span class="score" id="rsba-score">12</span>
-            <span class="score-label">RSBA score / 20</span>
-            <p id="rsba-guidance"></p>
-          </aside>
-        </div>
-      </section>
+    const $ = (id) => document.getElementById(id);
+    const categories = [...new Set(fields.map(f => f.category))];
+    $('statFields').textContent = fields.length;
+    $('statCategories').textContent = categories.length;
+    $('statGms').textContent = DATA.gmsFields.length;
 
-      <section class="section" id="platforms">
-        <div class="section-heading">
-          <p class="eyebrow">Where to monitor</p>
-          <h2>Platform assessment</h2>
-          <p>
-            Platform assessment compares channels using the same criteria before a team commits time
-            to manual review, scraping, or partner data requests. Scores are meant to support
-            prioritization, not to label a platform as inherently high or low risk.
-          </p>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Criterion</th>
-                <th scope="col">What to document</th>
-                <th scope="col">Collection implication</th>
-              </tr>
-            </thead>
-            <tbody id="platform-table"></tbody>
-          </table>
-        </div>
-      </section>
+    for (const name of Object.keys(profiles)) $('profileSelect').append(new Option(`${name} (${profiles[name].length})`, name));
+    $('categoryFilter').append(new Option('All categories', ''));
+    for (const cat of categories) $('categoryFilter').append(new Option(cat, cat));
+    $('categoryPills').innerHTML = categories.map(cat => `<span class="pill">${escapeHtml(cat)}</span>`).join('');
+    $('curationSteps').innerHTML = DATA.curationSteps.map(step => `<li>${escapeHtml(step)}</li>`).join('');
+    $('platformCriteria').innerHTML = DATA.platformCriteria.map(step => `<li>${escapeHtml(step)}</li>`).join('');
 
-      <section class="section" id="builder">
-        <div class="section-heading">
-          <p class="eyebrow">Interactive scoping</p>
-          <h2>Program field-list builder</h2>
-          <p>
-            Filter the Global Data Model by collection status or dimension, then copy the selected
-            field list into a protocol, spreadsheet, or issue tracker.
-          </p>
-        </div>
-        <div class="filters" role="group" aria-label="Filter fields">
-          <label>
-            Collection status
-            <select id="status-filter">
-              <option value="all">All statuses</option>
-              <option value="Required">Required</option>
-              <option value="Recommended">Recommended</option>
-              <option value="Conditional">Conditional</option>
-              <option value="Optional">Optional</option>
-            </select>
-          </label>
-          <label>
-            Dimension
-            <select id="dimension-filter">
-              <option value="all">All dimensions</option>
-            </select>
-          </label>
-          <button class="button secondary" type="button" id="copy-fields">Copy visible fields</button>
-        </div>
-        <div class="field-grid" id="field-grid"></div>
-        <p class="copy-status" id="copy-status" role="status"></p>
-      </section>
-    </main>
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      btn.classList.add('active');
+      $(btn.dataset.tab).classList.remove('hidden');
+    }));
 
-    <footer class="site-footer">
-      <p>
-        Built as a static HTML app for GitHub Pages. Review and adapt fields with subject-matter,
-        legal, safety, and ethics expertise before deployment.
-      </p>
-    </footer>
+    function escapeHtml(v) { return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+    function norm(v) { return String(v ?? '').trim().toLowerCase(); }
+    function csvEscape(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replaceAll('"','""') + '"' : s; }
+    function download(name, content, type='text/csv') { const blob = new Blob([content], {type}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href); }
+    function toCsv(rows) { if (!rows.length) return ''; const cols = Object.keys(rows[0]); return [cols.join(','), ...rows.map(r => cols.map(c => csvEscape(r[c])).join(','))].join('\n'); }
 
-    <script src="app.js"></script>
-  </body>
+    function renderFields() {
+      const q = norm($('fieldSearch').value), cat = $('categoryFilter').value;
+      const rows = fields.filter(f => (!q || norm(`${f.field_id} ${f.category} ${f.description} ${f.standardization_notes}`).includes(q)) && (!cat || f.category === cat) && (!$('gmsOnly').checked || f.in_gms) && (!$('selectedOnly').checked || selected.has(f.field_id)));
+      $('fieldsTable').querySelector('tbody').innerHTML = rows.map(f => `<tr class="${selected.has(f.field_id) ? 'selected' : ''} ${f.in_gms ? 'gms' : ''}"><td><strong>${escapeHtml(f.field_id)}</strong></td><td>${escapeHtml(f.category)}</td><td>${escapeHtml(f.description)}</td><td>${escapeHtml(f.standardization_notes)}</td><td><button data-field="${escapeHtml(f.field_id)}">${selected.has(f.field_id) ? 'Remove' : 'Add'}</button></td></tr>`).join('');
+      $('selectionSummary').innerHTML = `<strong>${selected.size}</strong> selected fields from <strong>${fields.length}</strong> total fields. Current view shows <strong>${rows.length}</strong> fields.`;
+      $('selectionHelp').textContent = `${selected.size} fields selected. Exports include category, field_id, description, standardization notes, and current GMS membership.`;
+      $('fieldsTable').querySelectorAll('button[data-field]').forEach(b => b.addEventListener('click', () => { selected.has(b.dataset.field) ? selected.delete(b.dataset.field) : selected.add(b.dataset.field); renderFields(); }));
+    }
+    ['fieldSearch','categoryFilter','gmsOnly','selectedOnly'].forEach(id => $(id).addEventListener('input', renderFields));
+    $('applyProfile').addEventListener('click', () => { selected.clear(); profiles[$('profileSelect').value].forEach(x => selected.add(x)); renderFields(); });
+    $('clearSelection').addEventListener('click', () => { selected.clear(); renderFields(); });
+    $('downloadFieldsCsv').addEventListener('click', () => download('global-data-model-fields.csv', toCsv(fields.filter(f => selected.has(f.field_id)))));
+    $('downloadFieldsJson').addEventListener('click', () => download('global-data-model-fields.json', JSON.stringify(fields.filter(f => selected.has(f.field_id)), null, 2), 'application/json'));
+
+    const rsbrCols = ['common_name','scientific_name','iucn_status','cites_status','online_trade_evidence','local_relevance','enforcement_relevance','identification_confidence','notes','rsbr_total','recommendation'];
+    const scoreCols = ['online_trade_evidence','local_relevance','enforcement_relevance','identification_confidence'];
+    function scoreRow(r) { const total = scoreCols.reduce((s,c) => s + (Number(r[c]) || 0), 0); r.rsbr_total = total; const retain = Number($('retainCut').value) || 8, drop = Number($('dropCut').value) || 4; r.recommendation = total >= retain ? 'Retain' : total <= drop ? 'Drop' : 'Monitor'; return r; }
+    function renderRsbr() {
+      rsbrRows.forEach(scoreRow);
+      $('rsbrTable').querySelector('thead').innerHTML = '<tr>' + rsbrCols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '<th></th></tr>';
+      $('rsbrTable').querySelector('tbody').innerHTML = rsbrRows.map((r,i) => `<tr class="${norm(r.recommendation)}">${rsbrCols.map(c => `<td ${['rsbr_total','recommendation'].includes(c) ? '' : 'contenteditable="true"'} data-row="${i}" data-col="${c}">${escapeHtml(r[c])}</td>`).join('')}<td><button data-del-rsbr="${i}">Delete</button></td></tr>`).join('');
+      const counts = rsbrRows.reduce((a,r)=>{a[r.recommendation]=(a[r.recommendation]||0)+1; return a;},{});
+      $('rsbrSummary').innerHTML = rsbrRows.length ? `<strong>${rsbrRows.length}</strong> species loaded: <span class="retain">${counts.Retain||0} retain</span>, <span class="monitor">${counts.Monitor||0} monitor</span>, <span class="drop">${counts.Drop||0} drop</span>.` : 'No RSBR species loaded yet.';
+      $('rsbrTable').querySelectorAll('td[contenteditable]').forEach(td => td.addEventListener('blur', () => { rsbrRows[td.dataset.row][td.dataset.col] = td.textContent.trim(); renderRsbr(); renderPlatforms(); }));
+      $('rsbrTable').querySelectorAll('button[data-del-rsbr]').forEach(b => b.addEventListener('click', () => { rsbrRows.splice(Number(b.dataset.delRsbr), 1); renderRsbr(); renderPlatforms(); }));
+    }
+    ['retainCut','dropCut'].forEach(id => $(id).addEventListener('input', () => { renderRsbr(); renderPlatforms(); }));
+    $('loadRsbrExample').addEventListener('click', () => { rsbrRows = [
+      {common_name:'African grey parrot', scientific_name:'Psittacus erithacus', iucn_status:'EN', cites_status:'I', online_trade_evidence:3, local_relevance:2, enforcement_relevance:3, identification_confidence:2, notes:'High-risk example'},
+      {common_name:'Ball python', scientific_name:'Python regius', iucn_status:'NT', cites_status:'II', online_trade_evidence:2, local_relevance:2, enforcement_relevance:1, identification_confidence:2, notes:'Commonly detected'},
+      {common_name:'Example low-priority species', scientific_name:'Species exampleus', iucn_status:'LC', cites_status:'none', online_trade_evidence:0, local_relevance:1, enforcement_relevance:0, identification_confidence:1, notes:'Placeholder'}
+    ]; renderRsbr(); renderPlatforms(); });
+    $('addRsbrRow').addEventListener('click', () => { rsbrRows.push({common_name:'', scientific_name:'', iucn_status:'', cites_status:'', online_trade_evidence:0, local_relevance:0, enforcement_relevance:0, identification_confidence:0, notes:''}); renderRsbr(); });
+    $('clearRsbr').addEventListener('click', () => { rsbrRows = []; renderRsbr(); renderPlatforms(); });
+    $('downloadRsbrCsv').addEventListener('click', () => download('rsbr-species-prioritisation.csv', toCsv(rsbrRows.map(scoreRow))));
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [], cell = '', quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], next = text[i + 1];
+        if (char === '"' && quoted && next === '"') { cell += '"'; i++; }
+        else if (char === '"') quoted = !quoted;
+        else if (char === ',' && !quoted) { row.push(cell); cell = ''; }
+        else if ((char === '\n' || char === '\r') && !quoted) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(cell); rows.push(row); row = []; cell = '';
+        } else cell += char;
+      }
+      if (cell || row.length) { row.push(cell); rows.push(row); }
+      const headers = rows.shift() || [];
+      return rows.filter(r => r.some(v => String(v).trim())).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ''])));
+    }
+    async function readFileRows(file) {
+      const buf = await file.arrayBuffer();
+      if (/\.csv$/i.test(file.name)) {
+        const text = new TextDecoder().decode(buf);
+        if (!window.XLSX) return parseCsv(text);
+        return XLSX.utils.sheet_to_json(XLSX.read(text, {type:'string'}).Sheets.Sheet1, {defval:''});
+      }
+      if (!window.XLSX) {
+        alert('Excel uploads require the XLSX library to load from the CDN. Use CSV or check your connection.');
+        return [];
+      }
+      const wb = XLSX.read(buf, {type:'array'});
+      return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
+    }
+    function mapIncomingRows(rows) {
+      return rows.map(r => {
+        const keys = Object.keys(r); const pick = (...names) => { const wanted = names.map(norm); const k = keys.find(x => wanted.includes(norm(x))); return k ? r[k] : ''; };
+        return { common_name: pick('common_name','common name','item_common_name'), scientific_name: pick('scientific_name','scientific name','item_scientific_name','item_species'), iucn_status: pick('iucn_status','iucn','iucn_category'), cites_status: pick('cites_status','cites','item_CITES'), online_trade_evidence: pick('online_trade_evidence','trade evidence','online evidence'), local_relevance: pick('local_relevance','local relevance'), enforcement_relevance: pick('enforcement_relevance','enforcement relevance'), identification_confidence: pick('identification_confidence','identification confidence'), notes: pick('notes','note') };
+      });
+    }
+    $('rsbrFile').addEventListener('change', async (e) => { if (e.target.files[0]) { rsbrRows = mapIncomingRows(await readFileRows(e.target.files[0])); renderRsbr(); renderPlatforms(); } });
+
+    function populatePlatformColumns() { const cols = [...new Set(platformRows.flatMap(Object.keys))]; $('platformColumn').innerHTML = cols.map(c => `<option>${escapeHtml(c)}</option>`).join(''); $('speciesColumn').innerHTML = cols.map(c => `<option>${escapeHtml(c)}</option>`).join(''); const set = (id, prefs) => { const hit = cols.find(c => prefs.includes(norm(c))); if (hit) $(id).value = hit; }; set('platformColumn',['platform','platform_name','website','source']); set('speciesColumn',['species','scientific_name','item_species','item_common_name','common_name']); }
+    function rsbrLookup() { const m = new Map(); rsbrRows.map(scoreRow).forEach(r => [r.common_name, r.scientific_name].forEach(k => { if (norm(k)) m.set(norm(k), r); })); return m; }
+    function renderPlatforms() {
+      const pcol = $('platformColumn').value, scol = $('speciesColumn').value, lookup = rsbrLookup(), groups = new Map();
+      platformRows.forEach(r => {
+        const platform = String(r[pcol] || 'Unknown').trim() || 'Unknown', species = String(r[scol] || '').trim();
+        const match = lookup.get(norm(species)); const rec = match?.recommendation || r.recommendation || r.Recommendation || 'Unscored'; const total = Number(match?.rsbr_total ?? r.rsbr_total ?? r.score ?? 0) || 0;
+        if (!groups.has(platform)) groups.set(platform, {platform, detections:0, species:new Set(), retain:0, monitor:0, drop:0, scores:[]});
+        const g = groups.get(platform); g.detections++; if (species) g.species.add(species); if (rec === 'Retain') g.retain++; else if (rec === 'Monitor') g.monitor++; else if (rec === 'Drop') g.drop++; if (total) g.scores.push(total);
+      });
+      platformRankings = [...groups.values()].map(g => ({platform:g.platform, detections:g.detections, distinct_species:g.species.size, retain:g.retain, monitor:g.monitor, drop:g.drop, average_rsbr:g.scores.length ? (g.scores.reduce((a,b)=>a+b,0)/g.scores.length).toFixed(1) : '', priority_score: (g.retain*3 + g.monitor*1.5 + g.species.size*.5 + Math.log1p(g.detections)).toFixed(1)})).sort((a,b)=>Number(b.priority_score)-Number(a.priority_score));
+      $('platformTable').querySelector('tbody').innerHTML = platformRankings.map(r => `<tr><td><strong>${escapeHtml(r.platform)}</strong></td><td>${r.detections}</td><td>${r.distinct_species}</td><td class="retain">${r.retain}</td><td class="monitor">${r.monitor}</td><td class="drop">${r.drop}</td><td>${r.average_rsbr}</td><td><strong>${r.priority_score}</strong></td></tr>`).join('');
+      $('platformSummary').innerHTML = platformRows.length ? `<strong>${platformRows.length}</strong> monitoring rows loaded across <strong>${platformRankings.length}</strong> platforms. ${rsbrRows.length ? 'Linked against the current RSBR species table.' : 'Load RSBR data for richer species-weighted scoring.'}` : 'No monitoring workbook loaded yet.';
+    }
+    $('platformFile').addEventListener('change', async (e) => { if (e.target.files[0]) { platformRows = await readFileRows(e.target.files[0]); populatePlatformColumns(); renderPlatforms(); } });
+    ['platformColumn','speciesColumn'].forEach(id => $(id).addEventListener('change', renderPlatforms));
+    $('loadPlatformExample').addEventListener('click', () => { if (!rsbrRows.length) $('loadRsbrExample').click(); platformRows = [
+      {platform_name:'Marketplace A', species:'African grey parrot'}, {platform_name:'Marketplace A', species:'African grey parrot'}, {platform_name:'Marketplace A', species:'Ball python'},
+      {platform_name:'Social Group B', species:'Ball python'}, {platform_name:'Social Group B', species:'Example low-priority species'}, {platform_name:'Forum C', species:'Unknown species'}
+    ]; populatePlatformColumns(); $('platformColumn').value='platform_name'; $('speciesColumn').value='species'; renderPlatforms(); });
+    $('clearPlatform').addEventListener('click', () => { platformRows = []; platformRankings = []; populatePlatformColumns(); renderPlatforms(); });
+    $('downloadPlatformCsv').addEventListener('click', () => download('platform-prioritisation.csv', toCsv(platformRankings)));
+
+    renderFields(); renderRsbr(); populatePlatformColumns(); renderPlatforms();
+  });
+  </script>
+</body>
 </html>

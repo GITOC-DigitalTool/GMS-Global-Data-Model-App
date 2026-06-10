@@ -1,108 +1,107 @@
-# GMS Tools Global Data Model App
+# gmstools Global Data Model Builder
 
-This repository contains a static HTML version of the **GMS Tools Global Data Model** app for scoping and selecting data collection fields for online illegal wildlife trade (IWT) monitoring programs. It is designed to be published directly with GitHub Pages: no build step, package manager, database, or server runtime is required.
+This repository contains a **static GitHub Pages version** of the gmstools Global Data Model app. It is designed to mimic the browser-only app pattern used by the original Shiny workflow: the schema is loaded in the browser, users can select fields, score species baskets, rank platforms, and export CSV or JSON outputs without running a server.
 
-## Working parts
+## Files
 
-### 1. Static GitHub Pages app
+- `index.html` — the complete browser application, including layout, styles, tab navigation, field selection, RSBR scoring, platform prioritisation, file upload handling, and export logic.
+- `assets/global-data-model.js` — the reusable data bundle exposed as `window.GDM_DATA`. It contains the field catalogue, baseline profiles, current GMS fields, curation notes, and platform assessment criteria.
 
-The app is implemented with three files:
-
-- `index.html` defines the page structure, content sections, navigation, forms, and interactive containers.
-- `styles.css` provides the responsive layout, visual design, card system, tables, filters, and mobile navigation behavior.
-- `app.js` stores the data model content and powers the interactive field builder, RSBA score calculator, platform assessment table, counters, and copy-to-clipboard action.
-
-To run it locally, open `index.html` in a browser or serve the folder with any static file server.
+The app loads the SheetJS `xlsx` library from a CDN so `.xlsx` and `.xls` uploads work on GitHub Pages. CSV uploads have a small browser fallback parser so CSV files still work if the CDN is unavailable.
 
 ## Global Data Model
 
-The **Global Data Model** is a normalized catalogue of fields that can be used when designing an online IWT monitoring program. The model is split into six dimensions:
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection. It organizes fields into six practical categories:
 
-1. **Observation** — record-level metadata that supports traceability, de-duplication, and review.
-2. **Taxon & Product** — species, product form, quantity, and identification confidence fields.
-3. **Trade Signal** — evidence that content is commercial or otherwise relevant to trade monitoring.
-4. **Actor & Network** — minimum necessary account, role, and engagement context.
-5. **Platform & Location** — the online environment, platform feature, and location cues.
-6. **Governance** — sensitivity, legal or policy flags, reviewer notes, and responsible data handling.
+1. **Observation** — stable identifiers, collection dates, source references, and capture methods that make records auditable.
+2. **Taxon & Product** — common names, scientific names, product forms, quantities, and identification confidence.
+3. **Trade Signal** — trade intent, price, currency, shipping cues, and other indicators that observed content is relevant to trade monitoring.
+4. **Actor & Network** — minimum necessary account, role, and engagement fields used for de-duplication or authorized escalation.
+5. **Platform & Location** — platform names, platform features, jurisdictional cues, and location evidence.
+6. **Governance** — legal or policy flags, sensitivity ratings, reviewer notes, and data-handling notes.
 
-Each field includes:
+Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set.
 
-- a field name;
-- a dimension;
-- a collection status; and
-- a short operational definition.
+## Field catalogue and profiles
 
-Collection statuses are used to scope effort:
+The **Field catalogue** tab lets users:
 
-- **Required** fields are the baseline fields needed for a defensible monitoring record.
-- **Recommended** fields strengthen interpretation and comparability when the information is available.
-- **Conditional** fields should be collected only when relevant to the program objective, platform, or observed content.
-- **Optional** fields add context but should not distract from the core monitoring question.
+- browse the complete schema;
+- filter by category;
+- search field IDs, descriptions, and notes;
+- show only current GMS fields;
+- show only selected fields;
+- apply baseline profiles; and
+- export selected fields as CSV or JSON.
+
+Profiles are meant to be starting points rather than final protocols. The included profiles are:
+
+- **Global Monitoring System** — the default current GMS field set.
+- **Minimal monitoring baseline** — a lean field set for lightweight pilots.
+- **Species trend analysis** — fields focused on taxon/product consistency and trend comparison.
+- **Platform enforcement triage** — fields focused on platform, actor, trade signal, and governance decisions.
 
 ## How the model was curated
 
-The app describes the curation process as a practical field-selection workflow rather than a fixed universal protocol. The working assumption is that monitoring teams need common structure while retaining enough flexibility to adapt to taxa, regions, languages, laws, platform policies, and safety constraints.
+The model is curated as a practical harmonization layer across online monitoring workflows. The curation process is represented in the app as four steps:
 
-The curation workflow in the app has four steps:
+1. **Harmonize equivalent field names** from monitoring protocols into a shared vocabulary.
+2. **Define each field operationally** so analysts collect the same kind of evidence consistently.
+3. **Mark current GMS fields and reusable profiles** so teams can start from tested field sets.
+4. **Minimize sensitive data collection** by keeping personal, safety-relevant, or enforcement-sensitive information limited to a documented monitoring purpose.
 
-1. **Harmonize terms** — similar data fields are consolidated into common labels and plain-language definitions.
-2. **Assign collection status** — every field is marked as required, recommended, conditional, or optional.
-3. **Map decisions** — fields are linked to decisions they support, such as species identification, seller behavior analysis, enforcement triage, or trend monitoring.
-4. **Reduce risk** — sensitive or personally identifying data is scoped to the minimum necessary for a legitimate monitoring purpose.
+This makes the model a living schema. Teams should adapt the field list to their species scope, platforms, legal context, ethics review, and operational capacity.
 
-This makes the model a living protocol. Teams should document why fields were included or excluded and revisit the field list when program goals, platforms, legal context, or trade patterns change.
+## RSBA and RSBR
 
-## RSBA: Rapid Scoping & Baseline Assessment
+The user-facing app labels the species workflow as **Rapid Species Basket Review (RSBR)**, while the broader readiness concept can be understood as part of an **RSBA-style rapid scoping and baseline assessment** workflow.
 
-The **RSBA** section is an interactive readiness screen for assessing whether a proposed monitoring concept is ready for a scoped pilot. It scores four factors from 1 to 5:
+The RSBR tab lets users:
 
-1. **Conservation or enforcement priority** — how important the monitoring question is.
-2. **Evidence of online trade activity** — whether there is enough signal to justify monitoring.
-3. **Data collection feasibility** — whether the team can collect useful information with available methods and capacity.
-4. **Safety, privacy, and ethics readiness** — whether governance, minimization, and escalation safeguards are in place.
+- upload a `.csv`, `.xlsx`, or `.xls` species list;
+- load example species data;
+- add and edit rows directly in the browser;
+- adjust retain and drop thresholds;
+- compute a total score from editable criteria; and
+- export the resulting species prioritisation table as CSV.
 
-The app adds these inputs into a score out of 20 and displays guidance:
+The scoring fields are:
 
-- **16–20**: strong candidate for a scoped pilot, assuming governance checks are complete.
-- **11–15**: promising but needs refinement before methods and scope are finalized.
-- **4–10**: keep in discovery mode until priority, evidence, feasibility, or readiness improves.
+- `online_trade_evidence`
+- `local_relevance`
+- `enforcement_relevance`
+- `identification_confidence`
 
-The RSBA is not a substitute for expert, legal, safety, or ethics review. It is a transparent first-pass baseline that helps teams compare candidate monitoring ideas consistently.
+The recommendation is calculated from the score:
 
-## Platform assessment
+- totals at or above the retain threshold are marked **Retain**;
+- totals at or below the drop threshold are marked **Drop**; and
+- totals between the thresholds are marked **Monitor**.
 
-The **Platform Assessment** section helps teams compare online channels before committing to active monitoring. The app currently uses five criteria:
+## Platform assessment and prioritisation
 
-1. **Relevance** — whether target taxa, products, keywords, or seller communities are present.
-2. **Accessibility** — whether content is public, permissioned, partner-provided, ephemeral, or technically restricted.
-3. **Data Quality** — whether the platform provides usable timestamps, images, location cues, account continuity, and stable references.
-4. **Risk & Ethics** — whether privacy exposure, investigator safety, sensitive species, or escalation concerns require stronger controls.
-5. **Operational Fit** — whether the platform matches available language skills, tools, analyst capacity, and maintenance resources.
+The **Platform prioritisation** tab ranks monitoring platforms from uploaded exploratory monitoring data. Users choose the platform and species columns after upload. If RSBR rows are loaded, platform detections are linked against the RSBR species table; otherwise the ranking uses score or recommendation columns already present in the uploaded workbook when available.
 
-The assessment is intended to prioritize where and how to monitor. It should not be used to label an entire platform as inherently high or low risk.
+The model documentation frames platform assessment around five criteria:
 
-## Program field-list builder
+1. **Relevance** — whether target species, products, keywords, sellers, or communities appear on the platform.
+2. **Accessibility** — whether content is public, permissioned, partner-provided, technically restricted, or ephemeral.
+3. **Data quality** — whether the platform provides usable timestamps, images, references, location cues, and account continuity.
+4. **Risk and ethics** — whether privacy, investigator safety, sensitive species, or escalation concerns require stronger controls.
+5. **Operational fit** — whether the platform matches available language coverage, tooling, analyst capacity, and maintenance effort.
 
-The **Program field-list builder** lets users filter fields by collection status and model dimension. The visible field cards can be copied to the clipboard and pasted into a protocol, spreadsheet, GitHub issue, or project management tool.
+The app calculates detections, distinct species, retain/monitor/drop counts, average RSBR score, and a priority score for each platform.
 
-This supports a repeatable workflow:
+## Publishing on GitHub Pages
 
-1. Start with all required fields.
-2. Add recommended fields that match the program objective.
-3. Add conditional fields only when they are relevant and collectable.
-4. Keep optional fields limited to the context the team can use responsibly.
-5. Export the scoped list and document the rationale.
+You can publish the app directly from the repository root because `index.html` is at the top level.
 
-## Publishing with GitHub Pages
+1. Commit and push this repository to GitHub.
+2. Open **Settings → Pages** for the repository.
+3. Choose the branch that contains `index.html`.
+4. Choose the repository root as the Pages source, or copy `index.html` and `assets/global-data-model.js` into `/docs` and publish from `/docs`.
+5. Save the Pages settings and wait for the published URL.
 
-1. Commit the files in this repository.
-2. Push the branch to GitHub.
-3. In the repository settings, open **Pages**.
-4. Choose the branch and root folder that contain `index.html`.
-5. Save the settings and wait for GitHub Pages to publish the site.
+## Responsible use
 
-Because this is a static app, GitHub Pages can serve it directly from the repository root.
-
-## Responsible use note
-
-Online IWT monitoring can involve sensitive species, personal data, risky actors, platform policy constraints, and law-enforcement implications. Before deployment, review the scoped field list and collection process with appropriate subject-matter, legal, safety, privacy, and ethics expertise.
+Online IWT monitoring can involve sensitive species, personal information, risky actors, platform policy restrictions, and law-enforcement implications. Before deploying a monitoring workflow, review the selected fields, RSBR criteria, platform ranking method, retention plan, and sharing rules with appropriate subject-matter, legal, safety, privacy, and ethics expertise.
