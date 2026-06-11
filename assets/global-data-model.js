@@ -1569,27 +1569,6 @@ window.GDM_DATA = {
       "in_gms": true
     },
     {
-      "field_id": "sponsored_ad",
-      "category": "Platform, content, and discovery context",
-      "description": "Whether the content appears to be sponsored or promoted",
-      "standardization_notes": "Boolean (TRUE/FALSE)/unknown; capture only visible platform indicators",
-      "in_gms": true
-    },
-    {
-      "field_id": "ad_type",
-      "category": "Platform, content, and discovery context",
-      "description": "Advertisement or listing type",
-      "standardization_notes": "Controlled list aligned to monitoring taxonomy",
-      "in_gms": true
-    },
-    {
-      "field_id": "ad_reference",
-      "category": "Platform, content, and discovery context",
-      "description": "Ad or listing reference identifier",
-      "standardization_notes": "Preserve exact source/reference string; use canonical reference where available",
-      "in_gms": true
-    },
-    {
       "field_id": "url_canonical",
       "category": "Platform, content, and discovery context",
       "description": "Normalized canonical URL",
@@ -1776,20 +1755,6 @@ window.GDM_DATA = {
       "category": "Seller and account entity fields",
       "description": "Whether any seller contact info is present",
       "standardization_notes": "Boolean (TRUE/FALSE)",
-      "in_gms": true
-    },
-    {
-      "field_id": "item_seller_contact",
-      "category": "Seller and account entity fields",
-      "description": "Seller contact information associated with the item",
-      "standardization_notes": "Sensitive; normalize where policy allows and prefer restricted handling for raw values",
-      "in_gms": true
-    },
-    {
-      "field_id": "item_seller_name",
-      "category": "Seller and account entity fields",
-      "description": "Seller name associated with the item or advertisement",
-      "standardization_notes": "Preserve original display text; avoid unnecessary personal data sharing",
       "in_gms": true
     },
     {
@@ -2050,12 +2015,18 @@ window.GDM_DATA = {
       "description": "Whether the seller appears to be a vulnerable group member (only if explicitly stated or clearly indicated in context)",
       "standardization_notes": "Boolean (TRUE/FALSE)/unknown; do NOT infer protected attributes; record only explicit self-identification or direct statements; document basis in note",
       "in_gms": true
+    },
+    {
+      "field_id": "vulnerable_group",
+      "category": "Vulnerability and bycatch indicators",
+      "description": "Vulnerable group category (if applicable)",
+      "standardization_notes": "Controlled list agreed by consortium; allow 'unknown'; avoid free text drift",
+      "in_gms": true
     }
   ],
   "profiles": {
     "Global Monitoring System": [
       "url",
-      "ad_reference",
       "platform_name",
       "item_title",
       "item_text",
@@ -2095,8 +2066,6 @@ window.GDM_DATA = {
       "item_currency",
       "item_count",
       "item_unit",
-      "item_seller_contact",
-      "item_seller_name",
       "note",
       "is_group",
       "group_type",
@@ -2105,11 +2074,10 @@ window.GDM_DATA = {
       "is_delivery_available",
       "delivery_method",
       "is_seller_vulnerable_group",
+      "vulnerable_group",
       "is_bycatch",
       "permit_claimed_flag",
-      "sponsored_ad",
       "case_id",
-      "ad_type",
       "datahub"
     ],
     "General Monitoring": [
@@ -2126,8 +2094,6 @@ window.GDM_DATA = {
       "platform_name",
       "website_type",
       "platform_type",
-      "ad_type",
-      "ad_reference",
       "item_title",
       "item_text",
       "ad_language",
@@ -2185,15 +2151,14 @@ window.GDM_DATA = {
       "availability_status",
       "payment_method",
       "seller_contact_known",
-      "item_seller_name",
-      "item_seller_contact",
       "seller_username",
       "seller_display_name",
       "item_image",
       "image_text",
       "item_multiple_detections",
       "is_bycatch",
-      "is_seller_vulnerable_group"
+      "is_seller_vulnerable_group",
+      "vulnerable_group"
     ],
     "Academic Research": [
       "record_date",
@@ -2288,7 +2253,6 @@ window.GDM_DATA = {
     ],
     "Law Enforcement": [
       "url",
-      "ad_reference",
       "platform_name",
       "item_title",
       "item_text",
@@ -2328,8 +2292,6 @@ window.GDM_DATA = {
       "item_currency",
       "item_count",
       "item_unit",
-      "item_seller_contact",
-      "item_seller_name",
       "note",
       "is_group",
       "group_type",
@@ -2340,9 +2302,7 @@ window.GDM_DATA = {
       "is_seller_vulnerable_group",
       "is_bycatch",
       "permit_claimed_flag",
-      "sponsored_ad",
       "case_id",
-      "ad_type",
       "datahub",
       "record_id",
       "parent_record_id",
@@ -2636,12 +2596,12 @@ window.GDM_DATA = {
       "was_recommended",
       "is_case_of_interest",
       "is_bycatch",
-      "is_seller_vulnerable_group"
+      "is_seller_vulnerable_group",
+      "vulnerable_group"
     ]
   },
   "gmsFields": [
     "url",
-    "ad_reference",
     "platform_name",
     "item_title",
     "item_text",
@@ -2681,8 +2641,6 @@ window.GDM_DATA = {
     "item_currency",
     "item_count",
     "item_unit",
-    "item_seller_contact",
-    "item_seller_name",
     "note",
     "is_group",
     "group_type",
@@ -2691,11 +2649,10 @@ window.GDM_DATA = {
     "is_delivery_available",
     "delivery_method",
     "is_seller_vulnerable_group",
+    "vulnerable_group",
     "is_bycatch",
     "permit_claimed_flag",
-    "sponsored_ad",
     "case_id",
-    "ad_type",
     "datahub"
   ],
   "curationSteps": [
