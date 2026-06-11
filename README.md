@@ -54,8 +54,11 @@ This structure lets analysts fill out monitoring data in the first tab while kee
 Profiles are meant to be starting points rather than final protocols. The included profiles are:
 
 - **Global Monitoring System** — all fields marked `in_gms = TRUE`.
-- **All fields** — the full field catalogue.
-- **Category subsets** — one baseline profile for each field-selection category, including automation/model-assist, core workflow metadata, geography/geocoding, governance/export controls, item/species/product fields, legal/enforcement tracking, linking/dedupe/network fields, media/evidence metadata, platform/content/discovery context, price/commercial terms, seller/account fields, shipping/routes indicators, and vulnerability/bycatch indicators.
+- **General Monitoring** — operational monitoring fields for routine collection, review, platform context, item details, locations, price, seller signals, delivery, media, and vulnerability/bycatch indicators.
+- **Academic Research** — de-identified research fields for taxonomy, platform/content context, geography, timing, prices, and aggregate monitoring signals.
+- **Law Enforcement** — operational, evidentiary, legal, seller/entity, referral, case, seizure, dedupe, media-forensics, and sensitive handling fields.
+- **Trend Analysis** — standardized fields for longitudinal platform, taxon, geography, route, price, engagement, and detection trend analysis.
+- **Policy/Regulation** — fields for CITES/IUCN/national protection review, legality and permitting, platform governance, routes, prices, enforcement outcomes, and policy-relevant indicators.
 
 ## How the model was curated
 
@@ -82,7 +85,7 @@ The **Species assessment (RSBA)** tab lets users run a rapid assessment workflow
 - run scoring after edits; and
 - export the completed assessment as an Excel workbook.
 
-Priority-setting should balance conservation urgency, enforcement relevance, trade relevance, online trade relevance, and the practical likelihood that a species or product can be identified and assessed online with enough confidence to make monitoring useful. The current RSBA criteria are stored in `assets/global-data-model.js` and displayed in the app:
+Priority-setting should balance conservation urgency, enforcement relevance, trade relevance, online trade relevance, and the practical likelihood that a species or product can be identified and assessed online with enough confidence to make monitoring useful. The app auto-scores legislative protection from CITES appendix and legal protection fields, and ecological impact from IUCN status. The current RSBA criteria are stored in `assets/global-data-model.js` and displayed in the app:
 
 | Criterion | Score range | Description |
 | --- | --- | --- |

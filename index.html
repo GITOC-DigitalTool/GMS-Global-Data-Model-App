@@ -42,7 +42,7 @@
     .table-wrap { width:100%; max-width:100%; max-height:690px; overflow:auto; border:1px solid var(--line); border-radius:16px; }
     .hidden { display:none !important; } .notice { border-left:4px solid var(--accent); padding:.8rem 1rem; background:rgba(71,215,172,.08); border-radius:12px; }
     .drop { color:#ffdada; } .monitor { color:#ffeab0; } .retain { color:#baffdf; } .muted { color:var(--muted); }
-    .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); }
+    .editable { table-layout:auto; min-width:max-content; } .editable th, .editable td { min-width:10rem; max-width:22rem; } .editable td[contenteditable="true"] { outline:none; min-width:10rem; } .editable td[contenteditable="true"]:focus { background:rgba(155,229,100,.16); box-shadow:inset 0 0 0 2px var(--accent-2); } #rsbaTable th:nth-child(1), #rsbaTable td:nth-child(1) { position:sticky; left:0; z-index:3; min-width:13rem; max-width:13rem; background:#08272b; } #rsbaTable th:nth-child(2), #rsbaTable td:nth-child(2) { position:sticky; left:13rem; z-index:3; min-width:14rem; max-width:14rem; background:#08272b; } #rsbaTable thead th:nth-child(1), #rsbaTable thead th:nth-child(2) { z-index:5; background:#12363d; }
     .criteria-list { display:grid; gap:.55rem; padding-left:1.2rem; } .criteria-list strong { color:#fff; } #fieldsTable { min-width:960px; } #fieldsTable th:nth-child(1), #fieldsTable td:nth-child(1) { width:20%; } #fieldsTable th:nth-child(2), #fieldsTable td:nth-child(2) { width:22%; } #fieldsTable th:nth-child(3), #fieldsTable td:nth-child(3) { width:29%; } #fieldsTable th:nth-child(4), #fieldsTable td:nth-child(4) { width:22%; } #fieldsTable th:nth-child(5), #fieldsTable td:nth-child(5) { width:6.75rem; text-align:center; } .table-wrap button { min-width:4.75rem; justify-content:center; white-space:nowrap; padding:.55rem .8rem; flex:0 0 auto; } #rsbaCriteriaTable { min-width:900px; table-layout:fixed; } #rsbaCriteriaTable .criterion-col { width:32%; } #rsbaCriteriaTable .score-col { width:8rem; } #rsbaCriteriaTable td.score-range { white-space:nowrap; font-weight:800; color:#fff; }
     footer { width:calc(100% - var(--page-gutter) - var(--page-gutter)); max-width:var(--page-max); margin:0 auto; padding:2rem 0; color:var(--muted); border-top:1px solid var(--line); }
     @media (max-width:900px) { .grid, .stats { grid-template-columns:1fr; } th { top:0; } nav.tabs { position:static; } }
@@ -103,7 +103,7 @@
     <section id="rsba" class="tab-panel hidden">
       <div class="card">
         <h2>Rapid Species Basket Assessment (RSBA)</h2>
-        <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, re-run scoring, and export the completed assessment.</p>
+        <p class="help">Upload a species list or use the example data. Users can edit the table directly, add rows, re-run scoring, and export the completed assessment. Legislative protection and ecological impact are auto-scored from CITES, legal protection, and IUCN fields.</p>
         <div class="row">
           <div><label for="rsbaFile">Upload .csv / .xlsx species list</label><input id="rsbaFile" type="file" accept=".csv,.xlsx,.xls" /></div>
           <div><label for="retainCut">Retain threshold (≥)</label><input id="retainCut" type="number" value="9" min="0" max="30" /></div>
@@ -169,8 +169,9 @@
     let rsbaRows = [];
     let platformRows = [];
 
-    const rsbaBaseCols = ['common_name','scientific_name','iucn_status','cites_status'];
+    const rsbaBaseCols = ['common_name','scientific_name','iucn_status','cites_status','legal_protection'];
     const rsbaScoreCols = DATA.rsbaCriteria.map(c => c.key);
+    const rsbaAutoScoreCols = ['legislative_protection', 'ecological_impact'];
     const rsbaCols = [...rsbaBaseCols, ...rsbaScoreCols, 'notes', 'rsba_total', 'recommendation'];
     const platformBaseCols = ['platform_name','platform_type'];
     const platformScoreCols = DATA.platformCriteria.map(c => c.key);
@@ -210,7 +211,9 @@
         const keys = Object.keys(row);
         const out = {};
         for (const col of cols) {
-          const key = keys.find(k => norm(k) === norm(col) || norm(k).replaceAll(' ', '_') === norm(col));
+          const aliases = {cites_status:['cites appendix','cites_appendix','cites','cites status'], iucn_status:['iucn','iucn category','iucn_category','iucn red list'], legal_protection:['legal protections','legal_protections','national legal protection','national protection','national_protection_status']};
+          const names = [col, ...(aliases[col] || [])].map(name => norm(name).replaceAll(' ', '_'));
+          const key = keys.find(k => names.includes(norm(k).replaceAll(' ', '_')));
           out[col] = key ? row[key] : '';
         }
         return out;
@@ -280,7 +283,41 @@
       $('fieldsTable').querySelectorAll('button[data-field]').forEach(b => b.addEventListener('click', () => { selected.has(b.dataset.field) ? selected.delete(b.dataset.field) : selected.add(b.dataset.field); renderFields(); }));
     }
 
+    function textContains(value, terms) {
+      const text = norm(value);
+      return terms.some(term => text.includes(term));
+    }
+    function citesAppendixLevel(value) {
+      const text = norm(value).replace(/appendix/g, '').trim();
+      if (/\b(i|1)\b/.test(text) && !/\b(ii|2)\b/.test(text) && !/\b(iii|3)\b/.test(text)) return 1;
+      if (/\b(ii|2)\b/.test(text)) return 2;
+      if (/\b(iii|3)\b/.test(text)) return 3;
+      return 0;
+    }
+    function autoLegislativeProtection(row) {
+      const cites = citesAppendixLevel(row.cites_status);
+      const legal = row.legal_protection;
+      const nationalBan = textContains(legal, ['trade ban', 'national ban', 'fully protected', 'strictly protected', 'prohibited', 'ban/protection']);
+      const permitTrade = textContains(legal, ['permit', 'regulated', 'conditional', 'law-enforcement rationale']);
+      const generalProtection = textContains(legal, ['general protection', 'legal-origin', 'legal origin', 'protected', 'protection']);
+      if (cites === 1 && nationalBan) return 3;
+      if (cites === 1 || nationalBan || cites === 2 || permitTrade) return 2;
+      if (cites === 3 || generalProtection) return 1;
+      return 0;
+    }
+    function autoEcologicalImpact(row) {
+      const status = norm(row.iucn_status);
+      if (textContains(status, ['cr', 'critically endangered', 'keystone'])) return 2;
+      if (textContains(status, ['en', 'endangered', 'vu', 'vulnerable', 'nt', 'near threatened'])) return 1;
+      return 0;
+    }
+    function applyRsbaAutoScores(row) {
+      row.legislative_protection = autoLegislativeProtection(row);
+      row.ecological_impact = autoEcologicalImpact(row);
+      return row;
+    }
     function scoreRsbaRow(row) {
+      applyRsbaAutoScores(row);
       const total = rsbaScoreCols.reduce((sum, key) => sum + num(row[key]), 0);
       row.rsba_total = total;
       const retain = num($('retainCut').value) || 9;
@@ -291,7 +328,7 @@
     function renderRsba() {
       rsbaRows.forEach(scoreRsbaRow);
       $('rsbaTable').querySelector('thead').innerHTML = '<tr>' + rsbaCols.map(c => `<th>${escapeHtml(c)}</th>`).join('') + '<th></th></tr>';
-      $('rsbaTable').querySelector('tbody').innerHTML = rsbaRows.map((r, i) => `<tr class="${norm(r.recommendation)}">${rsbaCols.map(c => `<td ${['rsba_total','recommendation'].includes(c) ? '' : 'contenteditable="true"'} data-row="${i}" data-col="${c}">${escapeHtml(r[c])}</td>`).join('')}<td><button data-del-rsba="${i}">Delete</button></td></tr>`).join('');
+      $('rsbaTable').querySelector('tbody').innerHTML = rsbaRows.map((r, i) => `<tr class="${norm(r.recommendation)}">${rsbaCols.map(c => `<td ${['rsba_total','recommendation', ...rsbaAutoScoreCols].includes(c) ? '' : 'contenteditable="true"'} data-row="${i}" data-col="${c}">${escapeHtml(r[c])}</td>`).join('')}<td><button data-del-rsba="${i}">Delete</button></td></tr>`).join('');
       const counts = rsbaRows.reduce((a, r) => { a[r.recommendation] = (a[r.recommendation] || 0) + 1; return a; }, {});
       $('rsbaSummary').innerHTML = rsbaRows.length ? `<strong>${rsbaRows.length}</strong> species assessed: <span class="retain">${counts.Retain||0} retain</span>, <span class="monitor">${counts.Monitor||0} monitor</span>, <span class="drop">${counts.Drop||0} drop</span>.` : 'No RSBA species loaded yet.';
       $('rsbaTable').querySelectorAll('td[contenteditable]').forEach(td => td.addEventListener('blur', () => { rsbaRows[td.dataset.row][td.dataset.col] = td.textContent.trim(); renderRsba(); }));
