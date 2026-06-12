@@ -736,13 +736,6 @@ window.GDM_DATA = {
       "in_gms": true
     },
     {
-      "field_id": "item_scientific_name",
-      "category": "Item, species, taxonomy, and product fields",
-      "description": "Standardized scientific name",
-      "standardization_notes": "Use GBIF/NCBI backbone or Catalogue of Life; store identifiers",
-      "in_gms": false
-    },
-    {
       "field_id": "item_scientific_name_raw",
       "category": "Item, species, taxonomy, and product fields",
       "description": "Scientific name as written",
@@ -2110,7 +2103,6 @@ window.GDM_DATA = {
       "engagement_views",
       "item_common_name",
       "item_common_name_website",
-      "item_scientific_name",
       "item_species",
       "item_taxa",
       "item_phylum",
@@ -2192,7 +2184,6 @@ window.GDM_DATA = {
       "search_term",
       "item_common_name",
       "item_common_name_website",
-      "item_scientific_name",
       "item_species",
       "item_taxa",
       "item_phylum",
@@ -2436,7 +2427,6 @@ window.GDM_DATA = {
       "moderation_status",
       "item_common_name",
       "item_common_name_website",
-      "item_scientific_name",
       "item_species",
       "item_taxa",
       "item_phylum",
@@ -2526,7 +2516,6 @@ window.GDM_DATA = {
       "search_term",
       "item_common_name",
       "item_common_name_website",
-      "item_scientific_name",
       "item_species",
       "item_taxa",
       "item_phylum",

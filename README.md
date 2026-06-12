@@ -5,13 +5,13 @@ The ECOSOLVE Global Monitoring System Data Model Builder helps teams review the 
 ## Files
 
 - `index.html` — the application interface, including tab navigation, field selection, RSBA scoring, platform assessment, upload handling, template downloads, and export logic.
-- `assets/global-data-model.js` — the application data bundle. It contains the complete field catalogue (289 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
+- `assets/global-data-model.js` — the application data bundle. It contains the complete field catalogue (288 fields across 13 field-selection categories), baseline profiles, current GMS fields, curation notes, RSBA criteria and examples, and platform assessment criteria and examples.
 
 The app supports `.xlsx`, `.xls`, and `.csv` uploads for assessment data. Downloads are kept to Excel workbooks/templates only.
 
 ## Global Data Model
 
-The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection: **289 fields across 13 field-selection categories**.
+The **Global Data Model** is the master schema used to scope online illegal wildlife trade monitoring data collection: **288 fields across 13 field-selection categories**.
 
 1. **Automation, scraping, and model-assist fields** — model labels, fingerprints, extractor metadata, scraper provenance, and ML suggestions.
 2. **Core record and workflow metadata** — collection program, analyst workflow, dates, review state, priority, risk, validation, and handling flags.
@@ -27,7 +27,7 @@ The **Global Data Model** is the master schema used to scope online illegal wild
 12. **Shipping, routes, and movement indicators** — cross-border indicators, delivery, origin/destination countries, meetup cues, packaging, and shipping methods.
 13. **Vulnerability and bycatch indicators** — bycatch flags and vulnerable-group indicators with explicit-basis requirements.
 
-Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set. The Global Monitoring System profile contains the 53 fields marked for the current GMS export, including core workflow, platform/content, item/species, geography, price, route, case, and vulnerability/bycatch fields.
+Each schema row includes a field ID, category, description, standardization notes, and whether it is part of the current Global Monitoring System field set. The catalogue uses `item_species` as the standard species/binomial field and omits the duplicate standardized scientific-name field. The Global Monitoring System profile contains the 53 fields marked for the current GMS export, including core workflow, platform/content, item/species, geography, price, route, case, and vulnerability/bycatch fields.
 
 ## Field catalogue and profiles
 
